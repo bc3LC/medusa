@@ -194,3 +194,7 @@ use_data(epf_2021_h, overwrite=T)
 # epf_2021_m
 epf_2021_m = read.csv(paste0(rawDataFolder,"epf_2021_m.csv"),header=T)
 use_data(epf_2021_m, overwrite=T)
+
+# mapping
+mapping = read.csv(paste0(rawDataFolder,"mapping.csv"),header=T)
+use_data(mapping, overwrite=T)

@@ -1,11 +1,30 @@
+library(usethis)
+library(magrittr)
+
+# standardize
+#'
+#' Details: function to standarize data names
+#' @param data dataset to be standardized
+# TO BE REPAIRED BY CLAUDIA ;)
+standardize <- function(data) {
+  data2 = data %>%
+    dplyr::mutate_at(3:ncol(data), as.character) %>%
+    tidyr::pivot_longer(cols = 3:ncol(data), names_to = "VAR_EPF") %>%
+    dplyr::left_join(mapping, by = c("VAR_EPF","value")) %>%
+    dplyr::mutate(VAR = ifelse(is.na(VAR), VAR_EPF, VAR)) %>%
+    dplyr::mutate(NOMBRE = ifelse(is.na(NOMBRE), value, NOMBRE)) %>%
+    dplyr::select(ANOENC, NUMERO, VAR, NOMBRE) %>%
+    tidyr::pivot_wider(names_from = NOMBRE, values_from = VAR)
+  return(data2)
+  }
+
+
+
 # load_epf
 #'
-#' Details: main function to load the Spanish HBS
-#'
-#' @param year  Description
-#'
-
-load_hbs <-function(year) {
+#' Details: main function to load the Spanish Household Budget Survey (HBS)
+#' @param year year of the HBS you want to load
+load_hbs <- function(year) {
 
 
   # ************************************************************
@@ -23,6 +42,8 @@ load_hbs <-function(year) {
     epf_hg[nchar(epf_hg$CODIGO) == 4,]$CODIGO <- paste0("0",  epf_hg[nchar(epf_hg$CODIGO) == 4,]$CODIGO)
   }
 
+  # Rename socioeconomic variables
+  epf_hh <- standardize(epf_hh)
 
   # ************************************************************
   # 2. Join the household and expenditure datasets
@@ -32,6 +53,12 @@ load_hbs <-function(year) {
   g <-  epf_hg %>%
     dplyr::mutate(CODIGO = stringr::str_sub(CODIGO) <- paste0("EUR_", CODIGO),
            gasto  = GASTO/FACTOR)
+
+  # Renombrar gastmon porque en 2021 aparece como GASTOMON
+  if (year == 2021) {
+    epf_hg = epf_hg %>%
+      dplyr::rename(GASTMON = GASTOMON)
+  }
 
   gm <- epf_hg  %>%
     dplyr::mutate(CODIGO = stringr::str_sub(CODIGO) <- paste0("EURMON_", CODIGO),

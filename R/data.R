@@ -285,3 +285,9 @@
 #' @source medusa
 #' @format .csv
 "epf_2021_m"
+
+#' Mapping to rename socioeconomic variables
+#'
+#' @source medusa
+#' @format .csv
+"mapping"

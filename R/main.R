@@ -7,7 +7,7 @@
 #' @param elevate  elevation to national accounting, options = c (T, F)
 #' @param save save the results, options = c (T, F)
 
-calc_di <-function(input, year,  mapping, elevate=F, save=T,) {
+calc_di <-function(input, year,  mapping, elevate=F, save=T) {
 
   # load hbs files
   raw_hbs <- load_hbs(year)
@@ -20,6 +20,7 @@ calc_di <-function(input, year,  mapping, elevate=F, save=T,) {
 
 
 
-  return(param1+param2)
-
 }
+
+
+

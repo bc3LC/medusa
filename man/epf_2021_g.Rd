@@ -3,7 +3,7 @@
 \docType{data}
 \name{epf_2021_g}
 \alias{epf_2021_g}
-\title{descripción de este archivo, copiar del excel}
+\title{Expenditure file of the 2021 Household Budget Survey (INE), which includes the expenditures at the highest COICOP disaggregation level for each of the households in the sample.}
 \format{
 .csv
 }
@@ -14,6 +14,6 @@ medusa
 epf_2021_g
 }
 \description{
-descripción de este archivo, copiar del excel
+Expenditure file of the 2021 Household Budget Survey (INE), which includes the expenditures at the highest COICOP disaggregation level for each of the households in the sample.
 }
 \keyword{datasets}

@@ -3,7 +3,7 @@
 \docType{data}
 \name{epf_2021_h}
 \alias{epf_2021_h}
-\title{descripción de este archivo, copiar del excel}
+\title{Household file of the 2021 Household Budget Survey (INE), which includes 8 sections with information on each of the households in the sample: 1) General information, 2) Characteristics of the household, 3) Characteristics of the household reference person, 4) Characteristics of the main dwelling, 5) Other dwellings available to the household, 6) Household consumption expenditures, 7) Regular monthly household income and 8) Number of lunches and dinners during the two-week period.}
 \format{
 .csv
 }
@@ -14,6 +14,6 @@ medusa
 epf_2021_h
 }
 \description{
-descripción de este archivo, copiar del excel
+Household file of the 2021 Household Budget Survey (INE), which includes 8 sections with information on each of the households in the sample: 1) General information, 2) Characteristics of the household, 3) Characteristics of the household reference person, 4) Characteristics of the main dwelling, 5) Other dwellings available to the household, 6) Household consumption expenditures, 7) Regular monthly household income and 8) Number of lunches and dinners during the two-week period.
 }
 \keyword{datasets}

@@ -4,18 +4,16 @@
 \alias{calc_di}
 \title{Details: main function to calculate distributional impacts for different price shocks}
 \usage{
-calc_di(input, year, save = T, mapping, elevate = F)
+calc_di(input, year, mapping, elevate = F, save = T)
 }
 \arguments{
-\item{input}{from where to load input data options = c(manual, gcam)}
+\item{input}{from where to load input data, options = c(manual, gcam)}
 
-\item{year}{Description}
+\item{year}{year for simulation, options = c(2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021)}
 
-\item{save}{param2 Description}
+\item{elevate}{elevation to national accounting, options = c (T, F)}
 
-\item{mapping}{Description}
-
-\item{elevate}{Description}
+\item{save}{save the results, options = c (T, F)}
 }
 \description{
 Details: main function to calculate distributional impacts for different price shocks

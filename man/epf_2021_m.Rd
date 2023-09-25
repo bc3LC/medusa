@@ -3,7 +3,7 @@
 \docType{data}
 \name{epf_2021_m}
 \alias{epf_2021_m}
-\title{descripción de este archivo, copiar del excel}
+\title{Members file of the 2021 Household Budget Survey (INE), which collects detailed sociodemographic information on the members of each household.}
 \format{
 .csv
 }
@@ -14,6 +14,6 @@ medusa
 epf_2021_m
 }
 \description{
-descripción de este archivo, copiar del excel
+Members file of the 2021 Household Budget Survey (INE), which collects detailed sociodemographic information on the members of each household.
 }
 \keyword{datasets}

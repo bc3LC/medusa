@@ -2,15 +2,15 @@ Package: medusa
 Title: medusa
 Version: 0.1.0
 Authors@R: c(person("Alonso-Epelde", "Eva", email = "eva.alonso@bc3research.org", role = c("aut", "cre"),
-		   comment = c(ORCID = "0000-0002-4052-1703")),
-	    	   person("Rodés-Bachs", "Clàudia", email = "claudia.rodes@bc3research.org", role = c("aut"),
-		   comment = c(ORCID = "0000-0001-6696-7685")),
-		   person("Sampedro", "Jon", email = "jon.sampedro@bc3research.org", role = c("aut"),
-		   comment = c(ORCID = "0000-0002-2277-1530")),
-		   person("García-Muros", "Xaquín", email = "xaquin.garcia@bc3research.org ", role = c("aut"),
-		   comment = c(ORCID = "0000-0002-2667-3292")),
-		   person("Moyano-Reina", "María", email = "maria.moyano@bc3research.org ", role = c("aut"),
-		   comment = c(ORCID = "0009-0000-4290-0697")))
+		     comment = c(ORCID = "0000-0002-4052-1703")),
+	         person("Rodés-Bachs", "Clàudia", email = "claudia.rodes@bc3research.org", role = c("aut"),
+		   	 comment = c(ORCID = "0000-0001-6696-7685")),
+		     person("Sampedro", "Jon", email = "jon.sampedro@bc3research.org", role = c("aut"),
+		     comment = c(ORCID = "0000-0002-2277-1530")),
+		     person("García-Muros", "Xaquín", email = "xaquin.garcia@bc3research.org ", role = c("aut"),
+		     comment = c(ORCID = "0000-0002-2667-3292")),
+		     person("Moyano-Reina", "María", email = "maria.moyano@bc3research.org ", role = c("aut"),
+		     comment = c(ORCID = "0009-0000-4290-0697")))
 Description: Description of your R package medusa.
 URL: https://github.com/bc3LC/medusa
 BugReports: https://github.com/bc3LC/medusa/issues
@@ -22,6 +22,7 @@ RoxygenNote: 7.2.3
 Imports: 
     knitr,
     dplyr,
+	reshape2,
 	rgcam,
 	markdown
 Suggests: 

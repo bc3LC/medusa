@@ -172,11 +172,40 @@ load_hbs <- function(year) {
 
 # add_coicop
 #'
-#' Details: main function to add coicop categories the Spanish Household Budget Survey (HBS)
+#' Details: main function to add coicop categories in the Spanish Household Budget Survey (HBS)
 #' @param year year of the HBS you want to use
-elevate_hbs <- function(year, country = "ES") {
+add_coicop <- function(year) {
+
+  # **********************************************************************
+  # 1. Load lists with the coicop aggregation we want to use
+  # **********************************************************************
+
+  # Load lists
+
+  for (r in colnames(lists)) {
+    assign(r, lists %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))
+  }
 
 
+  # **********************************************************************
+  # 2. Add coicop categories according to de lists aggregation
+  # **********************************************************************
+
+  # Add consumption variables
+  for (c in coicop) {
+    if(c %in% issue_empty){
+      eval(parse(text = paste0("epf_hg <- epf_hg %>%
+                                dplyr::mutate(", c, " = 0)")))
+    } else {
+      eval(parse(text = paste0("epf_hg <- epf_hg %>%
+                                dplyr::mutate(", c, " = rowSums(dplyr::select(epf_hg, contains(c(", c, ")))))")))
+    }
+  }
+
+  # Ensure that the sum of expenditure of the categories created matches the original total expenditure of the survey
+  if (sum(epf_hg$GASTOT/epf_hg$FACTOR) == sum(rowSums(dplyr::select(epf_hg, contains(coicop))))){
+    print(paste0("The procedure is correct"))
+  }
 
 }
 

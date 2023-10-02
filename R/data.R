@@ -291,3 +291,9 @@
 #' @source medusa
 #' @format .csv
 "mapping"
+
+#' List to add coicop categories
+#'
+#' @source medusa
+#' @format .csv
+"lists"

@@ -71,6 +71,7 @@ load_hbs <- function(year) {
   # Rename socioeconomic variables
   epf_hh <- standardize(epf_hh)
 
+
   # ************************************************************
   # 2. Join the household and expenditure datasets
   # ************************************************************
@@ -112,7 +113,80 @@ load_hbs <- function(year) {
     print(paste0("UNION is wrong"))
   }
 
+
+  # **********************************************************************
+  # 3. Create new socioeconomic variables
+  # **********************************************************************
+
+  # Create the variable DECILE (on total expenditure in equivalent consumption units and by weights)
+  epf_hg <- dplyr::mutate(epf_hg, GASTOT_UC2 = GASTOT/(FACTOR*UC2))
+  Nquantiles <- function(x, w = NULL, s, t = NULL) {
+    if (is.null(t)) {
+      if (is.null(w)) w <- rep(1,length(x))
+      # In the case of weights with missing values: critical error
+      if (sum(is.na(w)) > 0) stop("Error.")
+      n <- length(x)
+      nn <- 1:n
+      nn <- nn[order(x)]
+      ww <- ceiling((cumsum(w[order(x, na.last = NA)])/sum(w[!is.na(x)]))*s)
+      ww[n] <- s
+      y <-  c(ww,rep(NA,sum(is.na(x))))[order(nn)]
+    } else {
+      if (sum(t != t[order(t)]) > 0)
+        stop("Error.")
+      yy <- rep(1,length(x))
+      for (i in 1:length(t)) {
+        yy <- cbind(yy, as.numeric(x >= t[i]))
+      }
+      y <- apply(yy, 1, sum)
+    }
+    return(y)
+  }
+  epf_hg$DECILE <- Nquantiles(epf_hg$GASTOT_UC2, w = epf_hg$FACTOR , 10)
+
+  # Create the variable: QUINTILE
+  epf_hg$QUINTILE <- Nquantiles(epf_hg$GASTOT_UC2, w = epf_hg$FACTOR , 5)  # Como ya esta ejecutada la funcion, se puede aplicar directamente a los quintiles
+
+  # Create the variables in gender data from the HBS's individuals file
+  gender <- epf_hm %>%
+    dplyr::group_by ( NUMERO                                                      ) %>%    # MA04          : identification number of the household
+    dplyr::summarise( number_male   = sum( SEXO == 1 & EDAD >= 14)                ,        # number_male   : number of male members in the household
+                      number_female = sum( SEXO == 6 & EDAD >= 14)                ) %>%    # number_female : number of female members in the household
+    dplyr::mutate   ( share_female  = number_female/(number_male + number_female) ) %>%    # perce_female  : share of female members in the household
+
+    dplyr::mutate   ( FEMDEGREE = ifelse(share_female <  0.2                     , "FD1",
+                                  ifelse(share_female >= 0.2 & share_female < 0.4, "FD2",
+                                  ifelse(share_female >= 0.4 & share_female < 0.6, "FD3",
+                                  ifelse(share_female >= 0.6 & share_female < 0.8, "FD4",
+                                  ifelse(share_female >= 0.8                      ,"FD5", "Not provided"))))))
+
+  # Merge the data generated at the household level by HA04 (household ID) in hg dataset
+  epf_hg <- dplyr::left_join( epf_hg , gender , by = "NUMERO" )
+
+
+
   return(list(epf_hg = epf_hg, epf_hgm = epf_hgm, epf_hc = epf_hc))
 
 }
 
+
+# add_coicop
+#'
+#' Details: main function to add coicop categories the Spanish Household Budget Survey (HBS)
+#' @param year year of the HBS you want to use
+elevate_hbs <- function(year, country = "ES") {
+
+
+
+}
+
+
+# elevate
+#'
+#' Details: main function to elevate the Spanish Household Budget Survey (HBS)
+#' @param year year of the HBS you want to elevate
+elevate_hbs <- function(year, country = "ES") {
+
+
+
+}

@@ -1,23 +1,49 @@
 library(usethis)
 library(magrittr)
 
+
+# rename_values
+#'
+#' Details: function to rename the codified values of the dataset to the meaningful values detailed in the mapping
+#' @param data dataset to be standardized
+#' @param current_var column name to be standardized
+rename_values = function(data, current_var) {
+  data = data %>%
+    dplyr::rename(value = {{ current_var }}) %>%                             # renombra la columna (nombre de la variable) a value
+    dplyr::mutate(value = as.character(value)) %>%                           # te convierte en caracter
+    dplyr::left_join(mapping %>%                                             # te junta los dos df (mapping y data)
+                       dplyr::filter(VAR == current_var) %>%                 # pero solo coge la parte que nos interesa (solo cuando el valor de la variable es igual a current_var)
+                       dplyr::select(value, NOMBRE), by = "value") %>%       # se queda solo con las columnas que nos interesan (value y nombre)
+    dplyr::select(-value) %>%                                                # te elimina la columna value
+    dplyr::rename_with(~current_var, 'NOMBRE')                               # te renombra de nombre a current_var
+
+  return(data)
+}
+
+
 # standardize
 #'
 #' Details: function to standarize data names
 #' @param data dataset to be standardized
-# TO BE REPAIRED BY CLAUDIA ;)
 standardize <- function(data) {
-  data2 = data %>%
-    dplyr::mutate_at(3:ncol(data), as.character) %>%
-    tidyr::pivot_longer(cols = 3:ncol(data), names_to = "VAR_EPF") %>%
-    dplyr::left_join(mapping, by = c("VAR_EPF","value")) %>%
-    dplyr::mutate(VAR = ifelse(is.na(VAR), VAR_EPF, VAR)) %>%
-    dplyr::mutate(NOMBRE = ifelse(is.na(NOMBRE), value, NOMBRE)) %>%
-    dplyr::select(ANOENC, NUMERO, VAR, NOMBRE) %>%
-    tidyr::pivot_wider(names_from = NOMBRE, values_from = VAR)
-  return(data2)
+  # rename columns
+  old_names = colnames(data)                                                # te crea un vector con los nombres de las columnas
+  new_names = dplyr::left_join(data.frame(VAR_EPF = old_names),             # el vector de los nombres de las columnas se convierte en un df y el nombre de la columna es VAR_EPF
+                               mapping %>%
+                                 dplyr::select(VAR_EPF, VAR) %>%            # dentro del mapping selecciona solo las columnas que nos interesan
+                                 dplyr::distinct(.),                        # para eliminar duplicados
+                               by = 'VAR_EPF') %>%                          # Haces el left join en funcion a var_epf
+    dplyr::mutate(VAR = ifelse(is.na(VAR), VAR_EPF, VAR)) %>%               # cuando es na te pone var_epf y si no te pone var
+    dplyr::pull(VAR)                                                        # para solo quedarte con la columna var (como vector)
+  colnames(data) = new_names                                                # asignamos a los nombres de las columnas el nuevo vector
+
+  # rename values' codes to values' names
+  for (cc in intersect(unique(mapping$VAR), new_names)) {                   # para todas las columnas donde se puede hacer mapping de la variables sobreescribimos el dataset standarizado (con lunción rename_value)
+    data = rename_values(data, cc)
   }
 
+  return(data)
+}
 
 
 # load_epf

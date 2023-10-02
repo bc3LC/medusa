@@ -164,6 +164,9 @@ load_hbs <- function(year) {
   epf_hg <- dplyr::left_join( epf_hg , gender , by = "NUMERO" )
 
 
+  # **********************************************************************
+  # 4. Outputs of the function
+  # **********************************************************************
 
   return(list(epf_hg = epf_hg, epf_hgm = epf_hgm, epf_hc = epf_hc))
 
@@ -215,6 +218,35 @@ add_coicop <- function(year) {
 #' Details: main function to elevate the Spanish Household Budget Survey (HBS)
 #' @param year year of the HBS you want to elevate
 elevate_hbs <- function(year, country = "ES") {
+
+  # ************************************************************
+  # 1. Adjust HBS and national accounts population
+  # ************************************************************
+
+  # Enter population value of the NA: INE census 1 January
+  pop_NA <- eurostat::get_eurostat("demo_gind", time_format = "num")
+  pop_NA <- dplyr::filter(pop_NA, time == year & geo == country, indic_de == "JAN")
+  pop_NA <- pop_NA$values
+
+  # Calculate survey population: sum of households x members
+  pop_hbs <- sum(epf_hh$FACTOR*epf_hh$NMIEMB)
+
+  # Calculate the population adjustment factor (NA/HBS)
+  pop_adf <- pop_NA/pop_hbs
+
+  # Apply the population adjustment factor (factor hbs x pop_adf).
+  epf_hg <- epf_hg %>%
+    dplyr::mutate (HOGARESCN    = FACTOR * pop_adf  ,
+                   POBLACION    = FACTOR * NMIEMB   ,
+                   POBLACIONCN  = HOGARESCN *NMIEMB )
+
+  # Make sure that the population adjusted to the NA matches the NA population to know if the adjustment is well done.
+  if (round(sum(epf_hg$POBLACIONCN), digits = 0) == round( pop_NA, digits = 0) ){
+    print(paste0("AJUSTE POBLACION is correct"))
+  }
+
+  epf_hg1 <- epf_hg
+  epf_hg <- epf_hg1
 
 
 

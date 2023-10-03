@@ -297,3 +297,9 @@
 #' @source medusa
 #' @format .csv
 "lists"
+
+#' File containing household expenditure by COICOP category from the national accounts
+#'
+#' @source medusa
+#' @format .csv
+"gcfhogares95_22"

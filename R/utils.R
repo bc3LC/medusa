@@ -268,33 +268,78 @@ elevate_hbs <- function(year, country = "ES") {
 
     if (c==1){
       stat <- data.frame(COICOP = var,
-                         micro_ref = micro_ref,
-                         macro_ref = macro_ref[c])
+                         micro_ref = micro_ref)
     }else{
       stat <- rbind(stat, data.frame(COICOP = var,
-                                     micro_ref = micro_ref,
-                                     macro_ref = macro_ref[c]))
+                                     micro_ref = micro_ref))
     }
 
   }
 
-  EUR_A_073 <- sum(stat[stat$COICOP %in% c("EUR_A_073_T", "EUR_A_073_A", "EUR_A_073_M"),2])
-  stat[32,2] <- 6842046723
-  stat[33,2] <- 6842046723
-  stat[34,2] <- 6842046723
+  # Aggregate EUR_A_073
+  stat2 <- stat %>%
+           dplyr::filter(COICOP %in% c("EUR_A_073_T", "EUR_A_073_A", "EUR_A_073_M")) %>%
+           tibble::add_row( COICOP = "EUR_A_073", micro_ref = sum(.$micro_ref)) %>%
+           dplyr::filter(COICOP == "EUR_A_073")
+  stat <- rbind(stat, stat2)
 
-  stat <- stat %>% mutate(ca = macro_ref/micro_ref)
+  # Select macro_ref, add to stat and calculate micro-macro adjustment factor
+  macro <- gcfhogares95_22 %>%
+    dplyr::select(COICOP, as.character(year[1])) %>%
+    dplyr::rename('macro_ref' = as.character({{year}}))
+  macro$macro_ref <- as.numeric(gsub(",","",macro$macro_ref))                   # Convertir en numerico para poder calcular el coeficiente, para eso hay que quitarle las comas
 
-  # Apply adjustment coeficient
+  stat <- dplyr::left_join( stat , macro , by = "COICOP" )
+
+  stat <- dplyr::mutate(stat, coicop_adf = macro_ref*1000000/micro_ref)
+
+  # Apply adjustment coefficient
   for (c in 1:length(coicop)) {
     new = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_CN")
     var = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_PCN")
-    ca = paste0(eval(parse(text = paste0("stat$ca[", c, "]"))))
+    adf = paste0(eval(parse(text = paste0("stat$coicop_adf[", c, "]"))))
 
     eval(parse(text = paste0("epf_hg <- epf_hg %>%
-    mutate(", new, " = ", var, " * ", ca, ")")))
+    dplyr::mutate(", new, " = ", var, " * ", adf, ")")))
   }
 
+
+  # ************************************************************
+  # 3. Residents VS non-residents adjustment
+  # ************************************************************
+
+  # Calculate total hbs expenditure with the prevous adjustments
+
+  epf_hg <- epf_hg %>% mutate(GASTOT_CN = rowSums(dplyr::select(epf_hg, contains('_CN'))))
+
+  # Calculate adjustment coefficient
+  gf_na <- macro %>%
+    dplyr::filter(COICOP == "TOTAL") %>%
+    dplyr::select(macro_ref)
+  gf_na <- as.numeric(gf_na$macro_ref)
+  gf_na <- gf_na * 1000000
+
+  res_adf <- gf_na/sum(epf_hg$GASTOT_CN)
+
+  # Apply de adjustment coefficient
+  for (c in 1:length(coicop)) {
+    new = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_CNR")
+    var = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_CN")
+    adf = res_adf
+
+    eval(parse(text = paste0("epf_hg <- epf_hg %>%
+    mutate(", new, " = ", var, " * ", adf, ")")))
+
+  }
+
+  epf_hg <- epf_hg %>% mutate(GASTOT_CNR = rowSums(dplyr::select(epf_hg, contains('_CNR')))) #check
+
+  # Asegurarse de que la suma de gastos del fichero de hogares y el de hh_g coinciden
+  if (round(sum(epf_hg$GASTOT_CNR)) == gf_na) {
+    print(paste0("AJUSTE RESIDENTES/NO RESIDENTES is correct"))
+  }else{
+    print(paste0("AJUSTE RESIDENTES/NO RESIDENTES is wrong"))
+  }
 
 
 

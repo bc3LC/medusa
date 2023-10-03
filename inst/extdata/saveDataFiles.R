@@ -204,3 +204,8 @@ use_data(mapping, overwrite=T)
 # lists
 lists = read.csv(paste0(rawDataFolder,"lists.csv"),header=T)
 use_data(lists, overwrite=T)
+
+# gcfhogares95_22
+gcfhogares95_22 = read.csv(paste0(rawDataFolder,"gcfhogares95_22.csv"),header=T) %>%
+  dplyr::rename_with(~gsub("^X", "", .x), starts_with("X"))
+use_data(gcfhogares95_22, overwrite=T)

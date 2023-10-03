@@ -196,7 +196,9 @@ epf_2021_m = read.csv(paste0(rawDataFolder,"epf_2021_m.csv"),header=T)
 use_data(epf_2021_m, overwrite=T)
 
 # mapping
-mapping = read.csv(paste0(rawDataFolder,"mapping.csv"),header=T)
+mapping = read.csv(paste0(rawDataFolder,"mapping.csv"),header=T) %>%
+  # substitue all empty items for NA
+  dplyr::mutate_all(~dplyr::na_if(., ""))
 use_data(mapping, overwrite=T)
 
 # lists

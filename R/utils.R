@@ -37,8 +37,14 @@ standardize <- function(data) {
     dplyr::pull(VAR)                                                        # para solo quedarte con la columna var (como vector)
   colnames(data) = new_names                                                # asignamos a los nombres de las columnas el nuevo vector
 
-  # rename values' codes to values' names
-  for (cc in intersect(unique(mapping$VAR), new_names)) {                   # para todas las columnas donde se puede hacer mapping de la variables sobreescribimos el dataset standarizado (con lunción rename_value)
+  # rename values' codes to values' names for all items whose name is in the
+  # renamed mapping's column and have not NA values
+  ccitems = mapping %>%
+    dplyr::filter(VAR %in% intersect(unique(mapping$VAR), new_names),
+                  !is.na(value)) %>%
+    dplyr::pull(VAR) %>%
+    unique()
+  for (cc in ccitems) {                                                     # para todas las columnas donde se puede hacer mapping de la variables sobreescribimos el dataset standarizado (con función rename_value)
     data = rename_values(data, cc)
   }
 

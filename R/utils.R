@@ -192,7 +192,7 @@ add_coicop <- function(year) {
   # Load lists
 
   for (r in colnames(lists)) {
-    assign(r, lists %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))
+    assign(r, lists %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))      # Extrae una columna y se le asigna al nombre de la columna en un vector
   }
 
 
@@ -213,7 +213,7 @@ add_coicop <- function(year) {
 
   # Ensure that the sum of expenditure of the categories created matches the original total expenditure of the survey
   if (sum(epf_hg$GASTOT/epf_hg$FACTOR) == sum(rowSums(dplyr::select(epf_hg, contains(coicop))))){
-    print(paste0("The procedure is correct"))
+    print(paste0("Add coicop procedure is correct"))
   }
 
 }
@@ -251,8 +251,50 @@ elevate_hbs <- function(year, country = "ES") {
     print(paste0("AJUSTE POBLACION is correct"))
   }
 
-  epf_hg1 <- epf_hg
-  epf_hg <- epf_hg1
+  # ************************************************************
+  # 2. Adjust HBS and NA coicop categories
+  # ************************************************************
+
+  # Calculate the expenditure of each category at the level of NA population
+  for (c in 1:length(coicop)) {
+    new = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_PCN")
+    var = paste0(eval(parse(text = paste0("coicop[", c, "]"))))
+
+    eval(parse(text = paste0("epf_hg <- epf_hg %>%
+    dplyr::mutate(", new, " = ", var, " * HOGARESCN)")))
+
+    eval(parse(text = paste0("micro_ref <-
+    sum(epf_hg$", new, ")")))
+
+    if (c==1){
+      stat <- data.frame(COICOP = var,
+                         micro_ref = micro_ref,
+                         macro_ref = macro_ref[c])
+    }else{
+      stat <- rbind(stat, data.frame(COICOP = var,
+                                     micro_ref = micro_ref,
+                                     macro_ref = macro_ref[c]))
+    }
+
+  }
+
+  EUR_A_073 <- sum(stat[stat$COICOP %in% c("EUR_A_073_T", "EUR_A_073_A", "EUR_A_073_M"),2])
+  stat[32,2] <- 6842046723
+  stat[33,2] <- 6842046723
+  stat[34,2] <- 6842046723
+
+  stat <- stat %>% mutate(ca = macro_ref/micro_ref)
+
+  # Apply adjustment coeficient
+  for (c in 1:length(coicop)) {
+    new = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_CN")
+    var = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_PCN")
+    ca = paste0(eval(parse(text = paste0("stat$ca[", c, "]"))))
+
+    eval(parse(text = paste0("epf_hg <- epf_hg %>%
+    mutate(", new, " = ", var, " * ", ca, ")")))
+  }
+
 
 
 

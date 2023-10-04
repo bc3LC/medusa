@@ -189,7 +189,7 @@ add_coicop <- function(year) {
   # 1. Load lists with the coicop aggregation we want to use
   # **********************************************************************
 
-  # Load lists
+  # Convert lists df to vectors
 
   for (r in colnames(lists)) {
     assign(r, lists %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))      # Extrae una columna y se le asigna al nombre de la columna en un vector
@@ -216,10 +216,11 @@ add_coicop <- function(year) {
     print(paste0("Add coicop procedure is correct"))
   }
 
+  return(epf_hg)
 }
 
 
-# elevate
+# elevate_hbs
 #'
 #' Details: main function to elevate the Spanish Household Budget Survey (HBS)
 #' @param year year of the HBS you want to elevate
@@ -256,17 +257,16 @@ elevate_hbs <- function(year, country = "ES") {
   # ************************************************************
 
   # Calculate the expenditure of each category at the level of NA population
-  for (c in 1:length(coicop)) {
-    new = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_PCN")
-    var = paste0(eval(parse(text = paste0("coicop[", c, "]"))))
+  for (c in coicop) {
+    new = paste0( c, "_PCN")
+    var = c
 
-    eval(parse(text = paste0("epf_hg <- epf_hg %>%
-    dplyr::mutate(", new, " = ", var, " * HOGARESCN)")))
+    epf_hg <- epf_hg %>%
+      dplyr::mutate({{new}} := get(var) * HOGARESCN)
 
-    eval(parse(text = paste0("micro_ref <-
-    sum(epf_hg$", new, ")")))
+    micro_ref <- sum(epf_hg[[new]])
 
-    if (c==1){
+    if (!exists("stat")){
       stat <- data.frame(COICOP = var,
                          micro_ref = micro_ref)
     }else{
@@ -275,6 +275,7 @@ elevate_hbs <- function(year, country = "ES") {
     }
 
   }
+
 
   # Aggregate EUR_A_073
   stat2 <- stat %>%
@@ -291,16 +292,20 @@ elevate_hbs <- function(year, country = "ES") {
 
   stat <- dplyr::left_join( stat , macro , by = "COICOP" )
 
-  stat <- dplyr::mutate(stat, coicop_adf = macro_ref*1000000/micro_ref)
+  stat <- dplyr::mutate(stat, coicop_adf = macro_ref*1000000/micro_ref) %>%
+    dplyr::mutate(coicop_adf = ifelse(COICOP %in% c("EUR_A_073_T", "EUR_A_073_A", "EUR_A_073_M"), coicop_adf[which(COICOP == "EUR_A_073")], coicop_adf))                         # To do: generalozar este proceso a cualquier desagregacion
+
+  # Apply EUR_A_073 adf to EUR_A_073_T, EUR_A_073_A and EUR_A_073_M
+
 
   # Apply adjustment coefficient
-  for (c in 1:length(coicop)) {
-    new = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_CN")
-    var = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_PCN")
-    adf = paste0(eval(parse(text = paste0("stat$coicop_adf[", c, "]"))))
+  for (c in coicop) {
+    new = paste0( c, "_CN")
+    var = paste0( c, "_PCN")
+    adf = stat %>% dplyr::filter(COICOP == c) %>% dplyr::pull(coicop_adf)
 
-    eval(parse(text = paste0("epf_hg <- epf_hg %>%
-    dplyr::mutate(", new, " = ", var, " * ", adf, ")")))
+    epf_hg <- epf_hg %>%
+    dplyr::mutate({{new}} := get(var) * adf)
   }
 
 
@@ -310,7 +315,7 @@ elevate_hbs <- function(year, country = "ES") {
 
   # Calculate total hbs expenditure with the prevous adjustments
 
-  epf_hg <- epf_hg %>% mutate(GASTOT_CN = rowSums(dplyr::select(epf_hg, contains('_CN'))))
+  epf_hg <- epf_hg %>% dplyr::mutate(GASTOT_CN = rowSums(dplyr::select(epf_hg, contains('_CN'))))
 
   # Calculate adjustment coefficient
   gf_na <- macro %>%
@@ -322,17 +327,26 @@ elevate_hbs <- function(year, country = "ES") {
   res_adf <- gf_na/sum(epf_hg$GASTOT_CN)
 
   # Apply de adjustment coefficient
-  for (c in 1:length(coicop)) {
-    new = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_CNR")
-    var = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_CN")
+#  for (c in 1:length(coicop)) {
+#    new = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_CNR")
+#    var = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_CN")
+#    adf = res_adf
+#
+#    eval(parse(text = paste0("epf_hg <- epf_hg %>%
+#    dplyr::mutate(", new, " = ", var, " * ", adf, ")")))
+#
+#  }
+
+  for (c in coicop) {
+    new = paste0( c, "_CNR")
+    var = paste0( c, "_CN")
     adf = res_adf
 
-    eval(parse(text = paste0("epf_hg <- epf_hg %>%
-    mutate(", new, " = ", var, " * ", adf, ")")))
-
+    epf_hg <- epf_hg %>%
+      dplyr::mutate({{new}} := get(var) * adf)
   }
 
-  epf_hg <- epf_hg %>% mutate(GASTOT_CNR = rowSums(dplyr::select(epf_hg, contains('_CNR')))) #check
+  epf_hg <- epf_hg %>% dplyr::mutate(GASTOT_CNR = rowSums(dplyr::select(epf_hg, contains('_CNR')))) #check
 
   # Asegurarse de que la suma de gastos del fichero de hogares y el de hh_g coinciden
   if (round(sum(epf_hg$GASTOT_CNR)) == gf_na) {
@@ -341,6 +355,6 @@ elevate_hbs <- function(year, country = "ES") {
     print(paste0("AJUSTE RESIDENTES/NO RESIDENTES is wrong"))
   }
 
-
+  return(epf_hg)
 
 }

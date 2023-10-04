@@ -11,19 +11,19 @@
 calc_di <-function(input, year, elevate=F, save=T) {
 
   # load hbs files
-  raw_hbs <- load_hbs(year)
+  hbs <- load_hbs(year)
 
-  epf_hg  <- raw_hbs$epf_hg
-  epf_hgm <- raw_hbs$epf_hgm
-  epf_hc  <- raw_hbs$epf_hc
+  epf_hg  <- hbs$epf_hg
+  epf_hgm <- hbs$epf_hgm
+  epf_hc  <- hbs$epf_hc
 
   # add coicop categories
-
-
+  epf_hg <- add_coicop(year)
 
   # elevate the hbs
-
-
+  if(elevate=T){
+    epf <- elevate_hbs(year)
+    }
 
   # apply the shocks
 

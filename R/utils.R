@@ -327,16 +327,6 @@ elevate_hbs <- function(year, country = "ES") {
   res_adf <- gf_na/sum(epf_hg$GASTOT_CN)
 
   # Apply de adjustment coefficient
-#  for (c in 1:length(coicop)) {
-#    new = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_CNR")
-#    var = paste0(eval(parse(text = paste0("coicop[", c, "]"))), "_CN")
-#    adf = res_adf
-#
-#    eval(parse(text = paste0("epf_hg <- epf_hg %>%
-#    dplyr::mutate(", new, " = ", var, " * ", adf, ")")))
-#
-#  }
-
   for (c in coicop) {
     new = paste0( c, "_CNR")
     var = paste0( c, "_CN")

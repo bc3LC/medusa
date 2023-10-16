@@ -8,14 +8,19 @@ library(magrittr)
 #' @param data dataset to be standardized
 #' @param current_var column name to be standardized
 rename_values = function(data, current_var) {
-  data = data %>%
-    dplyr::rename(value = {{ current_var }}) %>%                             # renombra la columna (nombre de la variable) a value
-    dplyr::mutate(value = as.character(value)) %>%                           # te convierte en caracter
-    dplyr::left_join(mapping %>%                                             # te junta los dos df (mapping y data)
-                       dplyr::filter(VAR == current_var) %>%                 # pero solo coge la parte que nos interesa (solo cuando el valor de la variable es igual a current_var)
-                       dplyr::select(value, NOMBRE), by = "value") %>%       # se queda solo con las columnas que nos interesan (value y nombre)
-    dplyr::select(-value) %>%                                                # te elimina la columna value
-    dplyr::rename_with(~current_var, 'NOMBRE')                               # te renombra de nombre a current_var
+  exchange_data = mapping %>%                                             # te junta los dos df (mapping y data)
+    dplyr::filter(VAR == current_var) %>%                                 # pero solo coge la parte que nos interesa (solo cuando el valor de la variable es igual a current_var)
+    dplyr::select(value, NOMBRE)
+
+  if (sum(is.na(unique(exchange_data$value))) == 0) {                     # miramos si hay algun na en value y si es así no se aplica lo de abajo (para evitar errores con NMIEMB)
+    data = data %>%
+      dplyr::rename(value = {{ current_var }}) %>%                             # renombra la columna (nombre de la variable) a value
+      dplyr::mutate(value = as.character(value)) %>%                           # te convierte en caracter
+      dplyr::left_join(exchange_data, by = "value") %>%       # se queda solo con las columnas que nos interesan (value y nombre)
+      dplyr::select(-value) %>%                                                # te elimina la columna value
+      dplyr::rename_with(~current_var, 'NOMBRE')                               # te renombra de nombre a current_var
+  }
+
 
   return(data)
 }
@@ -346,5 +351,35 @@ elevate_hbs <- function(year, country = "ES") {
   }
 
   return(epf_hg)
+
+}
+
+
+# price_shock
+#'
+#' Details: main function to apply a specific price shock to the different COICOP categories
+price_shock <- function(data) {
+
+  scenarios <- colnames(shocks)[3:length(colnames(shocks))]
+
+  # Apply micro-macro shocks
+  for (s in scenarios) {
+    for (c in coicop) {
+      new = paste0( c, "_",s)
+      var = paste0( c, "_CNR")
+      shock = shocks[[s]][which(shocks$coicop == c)]
+
+      data <- data %>%
+        dplyr::mutate({{new}} := get(var) * shock)
+    }
+  }
+
+
+  # New total consumption
+
+  for (s in scenarios) {
+    eval(parse(text = paste0("epf_hg <- epf_hg %>%
+  mutate(GASTOT_", s, "= rowSums(dplyr::select(epf_hg, contains('", s, "'))))")))
+  }
 
 }

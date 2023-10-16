@@ -303,3 +303,9 @@
 #' @source medusa
 #' @format .csv
 "gcfhogares95_22"
+
+#' List to apply a specific price shock to the different COICOP categories
+#'
+#' @source medusa
+#' @format .csv
+"lists"

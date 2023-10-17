@@ -25,9 +25,18 @@ calc_di <-function(input, year, elevate=F, save=T) {
     epf <- elevate_hbs(year)
     }
 
-  # apply the shocks
+  # apply the price shocks
+  if(elevate=F){
+    epf <- epf_hg
+    for (c in coicop) {
+      new = paste0( c, "_CNR")
+      var = c
+      epf <- epf %>%
+        dplyr::mutate({{new}} := get(var))
+    }
+  }
 
-
+  price_shock(epf)
 
   # calculate distributional impacts
 

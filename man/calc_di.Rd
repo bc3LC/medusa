@@ -4,7 +4,7 @@
 \alias{calc_di}
 \title{Details: main function to calculate distributional impacts for different price shocks}
 \usage{
-calc_di(input, year, mapping, elevate = F, save = T)
+calc_di(input, year, elevate = F, save = T)
 }
 \arguments{
 \item{input}{from where to load input data, options = c(manual, gcam)}
@@ -14,6 +14,8 @@ calc_di(input, year, mapping, elevate = F, save = T)
 \item{elevate}{elevation to national accounting, options = c (T, F)}
 
 \item{save}{save the results, options = c (T, F)}
+
+\item{country}{country for simulation, in this case the package works only for Spain (ES)}
 }
 \description{
 Details: main function to calculate distributional impacts for different price shocks

@@ -57,7 +57,7 @@ standardize <- function(data) {
 }
 
 
-# load_epf
+# load_hbs
 #'
 #' Details: main function to load the Spanish Household Budget Survey (HBS)
 #' @param year year of the HBS you want to load
@@ -374,10 +374,13 @@ price_shock <- function(data) {
     }
   }
 
-
   # New total consumption
 
   for (s in scenarios) {
+
+    data <- data %>%
+      dplyr::mutate(paste0())
+
     eval(parse(text = paste0("epf_hg <- epf_hg %>%
   mutate(GASTOT_", s, "= rowSums(dplyr::select(epf_hg, contains('", s, "'))))")))
   }

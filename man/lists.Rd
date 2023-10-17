@@ -6,22 +6,14 @@
 \title{List to add coicop categories}
 \format{
 .csv
-
-.csv
 }
 \source{
-medusa
-
 medusa
 }
 \usage{
 lists
-
-lists
 }
 \description{
 List to add coicop categories
-
-List to apply a specific price shock to the different COICOP categories
 }
 \keyword{datasets}

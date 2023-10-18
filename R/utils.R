@@ -7,6 +7,7 @@ library(magrittr)
 #' Details: function to rename the codified values of the dataset to the meaningful values detailed in the mapping
 #' @param data dataset to be standardized
 #' @param current_var column name to be standardized
+#' @export
 rename_values = function(data, current_var) {
   exchange_data = mapping %>%                                             # te junta los dos df (mapping y data)
     dplyr::filter(VAR == current_var) %>%                                 # pero solo coge la parte que nos interesa (solo cuando el valor de la variable es igual a current_var)
@@ -30,6 +31,7 @@ rename_values = function(data, current_var) {
 #'
 #' Details: function to standarize data names
 #' @param data dataset to be standardized
+#' @export
 standardize <- function(data) {
   # rename columns
   old_names = colnames(data)                                                # te crea un vector con los nombres de las columnas
@@ -61,6 +63,7 @@ standardize <- function(data) {
 #'
 #' Details: main function to load the Spanish Household Budget Survey (HBS)
 #' @param year year of the HBS you want to load
+#' @return a list with the 3 files of the HBS
 #' @export
 load_hbs <- function(year) {
 
@@ -189,6 +192,7 @@ load_hbs <- function(year) {
 #'
 #' Details: main function to add coicop categories in the Spanish Household Budget Survey (HBS)
 #' @param year year of the HBS you want to use
+#' @export
 add_coicop <- function(year) {
 
   # **********************************************************************
@@ -221,6 +225,7 @@ add_coicop <- function(year) {
   if (sum(epf_hg$GASTOT/epf_hg$FACTOR) == sum(rowSums(dplyr::select(epf_hg, contains(coicop))))){
     print(paste0("Add coicop procedure is correct"))
   }
+
 
   return(epf_hg)
 }
@@ -384,26 +389,61 @@ price_shock <- function(data) {
     data <- data %>%
       dplyr::mutate({{new}} := rowSums(dplyr::select(data, dplyr::contains(s))))
 
-   }
   }
+
+  epf <- data
+
+  return(epf)
+
+}
 
 
 # impact
 #'
 #' Details: main function to apply a specific price shock to the different COICOP categories
 #' @param data input data calculate
-impact <- function(data) {
+#' @param var socioeconomic or demographic variable/s................ By default: all variables in categories
+impact <- function(data, var = categories$categories) {
 
-new_list = list()
-for (g in categories) {
-  gastotS_cols <- grep("^GASTOT_s", names(dataset), value = TRUE)
-  assign(paste0('di_',g),
-         epf_hg1 %>%
-           group_by(!!dplyr::sym(g)) %>%
-           summarise(VARIABLE = g,
-                     WEIGHT = sum(FACTOR),
-                     across(all_of(gastotS_cols), list(DI_s = ~ (sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)), .names = "DI_{.col}"))
-  )
-  new_list[[paste0('di_',g)]] = get(paste0('di_',g))
+  d_impacts = list()                                                                                        # Generamos una lista vacia
+  for (g in var) {
+    gastotS_cols <- grep("^GASTOT_s", names(data), value = TRUE)                                           # generamos un vector con todos los nombres que empiecen por GASTOT_s
+    assign(paste0('di_',g),                                                                                # asignamos todo lo que se calcula debajo a di_ g (del loop)
+           data %>%
+             dplyr::group_by(!!dplyr::sym(g)) %>%                                                          # agrupamos por g, sym es para que entienda el valor de g (sustituye el get)
+             dplyr::summarise(VARIABLE = g,                                                                # crear las columnas siguientes
+                       WEIGHT = sum(FACTOR),
+                       dplyr::across(dplyr::all_of(gastotS_cols),                                          # para todas las columnas que estan en gastotS_cols
+                                     list(DI_s = ~ (sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),            # generamos una nueva columna con los impactos distributivos, donde sum(.) es el valor de la columna que estamos usando
+                                     .names = "DI_{.col}")) %>%                                            # cambiamos el nombre de la columna añadiendo DI al nombre de columna que esta usando
+             dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))            # cambiamos los nombres de las columnas que empiezen por DI_GASTOT a DI_ solo (gsub es para sustituir y lo segundo para que solo se fije en las que empiezan por DI_GASTOT)
+    )
+    d_impacts[[paste0('di_',g)]] = get(paste0('di_',g))                                                     # añadir el resultado a la lista con el nombre di_g
+  }
+
+  return(d_impacts)
 }
+
+# graph
+#'
+#' Details: main function to apply a specific price shock to the different COICOP categories
+#' @param data input data calculate
+#' @param var socioeconomic or demographic variable/s................ By default: all variables in categories
+graph <- function(data, var = categories$categories){
+  if (!dir.exists("figures")) {dir.create("figures")}
+  for (g in var) {
+    datapl <- data[[paste0("di_",g)]] %>%
+      tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
+      dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", ""))
+
+    pl <- ggplot2::ggplot(datapl, aes(x = !!dplyr::sym(g), y = Impact)) +
+      ggplot2::geom_col(position = position_dodge(width = 1)) +
+      ggplot2::facet_grid(.~Scenario) +
+      ggplot2::labs(y = "Change in welfare (%)", x = element_blank()) +
+      ggplot2::theme(legend.position = "bottom") +
+      ggplot2::theme(legend.title = g) + #esto no me funciona
+      ggplot2::theme(text = element_text(size = 16))
+    save(pl, file = paste0("figures/DI_",g,".png"))
+  }
+
 }

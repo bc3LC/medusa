@@ -61,6 +61,7 @@ standardize <- function(data) {
 #'
 #' Details: main function to load the Spanish Household Budget Survey (HBS)
 #' @param year year of the HBS you want to load
+#' @export
 load_hbs <- function(year) {
 
 
@@ -358,11 +359,12 @@ elevate_hbs <- function(year, country = "ES") {
 # price_shock
 #'
 #' Details: main function to apply a specific price shock to the different COICOP categories
+#' @param data input data to apply the price shocks
 price_shock <- function(data) {
 
   scenarios <- colnames(shocks)[3:length(colnames(shocks))]
 
-  # Apply micro-macro shocks
+  # Apply the price shocks
   for (s in scenarios) {
     for (c in coicop) {
       new = paste0( c, "_",s)
@@ -374,15 +376,34 @@ price_shock <- function(data) {
     }
   }
 
-  # New total consumption
+  # Calculate new total consumption
 
   for (s in scenarios) {
+    new = paste0("GASTOT_", s)
 
     data <- data %>%
-      dplyr::mutate(paste0())
+      dplyr::mutate({{new}} := rowSums(dplyr::select(data, dplyr::contains(s))))
 
-    eval(parse(text = paste0("epf_hg <- epf_hg %>%
-  mutate(GASTOT_", s, "= rowSums(dplyr::select(epf_hg, contains('", s, "'))))")))
+   }
   }
 
+
+# impact
+#'
+#' Details: main function to apply a specific price shock to the different COICOP categories
+#' @param data input data calculate
+impact <- function(data) {
+
+new_list = list()
+for (g in categories) {
+  gastotS_cols <- grep("^GASTOT_s", names(dataset), value = TRUE)
+  assign(paste0('di_',g),
+         epf_hg1 %>%
+           group_by(!!dplyr::sym(g)) %>%
+           summarise(VARIABLE = g,
+                     WEIGHT = sum(FACTOR),
+                     across(all_of(gastotS_cols), list(DI_s = ~ (sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)), .names = "DI_{.col}"))
+  )
+  new_list[[paste0('di_',g)]] = get(paste0('di_',g))
+}
 }

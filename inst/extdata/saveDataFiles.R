@@ -213,3 +213,7 @@ use_data(gcfhogares95_22, overwrite=T)
 # shocks
 shocks = read.csv(paste0(rawDataFolder,"shocks.csv"),header=T)
 use_data(shocks, overwrite=T)
+
+# categories
+categories = read.csv(paste0(rawDataFolder,"categories.csv"),header=T)
+use_data(categories, overwrite=T)

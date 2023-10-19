@@ -1,6 +1,6 @@
 library(usethis)
 library(magrittr)
-
+library(medusa)
 
 # rename_values
 #'
@@ -235,6 +235,7 @@ add_coicop <- function(year) {
 #'
 #' Details: main function to elevate the Spanish Household Budget Survey (HBS)
 #' @param year year of the HBS you want to elevate
+#' @export
 elevate_hbs <- function(year, country = "ES") {
 
   # ************************************************************
@@ -365,6 +366,7 @@ elevate_hbs <- function(year, country = "ES") {
 #'
 #' Details: main function to apply a specific price shock to the different COICOP categories
 #' @param data input data to apply the price shocks
+#' @export
 price_shock <- function(data) {
 
   scenarios <- colnames(shocks)[3:length(colnames(shocks))]
@@ -400,10 +402,12 @@ price_shock <- function(data) {
 
 # impact
 #'
-#' Details: main function to apply a specific price shock to the different COICOP categories
+#' Details: main function to calculate the distributional impacts based in one or more socioeconomic or demographic variables
 #' @param data input data calculate
-#' @param var socioeconomic or demographic variable/s................ By default: all variables in categories
-impact <- function(data, var = categories$categories) {
+#' @param var socioeconomic or demographic variable/s for which distributional impacts are calculated. By default: all variables in categories.
+#' @param fig generates and saves a figure that summarises the distributional impacts. By default it is F, for the figure to be saved indicate T
+#' @export
+impact <- function(data, var = categories$categories, fig = F) {
 
   d_impacts = list()                                                                                        # Generamos una lista vacia
   for (g in var) {
@@ -421,15 +425,88 @@ impact <- function(data, var = categories$categories) {
     d_impacts[[paste0('di_',g)]] = get(paste0('di_',g))                                                     # añadir el resultado a la lista con el nombre di_g
   }
 
+  if (fig == T) {
+
+    if (!dir.exists("figures")) {dir.create("figures")}
+    for (g in var) {
+      datapl <- data[[paste0("di_",g)]] %>%
+        tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
+        dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", ""))
+
+      pl <- ggplot2::ggplot(datapl, ggplot2::aes(x = !!dplyr::sym(g), y = Impact)) +
+        ggplot2::geom_col(position = ggplot2::position_dodge(width = 1)) +
+        ggplot2::facet_grid(.~Scenario) +
+        ggplot2::labs(y = "Change in welfare (%)", x = g) +
+        ggplot2::theme(legend.position = "bottom") +
+        ggplot2::theme(text = ggplot2::element_text(size = 16))
+      save(pl, file = paste0("figures/DI_",g,".png"))
+    }
+  }
+
   return(d_impacts)
+
 }
 
-# graph
+# basic_graph
 #'
-#' Details: main function to apply a specific price shock to the different COICOP categories
+#' Details: main function to create a graph to summarize the distributional impact based in one or more socioeconomic or demographic variable (one plot per variable)
 #' @param data input data calculate
-#' @param var socioeconomic or demographic variable/s................ By default: all variables in categories
-graph <- function(data, var = categories$categories){
+#' @param var socioeconomic or demographic variable/s for which figures are generated. By default: all variables in categories.
+#' @export
+basic_graph <- function(data, var = categories$categories){
+  if (!dir.exists("figures")) {dir.create("figures")}
+  for (g in var) {
+    datapl <- data[[paste0("di_",g)]] %>%
+      tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
+      dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", ""))
+
+    pl <- ggplot2::ggplot(datapl, ggplot2::aes(x = !!dplyr::sym(g), y = Impact)) +
+      ggplot2::geom_col(position = ggplot2::position_dodge(width = 1)) +
+      ggplot2::facet_grid(.~Scenario) +
+      ggplot2::labs(y = "Change in welfare (%)", x = g) +
+      ggplot2::theme(legend.position = "bottom") +
+      ggplot2::theme(text = ggplot2::element_text(size = 16))
+    save(pl, file = paste0("figures/DI_",g,".png"))
+  }
+
+}
+
+# impact_intersectional
+#'
+#' Details: main function to calculate the distributional impacts based in one or more socioeconomic or demographic variables
+#' @param data input data calculate
+#' @param var1 first socioeconomic or demographic variable for which intersectional distributional impact is calculated. By default: all variables of category_a in is_categories.
+#' @param var2 second socioeconomic or demographic variable for which intersectional distributional impact is calculated. By default: all variables of category_b in is_categories.
+#' @export
+impact_intersectional <- function(data, var1 = is_categories$category_a, var2 = is_categories$category_b) {
+
+  is_d_impacts = list()                                                                                        # Generamos una lista vacia
+  for (g in var) {
+    gastotS_cols <- grep("^GASTOT_s", names(data), value = TRUE)                                           # generamos un vector con todos los nombres que empiecen por GASTOT_s
+    assign(paste0('di_',g),                                                                                # asignamos todo lo que se calcula debajo a di_ g (del loop)
+           data %>%
+             dplyr::group_by(!!dplyr::sym(g)) %>%                                                          # agrupamos por g, sym es para que entienda el valor de g (sustituye el get)
+             dplyr::summarise(VARIABLE = g,                                                                # crear las columnas siguientes
+                              WEIGHT = sum(FACTOR),
+                              dplyr::across(dplyr::all_of(gastotS_cols),                                          # para todas las columnas que estan en gastotS_cols
+                                            list(DI_s = ~ (sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),            # generamos una nueva columna con los impactos distributivos, donde sum(.) es el valor de la columna que estamos usando
+                                            .names = "DI_{.col}")) %>%                                            # cambiamos el nombre de la columna añadiendo DI al nombre de columna que esta usando
+             dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))            # cambiamos los nombres de las columnas que empiezen por DI_GASTOT a DI_ solo (gsub es para sustituir y lo segundo para que solo se fije en las que empiezan por DI_GASTOT)
+    )
+    is_d_impacts[[paste0('di_',g)]] = get(paste0('di_',g))                                                     # añadir el resultado a la lista con el nombre di_g
+  }
+
+  return(is_d_impacts)
+}
+
+# intersectional_graph
+#'
+#' Details: main function to create a graph to summarize the distributional impact based in the intersection of two socioeconomic or demographic variables (2 variables per plot)
+#' @param data input data calculate
+#' @param var1 socioeconomic or demographic variable/s................ By default: all variables in categories
+#' @param var2 socioeconomic or demographic variable/s................ By default: all variables in categories
+#' @export
+intersectional_graph <- function(data, var1 = categories$categories, var2=){
   if (!dir.exists("figures")) {dir.create("figures")}
   for (g in var) {
     datapl <- data[[paste0("di_",g)]] %>%
@@ -441,7 +518,7 @@ graph <- function(data, var = categories$categories){
       ggplot2::facet_grid(.~Scenario) +
       ggplot2::labs(y = "Change in welfare (%)", x = element_blank()) +
       ggplot2::theme(legend.position = "bottom") +
-      ggplot2::theme(legend.title = g) + #esto no me funciona
+      ggplot2::theme(legend.title = "g") + #esto no me funciona
       ggplot2::theme(text = element_text(size = 16))
     save(pl, file = paste0("figures/DI_",g,".png"))
   }

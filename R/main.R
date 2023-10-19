@@ -21,12 +21,12 @@ calc_di <-function(input, year, elevate=F, save=T) {
   epf_hg <- add_coicop(year)
 
   # elevate the hbs
-  if(elevate==T){
+  if(elevate == T){
     epf <- elevate_hbs(year)
     }
 
   # apply the price shocks
-  if(elevate==F){
+  if(elevate == F){
     epf <- epf_hg
     for (c in coicop) {
       new = paste0( c, "_CNR")

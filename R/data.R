@@ -304,8 +304,14 @@
 #' @format .csv
 "gcfhogares95_22"
 
-#' List to apply a specific price shock to the different COICOP categories
+#' List containing the socioeconomic and demographic categories for the calculation of distributional impacts
 #'
 #' @source medusa
 #' @format .csv
-"shocks"
+"categories"
+
+#' List containing the socioeconomic and demographic categories for the calculation of intersectional distributional impacts
+#'
+#' @source medusa
+#' @format .csv
+"is_categories"

@@ -217,3 +217,7 @@ use_data(shocks, overwrite=T)
 # categories
 categories = read.csv(paste0(rawDataFolder,"categories.csv"),header=T)
 use_data(categories, overwrite=T)
+
+# is_categories
+is_categories = read.csv(paste0(rawDataFolder,"is_categories.csv"),header=T)
+use_data(is_categories, overwrite=T)

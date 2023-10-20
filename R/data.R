@@ -315,3 +315,10 @@
 #' @source medusa
 #' @format .csv
 "is_categories"
+
+#' Clean hbs list for 2015
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2015"
+

@@ -221,3 +221,7 @@ use_data(categories, overwrite=T)
 # is_categories
 is_categories = read.csv(paste0(rawDataFolder,"is_categories.csv"),header=T)
 use_data(is_categories, overwrite=T)
+
+# epf_list
+epf_list_2015 = get(load(paste0(rawDataFolder,"/epf_lists/epf_list_2015.RData")))
+use_data(epf_list_2015, overwrite=T)

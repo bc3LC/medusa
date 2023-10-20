@@ -10,19 +10,19 @@
 
 calc_di <-function(input, year, elevate=F, save=T) {
 
-  # load hbs files
-  hbs <- load_hbs(year)
+  # get hbs files
+  hbs <- get(paste0("epf_list_", year))
 
   epf_hg  <- hbs$epf_hg
   epf_hgm <- hbs$epf_hgm
   epf_hc  <- hbs$epf_hc
 
   # add coicop categories
-  epf_hg <- add_coicop(year)
+  epf_hg <- add_coicop(epf_hg, year)
 
   # elevate the hbs
   if(elevate == T){
-    epf <- elevate_hbs(year)
+    epf <- elevate_hbs(epf_hg, year)
     }
 
   # apply the price shocks

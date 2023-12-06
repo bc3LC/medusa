@@ -2,15 +2,15 @@ VAR_EPF,VAR,VAR_EN,value,NOMBRE,NAME
 CCAA,CCAA,REGION,1,Andalucía,Andalucía
 CCAA,CCAA,REGION,2,Aragón,Aragón
 CCAA,CCAA,REGION,3,Asturias,Asturias
-CCAA,CCAA,REGION,4,Baleares ,Baleares
+CCAA,CCAA,REGION,4,Baleares,Baleares
 CCAA,CCAA,REGION,5,Canarias,Canarias
 CCAA,CCAA,REGION,6,Cantabria,Cantabria
 CCAA,CCAA,REGION,7,Castilla y León,Castilla y León
 CCAA,CCAA,REGION,8,Castilla La Mancha,Castilla La Mancha
 CCAA,CCAA,REGION,9,Cataluña,Cataluña
 CCAA,CCAA,REGION,10,Comunidad Valenciana,Comunidad Valenciana
-CCAA,CCAA,REGION,11,Extremadura ,Extremadura
-CCAA,CCAA,REGION,12,Galicia ,Galicia
+CCAA,CCAA,REGION,11,Extremadura,Extremadura
+CCAA,CCAA,REGION,12,Galicia,Galicia
 CCAA,CCAA,REGION,13,Madrid,Madrid
 CCAA,CCAA,REGION,14,Murcia,Murcia
 CCAA,CCAA,REGION,15,Navarra,Navarra

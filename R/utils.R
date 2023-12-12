@@ -80,6 +80,7 @@ load_rawhbs <- function(year) {
 
   if (typeof(epf_hg$CODIGO) == "integer"){
     epf_hg$CODIGO <- as.character(epf_hg$CODIGO)
+    epf_hg <- epf_hg %>% dplyr::filter(!is.na(CODIGO))
     epf_hg[nchar(epf_hg$CODIGO) == 4,]$CODIGO <- paste0("0",  epf_hg[nchar(epf_hg$CODIGO) == 4,]$CODIGO)
   }
 
@@ -122,7 +123,7 @@ load_rawhbs <- function(year) {
 
 
   # Asegurarse de que la suma de gastos del fichero de hogares y el de hh_g coinciden
-  if (sum(hh_g[2:length(hh_g)]) == sum(epf_hh$GASTOT/epf_hh$FACTOR)) {
+  if (sum(hh_g[2:length(hh_g)], na.rm = TRUE) == sum(epf_hh$GASTOT/epf_hh$FACTOR, na.rm = TRUE)) {
     print(paste0("UNION is correct"))
   }else{
     print(paste0("UNION is wrong"))
@@ -157,6 +158,7 @@ load_rawhbs <- function(year) {
     }
     return(y)
   }
+
   epf_hg$DECIL <- Nquantiles(epf_hg$GASTOT_UC2, w = epf_hg$FACTOR , 10)
 
   # Create the variable: QUINTIL
@@ -182,9 +184,9 @@ load_rawhbs <- function(year) {
                                   ifelse(share_female >= 0.8                      ,"GF5", "Not provided"))))))
 
   # Create the variable: POBREZA
-  med_gastot <- spatstat::weighted.median(epf_hg$GASTOT_UC2, epf_hg$FACTOR, na.rm = TRUE)
+  med_gastot <- spatstat.geom::weighted.median(epf_hg$GASTOT_UC2, epf_hg$FACTOR, na.rm = TRUE)
   u_pobreza <- 0.6*med_gastot
-  dplyr::mutate(epf_hg, POBREZA =ifelse(GASTOT_UC2 < u_pobreza, "En riesgo", "Sin riesgo"))
+  epf_hg <- dplyr::mutate(epf_hg, POBREZA =ifelse(GASTOT_UC2 < u_pobreza, "En riesgo", "Sin riesgo"))
 
   # Merge the data generated at the household level by HA04 (household ID) in hg dataset
   epf_hg <- dplyr::left_join( epf_hg , gender , by = "NUMERO" )

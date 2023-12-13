@@ -4,9 +4,11 @@
 \alias{elevate_hbs}
 \title{Details: main function to elevate the Spanish Household Budget Survey (HBS)}
 \usage{
-elevate_hbs(year, country = "ES")
+elevate_hbs(data, year, country = "ES")
 }
 \arguments{
+\item{data}{description}
+
 \item{year}{year of the HBS you want to elevate}
 }
 \description{

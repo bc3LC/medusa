@@ -2,13 +2,17 @@
 % Please edit documentation in R/utils.R
 \name{impact}
 \alias{impact}
-\title{Details: main function to apply a specific price shock to the different COICOP categories}
+\title{Details: main function to calculate the distributional impacts based in one or more socioeconomic or demographic variables}
 \usage{
-impact(data)
+impact(data, var = categories$categories, fig = T)
 }
 \arguments{
 \item{data}{input data calculate}
+
+\item{var}{socioeconomic or demographic variable/s for which distributional impacts are calculated. By default: all variables in categories.}
+
+\item{fig}{generates and saves a figure that summarises the distributional impacts. By default it is T, for the figure/s not to be saved indicate F}
 }
 \description{
-Details: main function to apply a specific price shock to the different COICOP categories
+Details: main function to calculate the distributional impacts based in one or more socioeconomic or demographic variables
 }

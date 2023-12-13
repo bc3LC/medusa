@@ -1,6 +1,5 @@
 library(usethis)
 library(magrittr)
-library(medusa)
 
 # rename_values
 #'

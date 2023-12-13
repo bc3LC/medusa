@@ -4,9 +4,11 @@
 \alias{add_coicop}
 \title{Details: main function to add coicop categories in the Spanish Household Budget Survey (HBS)}
 \usage{
-add_coicop(year)
+add_coicop(data, year)
 }
 \arguments{
+\item{data}{description}
+
 \item{year}{year of the HBS you want to use}
 }
 \description{

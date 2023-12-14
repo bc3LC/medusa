@@ -213,6 +213,9 @@ add_coicop <- function(data, year) {
   # 1. Load lists with the coicop aggregation we want to use
   # **********************************************************************
 
+  # Get the mapping list
+  lists <- get(paste0("coicop_", year))
+
   # Convert lists df to vectors
 
   for (r in colnames(lists)) {
@@ -227,13 +230,8 @@ add_coicop <- function(data, year) {
   # Add consumption variables
   epf_hg <- data
   for (c in coicop) {
-    if(c %in% issue_empty){
-      eval(parse(text = paste0("epf_hg <- epf_hg %>%
-                                dplyr::mutate(", c, " = 0)")))
-    } else {
       eval(parse(text = paste0("epf_hg <- epf_hg %>%
                                 dplyr::mutate(", c, " = rowSums(dplyr::select(epf_hg, contains(c(", c, ")))))")))
-    }
   }
 
   # Ensure that the sum of expenditure of the categories created matches the original total expenditure of the survey

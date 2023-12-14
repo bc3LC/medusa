@@ -286,36 +286,6 @@
 #' @format .csv
 "epf_2021_m"
 
-#' Mapping to rename socioeconomic variables
-#'
-#' @source medusa
-#' @format .csv
-"mapping"
-
-#' List to add coicop categories
-#'
-#' @source medusa
-#' @format .csv
-"lists"
-
-#' File containing household expenditure by COICOP category from the national accounts
-#'
-#' @source medusa
-#' @format .csv
-"gcfhogares95_22"
-
-#' List containing the socioeconomic and demographic categories for the calculation of distributional impacts
-#'
-#' @source medusa
-#' @format .csv
-"categories"
-
-#' List containing the socioeconomic and demographic categories for the calculation of intersectional distributional impacts
-#'
-#' @source medusa
-#' @format .csv
-"is_categories"
-
 #' Clean hbs list for 2006
 #'
 #' @source medusa
@@ -411,4 +381,132 @@
 #' @source medusa
 #' @format .RData
 "epf_list_2021"
+#' Mapping to rename socioeconomic variables
+#'
+#' @source medusa
+#' @format .csv
+"mapping"
+
+#' List to add coicop categories
+#'
+#' @source medusa
+#' @format .csv
+"lists"
+
+#' List to add coicop categories for 2006
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2006"
+
+#' List to add coicop categories for 2007
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2007"
+
+#' List to add coicop categories for 2008
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2008"
+
+#' List to add coicop categories for 2009
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2009"
+
+#' List to add coicop categories for 2010
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2010"
+
+#' List to add coicop categories for 2011
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2011"
+
+#' List to add coicop categories for 2012
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2012"
+
+#' List to add coicop categories for 2013
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2013"
+
+#' List to add coicop categories for 2014
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2014"
+
+#' List to add coicop categories for 2015
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2015"
+
+#' List to add coicop categories for 2016
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2016"
+
+#' List to add coicop categories for 2017
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2017"
+
+#' List to add coicop categories for 2018
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2018"
+
+#' List to add coicop categories for 2019
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2019"
+
+#' List to add coicop categories for 2020
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2020"
+
+#' List to add coicop categories for 2021
+#'
+#' @source medusa
+#' @format .csv
+"coicop_2021"
+
+
+#' File containing household expenditure by COICOP category from the national accounts
+#'
+#' @source medusa
+#' @format .csv
+"gcfhogares95_22"
+
+#' List containing the socioeconomic and demographic categories for the calculation of distributional impacts
+#'
+#' @source medusa
+#' @format .csv
+"categories"
+
+#' List containing the socioeconomic and demographic categories for the calculation of intersectional distributional impacts
+#'
+#' @source medusa
+#' @format .csv
+"is_categories"
+
+
 

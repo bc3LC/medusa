@@ -316,9 +316,99 @@
 #' @format .csv
 "is_categories"
 
+#' Clean hbs list for 2006
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2006"
+
+#' Clean hbs list for 2007
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2007"
+
+#' Clean hbs list for 2008
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2008"
+
+#' Clean hbs list for 2009
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2009"
+
+#' Clean hbs list for 2010
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2010"
+
+#' Clean hbs list for 2011
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2011"
+
+#' Clean hbs list for 2012
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2012"
+
+#' Clean hbs list for 2013
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2013"
+
+#' Clean hbs list for 2014
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2014"
+
 #' Clean hbs list for 2015
 #'
 #' @source medusa
 #' @format .RData
 "epf_list_2015"
+
+#' Clean hbs list for 2016
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2016"
+
+#' Clean hbs list for 2017
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2017"
+
+#' Clean hbs list for 2018
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2018"
+
+#' Clean hbs list for 2019
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2019"
+
+#' Clean hbs list for 2020
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2020"
+
+#' Clean hbs list for 2021
+#'
+#' @source medusa
+#' @format .RData
+"epf_list_2021"
 

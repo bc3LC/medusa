@@ -222,6 +222,68 @@ use_data(categories, overwrite=T)
 is_categories = read.csv(paste0(rawDataFolder,"is_categories.csv"),header=T)
 use_data(is_categories, overwrite=T)
 
-# epf_list
+# epf_list_2006
+epf_list_2006 = get(load(paste0(rawDataFolder,"epf_lists/epf_list_2006.RData")))
+use_data(epf_list_2006, overwrite=T)
+
+# epf_list_2007
+epf_list_2007 = get(load(paste0(rawDataFolder,"epf_lists/epf_list_2007.RData")))
+use_data(epf_list_2007, overwrite=T)
+
+# epf_list_2008
+epf_list_2008 = get(load(paste0(rawDataFolder,"epf_lists/epf_list_2008.RData")))
+use_data(epf_list_2008, overwrite=T)
+
+# epf_list_2009
+epf_list_2009 = get(load(paste0(rawDataFolder,"epf_lists/epf_list_2009.RData")))
+use_data(epf_list_2006, overwrite=T)
+
+# epf_list_2010
+epf_list_2010 = get(load(paste0(rawDataFolder,"epf_lists/epf_list_2010.RData")))
+use_data(epf_list_2010, overwrite=T)
+
+# epf_list_2011
+epf_list_2011 = get(load(paste0(rawDataFolder,"epf_lists/epf_list_2011.RData")))
+use_data(epf_list_2011, overwrite=T)
+
+# epf_list_2012
+epf_list_2012 = get(load(paste0(rawDataFolder,"epf_lists/epf_list_2012.RData")))
+use_data(epf_list_2012, overwrite=T)
+
+# epf_list_2013
+epf_list_2013 = get(load(paste0(rawDataFolder,"epf_lists/epf_list_2013.RData")))
+use_data(epf_list_2013, overwrite=T)
+
+# epf_list_2014
+epf_list_2014 = get(load(paste0(rawDataFolder,"epf_lists/epf_list_2014.RData")))
+use_data(epf_list_2014, overwrite=T)
+
+# epf_list_2015
 epf_list_2015 = get(load(paste0(rawDataFolder,"/epf_lists/epf_list_2015.RData")))
 use_data(epf_list_2015, overwrite=T)
+
+# epf_list_2016
+epf_list_2016 = get(load(paste0(rawDataFolder,"/epf_lists/epf_list_2016.RData")))
+use_data(epf_list_2016, overwrite=T)
+
+# epf_list_2017
+epf_list_2017 = get(load(paste0(rawDataFolder,"/epf_lists/epf_list_2017.RData")))
+use_data(epf_list_2017, overwrite=T)
+
+# epf_list_2018
+epf_list_2018 = get(load(paste0(rawDataFolder,"/epf_lists/epf_list_2018.RData")))
+use_data(epf_list_2018, overwrite=T)
+
+# epf_list_2019
+epf_list_2019 = get(load(paste0(rawDataFolder,"/epf_lists/epf_list_2019.RData")))
+use_data(epf_list_2019, overwrite=T)
+
+# epf_list_2020
+epf_list_2020 = get(load(paste0(rawDataFolder,"/epf_lists/epf_list_2020.RData")))
+use_data(epf_list_2020, overwrite=T)
+
+# epf_list_2021
+epf_list_2021 = get(load(paste0(rawDataFolder,"/epf_lists/epf_list_2021.RData")))
+use_data(epf_list_2021, overwrite=T)
+
+

@@ -209,7 +209,7 @@ use_data(epf_list_2008, overwrite=T)
 
 # epf_list_2009
 epf_list_2009 = get(load(paste0(rawDataFolder,"epf_lists/epf_list_2009.RData")))
-use_data(epf_list_2006, overwrite=T)
+use_data(epf_list_2009, overwrite=T)
 
 # epf_list_2010
 epf_list_2010 = get(load(paste0(rawDataFolder,"epf_lists/epf_list_2010.RData")))

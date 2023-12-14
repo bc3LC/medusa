@@ -264,7 +264,7 @@ elevate_hbs <- function(data, year, country = "ES") {
   pop_NA <- pop_NA$values
 
   # Calculate survey population: sum of households x members
-  pop_hbs <- sum(epf_hh$FACTOR*epf_hh$NMIEMB)
+  pop_hbs <- sum(epf_hg$FACTOR*epf_hg$NMIEMB)
 
   # Calculate the population adjustment factor (NA/HBS)
   pop_adf <- pop_NA/pop_hbs
@@ -384,6 +384,15 @@ elevate_hbs <- function(data, year, country = "ES") {
 #' @param data input data to apply the price shocks
 #' @export
 price_shock <- function(data) {
+
+  # Get the shock list
+  shocks <- get("shocks")
+
+  # Convert lists df to vectors
+
+  for (r in colnames(shocks)) {
+    assign(r, shocks %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))      # Extrae una columna y se le asigna al nombre de la columna en un vector
+  }
 
   scenarios <- colnames(shocks)[3:length(colnames(shocks))]
 

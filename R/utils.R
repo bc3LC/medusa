@@ -72,7 +72,7 @@ load_rawhbs <- function(year, path) {
   # 1. Load EPF data
   # ************************************************************
 
-  epf_hh <- read.csv(file.path(path,paste0("epf_", year, "_h.csv")))
+  epf_hm <- read.csv(file.path(path,paste0("epf_", year, "_h.csv")))
 
   epf_hg <- read.csv(file.path(path,paste0("epf_", year, "_g.csv")))
 
@@ -87,6 +87,10 @@ load_rawhbs <- function(year, path) {
   # Rename socioeconomic variables
   epf_hh <- standardize(epf_hh)
 
+  # Con standardize
+  # if (year == 2019) {
+  #  epf_hh <- epf_hh %>%  dplyr::distinct()
+  # }
 
   # ************************************************************
   # 2. Join the household and expenditure datasets
@@ -117,6 +121,9 @@ load_rawhbs <- function(year, path) {
   hh_c  <- reshape2::dcast(c, NUMERO ~ CODIGO, value.var= "cantidad", fun.aggregate = sum)
 
   # Unir la tabla de hogares y con los datos de gasto
+  if (year == 2019) {
+    epf_hh$NUMERO <- as.character(epf_hh$NUMERO)
+  }
   epf_hg  <- dplyr::left_join( epf_hh , hh_g  , by = "NUMERO" )
   epf_hgm <- dplyr::left_join( epf_hh , hh_gm , by = "NUMERO" )
   epf_hc  <- dplyr::left_join( epf_hh , hh_c  , by = "NUMERO" )
@@ -189,6 +196,9 @@ load_rawhbs <- function(year, path) {
   epf_hg <- dplyr::mutate(epf_hg, POBREZA =ifelse(GASTOT_UC2 < u_pobreza, "En riesgo", "Sin riesgo"))
 
   # Merge the data generated at the household level by HA04 (household ID) in hg dataset
+  if (year == 2019) {
+    gender$NUMERO <- as.character(gender$NUMERO)
+  }
   epf_hg <- dplyr::left_join( epf_hg , gender , by = "NUMERO" )
 
 
@@ -236,7 +246,7 @@ add_coicop <- function(data, year) {
   }
 
   # Ensure that the sum of expenditure of the categories created matches the original total expenditure of the survey
-  if (sum(epf_hg$GASTOT/epf_hg$FACTOR) == sum(rowSums(dplyr::select(epf_hg, contains(coicop))))){
+  if (sum(epf_hg$GASTOT/epf_hg$FACTOR, na.rm = TRUE) == sum(rowSums(dplyr::select(epf_hg, contains(coicop))), na.rm = TRUE)){
     print(paste0("Add coicop procedure is correct"))
   }
 
@@ -284,6 +294,15 @@ elevate_hbs <- function(data, year, country = "ES") {
   # ************************************************************
   # 2. Adjust HBS and NA coicop categories
   # ************************************************************
+
+  # Get the mapping list
+  lists <- get(paste0("coicop_", year))
+
+  # Convert lists df to vectors
+
+  for (r in colnames(lists)) {
+    assign(r, lists %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))      # Extrae una columna y se le asigna al nombre de la columna en un vector
+  }
 
   # Calculate the expenditure of each category at the level of NA population
   for (c in coicop) {

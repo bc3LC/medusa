@@ -4,10 +4,12 @@
 \alias{load_rawhbs}
 \title{Details: main function to load the Spanish Household Budget Survey (HBS)}
 \usage{
-load_rawhbs(year)
+load_rawhbs(year, path)
 }
 \arguments{
 \item{year}{year of the HBS you want to load}
+
+\item{path}{LOCAL path to the folder where the epf's are stored. Not included in the pkg.}
 }
 \value{
 a list with the 3 files of the HBS

@@ -78,67 +78,67 @@ lists = read.csv(paste0(rawDataFolder,"lists.csv"),header=T)
 use_data(lists, overwrite=T)
 
 # coicop_2006
-coicop_2006 = read.csv(paste0(rawDataFolder,"coicop_2006.csv"),header=T)
+coicop_2006 = read.csv(paste0(rawDataFolder,"coicop_2006.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2006, overwrite=T)
 
 # coicop_2007
-coicop_2007 = read.csv(paste0(rawDataFolder,"coicop_2007.csv"),header=T)
+coicop_2007 = read.csv(paste0(rawDataFolder,"coicop_2007.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2007, overwrite=T)
 
 # coicop_2008
-coicop_2008 = read.csv(paste0(rawDataFolder,"coicop_2008.csv"),header=T)
+coicop_2008 = read.csv(paste0(rawDataFolder,"coicop_2008.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2008, overwrite=T)
 
 # coicop_2009
-coicop_2009 = read.csv(paste0(rawDataFolder,"coicop_2009.csv"),header=T)
+coicop_2009 = read.csv(paste0(rawDataFolder,"coicop_2009.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2009, overwrite=T)
 
 # coicop_2010
-coicop_2010 = read.csv(paste0(rawDataFolder,"coicop_2010.csv"),header=T)
+coicop_2010 = read.csv(paste0(rawDataFolder,"coicop_2010.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2010, overwrite=T)
 
 # coicop_2011
-coicop_2011 = read.csv(paste0(rawDataFolder,"coicop_2011.csv"),header=T)
+coicop_2011 = read.csv(paste0(rawDataFolder,"coicop_2011.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2011, overwrite=T)
 
 # coicop_2012
-coicop_2012 = read.csv(paste0(rawDataFolder,"coicop_2012.csv"),header=T)
+coicop_2012 = read.csv(paste0(rawDataFolder,"coicop_2012.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2012, overwrite=T)
 
 # coicop_2013
-coicop_2013 = read.csv(paste0(rawDataFolder,"coicop_2013.csv"),header=T)
+coicop_2013 = read.csv(paste0(rawDataFolder,"coicop_2013.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2013, overwrite=T)
 
 # coicop_2014
-coicop_2014 = read.csv(paste0(rawDataFolder,"coicop_2014.csv"),header=T)
+coicop_2014 = read.csv(paste0(rawDataFolder,"coicop_2014.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2014, overwrite=T)
 
 # coicop_2015
-coicop_2015 = read.csv(paste0(rawDataFolder,"coicop_2015.csv"),header=T)
+coicop_2015 = read.csv(paste0(rawDataFolder,"coicop_2015.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2015, overwrite=T)
 
 # coicop_2016
-coicop_2016 = read.csv(paste0(rawDataFolder,"coicop_2016.csv"),header=T)
+coicop_2016 = read.csv(paste0(rawDataFolder,"coicop_2016.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2016, overwrite=T)
 
 # coicop_2017
-coicop_2017 = read.csv(paste0(rawDataFolder,"coicop_2017.csv"),header=T)
+coicop_2017 = read.csv(paste0(rawDataFolder,"coicop_2017.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2017, overwrite=T)
 
 # coicop_2018
-coicop_2018 = read.csv(paste0(rawDataFolder,"coicop_2018.csv"),header=T)
+coicop_2018 = read.csv(paste0(rawDataFolder,"coicop_2018.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2018, overwrite=T)
 
 # coicop_2019
-coicop_2019 = read.csv(paste0(rawDataFolder,"coicop_2019.csv"),header=T)
+coicop_2019 = read.csv(paste0(rawDataFolder,"coicop_2019.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2019, overwrite=T)
 
 # coicop_2020
-coicop_2020 = read.csv(paste0(rawDataFolder,"coicop_2020.csv"),header=T)
+coicop_2020 = read.csv(paste0(rawDataFolder,"coicop_2020.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2020, overwrite=T)
 
 # coicop_2021
-coicop_2021 = read.csv(paste0(rawDataFolder,"coicop_2021.csv"),header=T)
+coicop_2021 = read.csv(paste0(rawDataFolder,"coicop_2021.csv"),header=T, fileEncoding = "UTF-8-BOM")
 use_data(coicop_2021, overwrite=T)
 
 # gcfhogares95_22

@@ -230,6 +230,7 @@ add_coicop <- function(data, year) {
   # Convert lists df to vectors
 
   for (r in colnames(lists)) {
+    print(r)
     assign(r, lists %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))      # Extrae una columna y se le asigna al nombre de la columna en un vector
   }
 

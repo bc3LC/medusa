@@ -203,7 +203,13 @@ load_rawhbs <- function(year, path) {
 
 
   # **********************************************************************
-  # 4. Outputs of the function
+  # 4. Remove GASTOT NA
+  # **********************************************************************
+
+  epf_hg <- epf_hg %>% dplyr::filter(!is.na(GASTOT))
+
+  # **********************************************************************
+  # 5. Outputs of the function
   # **********************************************************************
 
   epf_list <- list(epf_hg = epf_hg, epf_hgm = epf_hgm, epf_hc = epf_hc)
@@ -230,7 +236,6 @@ add_coicop <- function(data, year) {
   # Convert lists df to vectors
 
   for (r in colnames(lists)) {
-    print(r)
     assign(r, lists %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))      # Extrae una columna y se le asigna al nombre de la columna en un vector
   }
 
@@ -342,7 +347,7 @@ elevate_hbs <- function(data, year, country = "ES") {
   stat <- dplyr::left_join( stat , macro , by = "COICOP" )
 
   stat <- dplyr::mutate(stat, coicop_adf = macro_ref*1000000/micro_ref) %>%
-    dplyr::mutate(coicop_adf = ifelse(COICOP %in% c("EUR_A_073_T", "EUR_A_073_A", "EUR_A_073_M"), coicop_adf[which(COICOP == "EUR_A_073")], coicop_adf))                         # To do: generalozar este proceso a cualquier desagregacion
+    dplyr::mutate(coicop_adf = ifelse(COICOP %in% c("EUR_A_073_T", "EUR_A_073_A", "EUR_A_073_M"), coicop_adf[which(COICOP == "EUR_A_073")], coicop_adf))                         # To do: generalizar este proceso a cualquier desagregacion
 
   # Apply EUR_A_073 adf to EUR_A_073_T, EUR_A_073_A and EUR_A_073_M
 

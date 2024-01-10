@@ -276,8 +276,9 @@ elevate_hbs <- function(data, year, country = "ES") {
   # ************************************************************
 
   # Enter population value of the NA: INE census 1 January
-  pop_NA <- eurostat::get_eurostat("demo_gind", time_format = "num")
-  pop_NA <- dplyr::filter(pop_NA, time == year & geo == country, indic_de == "JAN")
+  pop_NA <- restatapi::get_eurostat_data("demo_gind",
+                                         filters = c("AVG", country),
+                                         date_filter = year)
   pop_NA <- pop_NA$values
 
   # Calculate survey population: sum of households x members
@@ -413,6 +414,11 @@ price_shock <- function(data) {
 
   # Get the shock list
   shocks <- get("shocks")
+
+  if(year >= 2016){
+    shocks <- shocks[!(shocks$coicop %in% "EUR_A_023"),]
+    shocks <- shocks[!(shocks$coicop %in% "EUR_A_122"),]
+  }
 
   # Convert lists df to vectors
 

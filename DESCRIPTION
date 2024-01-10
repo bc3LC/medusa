@@ -23,6 +23,7 @@ Imports:
     knitr,
     dplyr,
 	reshape2,
+	restatapi,
 	rgcam,
 	markdown
 Suggests: 

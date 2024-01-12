@@ -88,9 +88,9 @@ load_rawhbs <- function(year, path) {
   epf_hh <- standardize(epf_hh)
 
   # Con standardize
-  # if (year == 2019) {
-  #  epf_hh <- epf_hh %>%  dplyr::distinct()
-  # }
+   if (year == 2019) {
+    epf_hh <- epf_hh %>%  dplyr::distinct()
+   }
 
   # ************************************************************
   # 2. Join the household and expenditure datasets

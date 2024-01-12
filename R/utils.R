@@ -72,7 +72,7 @@ load_rawhbs <- function(year, path) {
   # 1. Load EPF data
   # ************************************************************
 
-  epf_hm <- read.csv(file.path(path,paste0("epf_", year, "_h.csv")))
+  epf_hh <- read.csv(file.path(path,paste0("epf_", year, "_h.csv")))
 
   epf_hg <- read.csv(file.path(path,paste0("epf_", year, "_g.csv")))
 
@@ -123,6 +123,9 @@ load_rawhbs <- function(year, path) {
   # Unir la tabla de hogares y con los datos de gasto
   if (year == 2019) {
     epf_hh$NUMERO <- as.character(epf_hh$NUMERO)
+    hh_g$NUMERO <- as.character(hh_g$NUMERO)
+    hh_gm$NUMERO <- as.character(hh_gm$NUMERO)
+    hh_c$NUMERO <- as.character(hh_c$NUMERO)
   }
   epf_hg  <- dplyr::left_join( epf_hh , hh_g  , by = "NUMERO" )
   epf_hgm <- dplyr::left_join( epf_hh , hh_gm , by = "NUMERO" )

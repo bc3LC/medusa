@@ -1,7 +1,7 @@
 Package: medusa
 Title: medusa
 Version: 0.1.0
-Authors@R: c(person("Alonso-Epelde", "Eva", email = "eva.alonso@bc3research.org", role = c("aut", "cre"),
+Authors@R: c(person("Eva", "Alonso-Epelde", "Eva", email = "eva.alonso@bc3research.org", role = c("aut", "cre"),
 		     comment = c(ORCID = "0000-0002-4052-1703")),
 	         person("Rodés-Bachs", "Clàudia", email = "claudia.rodes@bc3research.org", role = c("aut"),
 		   	 comment = c(ORCID = "0000-0001-6696-7685")),

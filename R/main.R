@@ -40,12 +40,12 @@ calc_di <-function(input, year, elevate=F, save=T) {
 
   # calculate distributional impacts
 
-   epf$EUR_A_0111_CNR[1]
-   epf$EUR_A_0111_s1[1]
-   epf$EUR_A_0111_CNR[1]*2
+
 
 
 }
 
-
+epf$EUR_A_0111_CNR[1]
+epf$EUR_A_0111_s1[1]
+epf$EUR_A_0111_CNR[1]*2
 

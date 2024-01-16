@@ -10,7 +10,8 @@ library(magrittr)
 rename_values = function(data, current_var) {
   exchange_data = mapping %>%                                             # te junta los dos df (mapping y data)
     dplyr::filter(VAR == current_var) %>%                                 # pero solo coge la parte que nos interesa (solo cuando el valor de la variable es igual a current_var)
-    dplyr::select(value, NOMBRE)
+    dplyr::select(value, NOMBRE) %>%
+    dplyr::distinct()
 
   if (sum(is.na(unique(exchange_data$value))) == 0) {                     # miramos si hay algun na en value y si es así no se aplica lo de abajo (para evitar errores con NMIEMB)
     data = data %>%
@@ -72,6 +73,7 @@ load_rawhbs <- function(year, path) {
   # 1. Load EPF data
   # ************************************************************
 
+
   epf_hh <- read.csv(file.path(path,paste0("epf_", year, "_h.csv")))
 
   epf_hg <- read.csv(file.path(path,paste0("epf_", year, "_g.csv")))
@@ -88,7 +90,7 @@ load_rawhbs <- function(year, path) {
   epf_hh <- standardize(epf_hh)
 
   # Con standardize
-   if (year == 2019) {
+   if (year == c(2019)) {
     epf_hh <- epf_hh %>%  dplyr::distinct()
    }
 

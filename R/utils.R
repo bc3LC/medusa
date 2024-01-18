@@ -89,10 +89,6 @@ load_rawhbs <- function(year, path) {
   # Rename socioeconomic variables
   epf_hh <- standardize(epf_hh)
 
-  # Con standardize
-   if (year == c(2019)) {
-    epf_hh <- epf_hh %>%  dplyr::distinct()
-   }
 
   # ************************************************************
   # 2. Join the household and expenditure datasets
@@ -135,12 +131,9 @@ load_rawhbs <- function(year, path) {
 
 
   # Asegurarse de que la suma de gastos del fichero de hogares y el de hh_g coinciden
-  if (sum(hh_g[2:length(hh_g)], na.rm = TRUE) == sum(epf_hh$GASTOT/epf_hh$FACTOR, na.rm = TRUE)) {
-    print(paste0("UNION is correct"))
-  }else{
-    print(paste0("UNION is wrong"))
+  if (sum(hh_g[2:length(hh_g)], na.rm = TRUE) != sum(epf_hh$GASTOT/epf_hh$FACTOR, na.rm = TRUE)) {
+    stop("UNION is wrong")
   }
-
 
   # **********************************************************************
   # 3. Create new socioeconomic variables
@@ -181,6 +174,13 @@ load_rawhbs <- function(year, path) {
 
   # Create the variable: PERCENTIL
   epf_hg$PERCENTIL <- Nquantiles(epf_hg$GASTOT_UC2, w = epf_hg$FACTOR , 100)
+
+  # Create PAISPR for 2006-2010
+  epf_hg <- epf_hg %>%
+    dplyr::mutate(PAISPR = ifelse(NACIONA_SP == 1 , "España",
+                           ifelse(NACIONA_SP != 1 & PAISSP == 1, "UE27",
+                           ifelse(NACIONA_SP != 1 & PAISSP == 2, "Otros Europa",
+                           ifelse(NACIONA_SP != 1 & PAISSP == 3, "Resto mundo", "No consta")))))
 
   # Create the variables in gender data from the HBS's individuals file: GRADOFEM
   gender <- epf_hm %>%
@@ -533,7 +533,7 @@ basic_graph <- function(data, var = categories$categories){
 #' @param var socioeconomic or demographic variable/s for which distributional impacts are calculated. By default: all variables in categories.
 #' @param fig generates and saves a figure that summarises the distributional impacts. By default it is T, for the figure/s not to be saved indicate F
 #' @export
-impact <- function(data, var = categories$categories, fig = T) {
+impact <- function(data, var = categories$categories, fig = F) {
 
   d_impacts = list()                                                                                        # Generamos una lista vacia
   for (g in var) {
@@ -561,37 +561,6 @@ impact <- function(data, var = categories$categories, fig = T) {
 
 }
 
-
-# impact_intersectional
-#'
-#' Details: main function to calculate the distributional impacts based in one or more socioeconomic or demographic variables
-#' @param data input data calculate
-#' @param var1 first socioeconomic or demographic variable for which intersectional distributional impact is calculated. By default: all variables of category_a in is_categories.
-#' @param var2 second socioeconomic or demographic variable for which intersectional distributional impact is calculated. By default: all variables of category_b in is_categories.
-#' @export
-impact_intersectional <- function(data, pairs = is_categories) {
-
-  is_d_impacts = list()                                                                                        # Generamos una lista vacia
-  for (r in 1:nrow(pairs)) {      # para el numero de filas de pairs
-    var_a = pairs$category_a[r]   # te coge el valor de pair en la columna a en la row r
-    var_b = pairs$category_b[r]   # te coge el valor de pair en la columna a en la row r
-    gastotS_cols <- grep("^GASTOT_s", names(data), value = TRUE)                                           # generamos un vector con todos los nombres que empiecen por GASTOT_s
-    assign(paste0('di_',var_a,"_",var_b),                                                                                # asignamos todo lo que se calcula debajo a di_ g (del loop)
-           data %>%
-             dplyr::group_by(!!dplyr::sym(var_a),!!dplyr::sym(var_b)) %>%                                                          # agrupamos por g, sym es para que entienda el valor de g (sustituye el get)
-             dplyr::summarise(VARIABLE_A = var_a,                                                                # crear las columnas siguientes
-                              VARIABLE_B = var_b,                                                                # crear las columnas siguientes
-                              WEIGHT = sum(FACTOR),
-                              dplyr::across(dplyr::all_of(gastotS_cols),                                          # para todas las columnas que estan en gastotS_cols
-                                            list(DI_s = ~ (sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),            # generamos una nueva columna con los impactos distributivos, donde sum(.) es el valor de la columna que estamos usando
-                                            .names = "DI_{.col}")) %>%                                            # cambiamos el nombre de la columna añadiendo DI al nombre de columna que esta usando
-             dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))            # cambiamos los nombres de las columnas que empiezen por DI_GASTOT a DI_ solo (gsub es para sustituir y lo segundo para que solo se fije en las que empiezan por DI_GASTOT)
-    )
-    is_d_impacts[[paste0('di_',var_a,'_',var_b)]] = get(paste0('di_',var_a,'_',var_b))                                                     # añadir el resultado a la lista con el nombre di_g
-  }
-
-  return(is_d_impacts)
-}
 
 # intersectional_graph
 #'
@@ -625,4 +594,42 @@ intersectional_graph <- function(data, pairs = is_categories){
     ggplot2::ggsave(pl, file = paste0("figures/DI_",g,".png"), width = adj_wh$width  , height = adj_wh$heigth , units = "mm")
   }
 
+}
+
+
+# impact_intersectional
+#'
+#' Details: main function to calculate the distributional impacts based in one or more socioeconomic or demographic variables
+#' @param data input data calculate
+#' @param var1 first socioeconomic or demographic variable for which intersectional distributional impact is calculated. By default: all variables of category_a in is_categories.
+#' @param var2 second socioeconomic or demographic variable for which intersectional distributional impact is calculated. By default: all variables of category_b in is_categories.
+#' @export
+impact_intersectional <- function(data, pairs = is_categories, fig = F) {
+
+  is_d_impacts = list()                                                                                        # Generamos una lista vacia
+  for (r in 1:nrow(pairs)) {      # para el numero de filas de pairs
+    var_a = pairs$category_a[r]   # te coge el valor de pair en la columna a en la row r
+    var_b = pairs$category_b[r]   # te coge el valor de pair en la columna a en la row r
+    gastotS_cols <- grep("^GASTOT_s", names(data), value = TRUE)                                           # generamos un vector con todos los nombres que empiecen por GASTOT_s
+    assign(paste0('di_',var_a,"_",var_b),                                                                                # asignamos todo lo que se calcula debajo a di_ g (del loop)
+           data %>%
+             dplyr::group_by(!!dplyr::sym(var_a),!!dplyr::sym(var_b)) %>%                                                          # agrupamos por g, sym es para que entienda el valor de g (sustituye el get)
+             dplyr::summarise(VARIABLE_A = var_a,                                                                # crear las columnas siguientes
+                              VARIABLE_B = var_b,                                                                # crear las columnas siguientes
+                              WEIGHT = sum(FACTOR),
+                              dplyr::across(dplyr::all_of(gastotS_cols),                                          # para todas las columnas que estan en gastotS_cols
+                                            list(DI_s = ~ (sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),            # generamos una nueva columna con los impactos distributivos, donde sum(.) es el valor de la columna que estamos usando
+                                            .names = "DI_{.col}")) %>%                                            # cambiamos el nombre de la columna añadiendo DI al nombre de columna que esta usando
+             dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))            # cambiamos los nombres de las columnas que empiezen por DI_GASTOT a DI_ solo (gsub es para sustituir y lo segundo para que solo se fije en las que empiezan por DI_GASTOT)
+    )
+    is_d_impacts[[paste0('di_',var_a,'_',var_b)]] = get(paste0('di_',var_a,'_',var_b))                                                     # añadir el resultado a la lista con el nombre di_g
+  }
+
+  if (fig == T) {
+
+    intersectional_graph(data = d_impacts, var)
+
+  }
+
+  return(is_d_impacts)
 }

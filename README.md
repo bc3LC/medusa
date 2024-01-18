@@ -93,9 +93,20 @@ Now  the package is fully loaded and you can start using its functions.
 
 [Back to Contents](#contents)
 
-.....
+The `medusa` package  contains 3 main functions and several other auxiliary functions :
 
-In addition, the package includes some default input files (.Rda), that are read by the different functions. These can be changed by the user. 
+1. Calculate distributional impacts 
+	- Main function: `calc_di`
+	- Auxiliary functions: `rename_values`, `standardize`, `load_rawhbs`, `add_coicop`, `elevate_hbs`, `price_shock`, `adjust_wh`, `basic_graph`, `impact`, `impact_intersectional` and `intersectional_graph`
+2. Calculate energy poverty indicators
+	- Main function: `calc_ep`
+	- Auxiliary functions: `....`
+3. Calculate transport poverty indicators
+	- Main function: `calc_tp`
+	- Auxiliary functions: `....`
+
+
+In addition, the package includes some default input files (.Rda), that are read by the different functions. 
 
 ## <a name="references"></a>References
 
@@ -106,11 +117,16 @@ In addition, the package includes some default input files (.Rda), that are read
 [Back to Contents](#contents)
 
 <a name="R1">[R1]</a> Labandeira, X., Labeaga, J., & López-Otero, X. (2017). A meta-analysis on the price elasticity of energy demand. <i>Energy Policy</i> , 102 ( C), 549–568.
+
 <a name="R2">[R2]</a>  Goodman, A., & Oldfield, Z. (2004). <i> Permanent differences? Income and expenditure inequality in the 1990s and 2000s </i> (Research Report R66). IFS Report. https://doi.org/10.1920/re.ifs.2004.0066
+
 <a name="R3">[R3]</a>  Cho, S., Crenshaw, K. W., & McCall, L. (2013). Toward a Field of Intersectionality Studies: Theory, Applications, and Praxis. <i> Signs: Journal of Women in Culture and Society, 38(4), 785–810.</i>  https://doi.org/10.1086/669608
+
 <a name="R4">[R4]</a> Crenshaw, K. W. (1994). Mapping the Margins: Intersectionality, Identity Politics, and Violence Against Women of Color. In <i> The Public Nature of Private Violence</i>. Routledge.
 <a name="R5">[R5]</a> Davis, K. (2008). Intersectionality as buzzword: A sociology of science perspective on what makes a feminist theory successful. <i> Feminist Theory</i>, 9(1), 67–85. https://doi.org/10.1177/1464700108086364
+
 <a name="R6">[R6]</a> Djoudi, H., Locatelli, B., Vaast, C., Asher, K., Brockhaus, M., & Basnett Sijapati, B. (2016). Beyond dichotomies: Gender and intersecting inequalities in climate change studies. <i>Ambio</i>, 45(3), 248–262.
 https://doi.org/10.1007/s13280-016-0825-2
+
 <a name="R7">[R7]</a> Kaijser, A., & Kronsell, A. (2014). Climate change through the lens of intersectionality. <i>Environmental Politics</i>, 23(3), 417–433.
 https://doi.org/10.1080/09644016.2013.835203

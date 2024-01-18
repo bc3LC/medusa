@@ -4,7 +4,7 @@
 \alias{impact_intersectional}
 \title{Details: main function to calculate the distributional impacts based in one or more socioeconomic or demographic variables}
 \usage{
-impact_intersectional(data, pairs = is_categories)
+impact_intersectional(data, pairs = is_categories, fig = F)
 }
 \arguments{
 \item{data}{input data calculate}

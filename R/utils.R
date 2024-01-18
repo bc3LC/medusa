@@ -176,11 +176,13 @@ load_rawhbs <- function(year, path) {
   epf_hg$PERCENTIL <- Nquantiles(epf_hg$GASTOT_UC2, w = epf_hg$FACTOR , 100)
 
   # Create PAISPR for 2006-2010
+  if(year %in% c(2006, 2007, 2008,2009,2010)){
   epf_hg <- epf_hg %>%
     dplyr::mutate(PAISPR = ifelse(NACIONA_SP == 1 , "España",
                            ifelse(NACIONA_SP != 1 & PAISSP == 1, "UE27",
                            ifelse(NACIONA_SP != 1 & PAISSP == 2, "Otros Europa",
                            ifelse(NACIONA_SP != 1 & PAISSP == 3, "Resto mundo", "No consta")))))
+  }
 
   # Create the variables in gender data from the HBS's individuals file: GRADOFEM
   gender <- epf_hm %>%

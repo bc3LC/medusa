@@ -13,11 +13,11 @@ rename_values = function(data, current_var) {
     dplyr::select(value, NOMBRE) %>%
     dplyr::distinct()
 
-  if (sum(is.na(unique(exchange_data$value))) == 0) {                     # miramos si hay algun na en value y si es así no se aplica lo de abajo (para evitar errores con NMIEMB)
+  if (current_var != "NMIEMB" | (current_var == "NMIEMB" & sum(is.na(unique(exchange_data$value))) == 0) ) {                     # miramos si hay algun na en value y si es así no se aplica lo de abajo (para evitar errores con NMIEMB)
     data = data %>%
       dplyr::rename(value = {{ current_var }}) %>%                             # renombra la columna (nombre de la variable) a value
       dplyr::mutate(value = as.character(value)) %>%                           # te convierte en caracter
-      dplyr::left_join(exchange_data, by = "value") %>%       # se queda solo con las columnas que nos interesan (value y nombre)
+      dplyr::left_join(exchange_data, by = "value") %>%                        # se queda solo con las columnas que nos interesan (value y nombre)
       dplyr::select(-value) %>%                                                # te elimina la columna value
       dplyr::rename_with(~current_var, 'NOMBRE')                               # te renombra de nombre a current_var
   }
@@ -625,6 +625,13 @@ impact_intersectional <- function(data, pairs = is_categories, fig = F) {
              dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))            # cambiamos los nombres de las columnas que empiezen por DI_GASTOT a DI_ solo (gsub es para sustituir y lo segundo para que solo se fije en las que empiezan por DI_GASTOT)
     )
     is_d_impacts[[paste0('di_',var_a,'_',var_b)]] = get(paste0('di_',var_a,'_',var_b))                                                     # añadir el resultado a la lista con el nombre di_g
+
+    # check for NAs in col1 or col2. If so, stop
+    tmp <- get(paste0('di_',var_a,'_',var_b))
+    if (sum(is.na(tmp[[1]])) != 0 | sum(is.na(tmp[[2]])) != 0) {
+      print(head(tmp))
+      stop(paste0("There are NAs in di_",var_a,"_",var_b))
+    }
   }
 
   if (fig == T) {

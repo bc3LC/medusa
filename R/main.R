@@ -43,13 +43,13 @@ calc_di <-function(year, elevate=F, iimpact = F, var = "all", fig=F, save=T) {
      if(var == "all"){
     var = categories$categories
   }
-    impact(epf, var = var, fig = fig)
+    di <- impact(epf, var = var, fig = fig)
 
   }
 
    if(iimpact == T){
 
-     impact_intersectional(epf, pairs = is_categories, fig)
+     dii <- impact_intersectional(epf, pairs = is_categories, fig)
 
    }
 

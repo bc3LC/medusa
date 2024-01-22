@@ -131,7 +131,7 @@ load_rawhbs <- function(year, path) {
 
 
   # Asegurarse de que la suma de gastos del fichero de hogares y el de hh_g coinciden
-  if (sum(hh_g[2:length(hh_g)], na.rm = TRUE) != sum(epf_hh$GASTOT/epf_hh$FACTOR, na.rm = TRUE)) {
+  if (round(sum(hh_g[2:length(hh_g)], na.rm = TRUE)) != round(sum(epf_hh$GASTOT/epf_hh$FACTOR, na.rm = TRUE))) {
     stop("UNION is wrong")
   }
 

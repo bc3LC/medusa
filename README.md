@@ -93,7 +93,7 @@ Now  the package is fully loaded and you can start using its functions.
 
 [Back to Contents](#contents)
 
-The `medusa` package  contains 3 main functions and several other auxiliary functions :
+The `medusa` package  contains 3 main functions and several other auxiliary functions:
 
 1. Calculate distributional impacts 
 	- Main function: `calc_di`

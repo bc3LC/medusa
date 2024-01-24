@@ -564,11 +564,11 @@ basic_graph <- function(data, var = categories$categories){
 #' @param var socioeconomic or demographic variable/s for which distributional impacts are calculated. By default: all variables in categories.
 #' @param fig generates and saves a figure that summarises the distributional impacts. By default it is T, for the figure/s not to be saved indicate F
 #' @export
-impact <- function(data, var = categories$categories, fig = F) {
+impact <- function(data, var = categories$categories, fig = F, save = T, file_name = "D_impacts") {
 
   d_impacts = list()                                                                                        # Generamos una lista vacia
   for (g in var) {
-    if (var %in% colnames(data)) {
+    if (g %in% colnames(data)) {
       gastotS_cols <- grep("^GASTOT_s", names(data), value = TRUE)                                           # generamos un vector con todos los nombres que empiecen por GASTOT_s
       assign(paste0('di_',g),                                                                                # asignamos todo lo que se calcula debajo a di_ g (del loop)
              data %>%
@@ -585,6 +585,12 @@ impact <- function(data, var = categories$categories, fig = F) {
         warning(paste0(var, " is not present in the dataset"))
       }
     }
+
+  if (save == T){
+    if (!dir.exists("outputs_di")) {dir.create("outputs_di")}
+    save(d_impacts, file = paste0("outputs_di/", file_name, ".RData"))
+  }
+
 
   if (fig == T) {
 
@@ -635,7 +641,7 @@ intersectional_graph <- function(data, pairs = is_categories){
 #' @param var1 first socioeconomic or demographic variable for which intersectional distributional impact is calculated. By default: all variables of category_a in is_categories.
 #' @param var2 second socioeconomic or demographic variable for which intersectional distributional impact is calculated. By default: all variables of category_b in is_categories.
 #' @export
-impact_intersectional <- function(data, pairs = is_categories, fig = F) {
+impact_intersectional <- function(data, pairs = is_categories, fig = F, save = T, file_name = "DI_impact") {
 
   is_d_impacts = list()                                                                                        # Generamos una lista vacia
   for (r in 1:nrow(pairs)) {      # para el numero de filas de pairs

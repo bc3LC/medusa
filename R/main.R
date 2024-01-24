@@ -13,8 +13,6 @@ calc_di <-function(year, elevate=F, iimpact = F, var = "all", fig=F, save=T) {
   hbs <- get(paste0("epf_list_", year))
 
   epf_hg  <- hbs$epf_hg
-  epf_hgm <- hbs$epf_hgm
-  epf_hc  <- hbs$epf_hc
 
   # add coicop categories
   epf_hg <- add_coicop(epf_hg, year)
@@ -48,8 +46,10 @@ calc_di <-function(year, elevate=F, iimpact = F, var = "all", fig=F, save=T) {
   }
 
    if(iimpact == T){
-
-     dii <- impact_intersectional(epf, pairs = is_categories, fig)
+     # if(var == "all"){
+     #   pairs = is_categories
+     # }
+     dii <- impact_intersectional(epf, pairs = pairs, fig)
 
    }
 

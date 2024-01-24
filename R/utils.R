@@ -87,7 +87,7 @@ load_rawhbs <- function(year, path) {
   }
 
   # Rename socioeconomic variables
-  epf_hh <- standardize(epf_hh)
+  epf_hh0 <- standardize(epf_hh)
 
 
   # ************************************************************
@@ -476,7 +476,7 @@ adjust_wh <- function(data, var_w, var_h) {
   base_w <- 110
   a_w <- 90
   base_h <- 150
-  a_h <- 140
+  a_h <- 160
   if(!is.null(var_w)) {
     n_elem <- length(unique(data[[var_w]]))
     final_w <- base_w + a_w * (n_elem -1)
@@ -494,6 +494,35 @@ adjust_wh <- function(data, var_w, var_h) {
 
 }
 
+# adjust_wh_is
+#'
+#' Details: main function to create a graph to summarize the distributional impact based in one or more socioeconomic or demographic variable (one plot per variable)
+#' @param data description
+#' @param var_w description
+#' @param var_h description
+#' @export
+
+adjust_wh_is <- function(data, var_w, var_h) {
+  base_w <- 90
+  a_w <- 90
+  base_h <- 150
+  a_h <- 50
+  if(!is.null(var_w)) {
+    n_elem <- length(unique(data[[var_w]]))
+    final_w <- base_w + a_w * (n_elem -1)
+  } else {
+    final_w <- base_w
+  }
+  if(!is.null(var_h)) {
+    n_elem <- length(unique(data[[var_h]]))
+    final_h <- base_h + a_h * (n_elem -1)
+  } else {
+    final_h <- base_h
+  }
+
+  return(list(width = final_w, heigth = final_h))
+
+}
 
 # basic_graph
 #'
@@ -515,7 +544,7 @@ basic_graph <- function(data, var = categories$categories){
       ggplot2::labs(y = "Change in welfare (%)", x = g) +
       ggplot2::theme(legend.position = "bottom") +
       ggplot2::theme(text = ggplot2::element_text(size = 16))
-    if (g == "CCAA") {
+    if (g %in% c("CCAA")) {
       pl <- pl +
         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.25))
       pl
@@ -539,19 +568,23 @@ impact <- function(data, var = categories$categories, fig = F) {
 
   d_impacts = list()                                                                                        # Generamos una lista vacia
   for (g in var) {
-    gastotS_cols <- grep("^GASTOT_s", names(data), value = TRUE)                                           # generamos un vector con todos los nombres que empiecen por GASTOT_s
-    assign(paste0('di_',g),                                                                                # asignamos todo lo que se calcula debajo a di_ g (del loop)
-           data %>%
-             dplyr::group_by(!!dplyr::sym(g)) %>%                                                          # agrupamos por g, sym es para que entienda el valor de g (sustituye el get)
-             dplyr::summarise(VARIABLE = g,                                                                # crear las columnas siguientes
-                       WEIGHT = sum(FACTOR),
-                       dplyr::across(dplyr::all_of(gastotS_cols),                                          # para todas las columnas que estan en gastotS_cols
-                                     list(DI_s = ~ 100*(sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),            # generamos una nueva columna con los impactos distributivos, donde sum(.) es el valor de la columna que estamos usando
-                                     .names = "DI_{.col}")) %>%                                            # cambiamos el nombre de la columna añadiendo DI al nombre de columna que esta usando
-             dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))            # cambiamos los nombres de las columnas que empiezen por DI_GASTOT a DI_ solo (gsub es para sustituir y lo segundo para que solo se fije en las que empiezan por DI_GASTOT)
-    )
-    d_impacts[[paste0('di_',g)]] = get(paste0('di_',g))                                                     # añadir el resultado a la lista con el nombre di_g
-  }
+    if (var %in% colnames(data)) {
+      gastotS_cols <- grep("^GASTOT_s", names(data), value = TRUE)                                           # generamos un vector con todos los nombres que empiecen por GASTOT_s
+      assign(paste0('di_',g),                                                                                # asignamos todo lo que se calcula debajo a di_ g (del loop)
+             data %>%
+               dplyr::group_by(!!dplyr::sym(g)) %>%                                                          # agrupamos por g, sym es para que entienda el valor de g (sustituye el get)
+               dplyr::summarise(VARIABLE = g,                                                                # crear las columnas siguientes
+                         WEIGHT = sum(FACTOR),
+                         dplyr::across(dplyr::all_of(gastotS_cols),                                          # para todas las columnas que estan en gastotS_cols
+                                       list(DI_s = ~ 100*(sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),            # generamos una nueva columna con los impactos distributivos, donde sum(.) es el valor de la columna que estamos usando
+                                       .names = "DI_{.col}")) %>%                                            # cambiamos el nombre de la columna añadiendo DI al nombre de columna que esta usando
+               dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))            # cambiamos los nombres de las columnas que empiezen por DI_GASTOT a DI_ solo (gsub es para sustituir y lo segundo para que solo se fije en las que empiezan por DI_GASTOT)
+      )
+      d_impacts[[paste0('di_',g)]] = get(paste0('di_',g))                                                     # añadir el resultado a la lista con el nombre di_g
+    } else {
+        warning(paste0(var, " is not present in the dataset"))
+      }
+    }
 
   if (fig == T) {
 
@@ -581,19 +614,15 @@ intersectional_graph <- function(data, pairs = is_categories){
       dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", ""))
 
     pl <- ggplot2::ggplot(datapl, ggplot2::aes(x = !!dplyr::sym(var_a), y = Impact)) +
-      ggplot2::geom_col(position = ggplot2::position_dodge(width = 1)) +
+      ggplot2::geom_point() +
+      ggplot2::geom_line() +
       ggplot2::facet_grid(as.formula(paste0("~",var_b,"~Scenario"))) +
-      ggplot2::labs(y = "Change in welfare (%)", x = g) +
+      ggplot2::labs(y = "Change in welfare (%)", x = var_a) +
       ggplot2::theme(legend.position = "bottom") +
       ggplot2::theme(text = ggplot2::element_text(size = 16))
-    if (g == "CCAA") {
-      pl <- pl +
-        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.25))
-      pl
-    }
 
-    adj_wh <- adjust_wh(datapl, var_w = "Scenario", var_h = NULL)
-    ggplot2::ggsave(pl, file = paste0("figures/DI_",g,".png"), width = adj_wh$width  , height = adj_wh$heigth , units = "mm")
+    adj_wh <- adjust_wh_is(datapl, var_w = "Scenario", var_h = var_b)
+    ggplot2::ggsave(pl, file = paste0("figures/DI_",var_a,"_", var_b,".png"), width = adj_wh$width  , height = adj_wh$heigth , units = "mm")
   }
 
 }
@@ -612,31 +641,31 @@ impact_intersectional <- function(data, pairs = is_categories, fig = F) {
   for (r in 1:nrow(pairs)) {      # para el numero de filas de pairs
     var_a = pairs$category_a[r]   # te coge el valor de pair en la columna a en la row r
     var_b = pairs$category_b[r]   # te coge el valor de pair en la columna a en la row r
-    gastotS_cols <- grep("^GASTOT_s", names(data), value = TRUE)                                           # generamos un vector con todos los nombres que empiecen por GASTOT_s
-    assign(paste0('di_',var_a,"_",var_b),                                                                                # asignamos todo lo que se calcula debajo a di_ g (del loop)
-           data %>%
-             dplyr::group_by(!!dplyr::sym(var_a),!!dplyr::sym(var_b)) %>%                                                          # agrupamos por g, sym es para que entienda el valor de g (sustituye el get)
-             dplyr::summarise(VARIABLE_A = var_a,                                                                # crear las columnas siguientes
-                              VARIABLE_B = var_b,                                                                # crear las columnas siguientes
-                              WEIGHT = sum(FACTOR),
-                              dplyr::across(dplyr::all_of(gastotS_cols),                                          # para todas las columnas que estan en gastotS_cols
-                                            list(DI_s = ~ (sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),            # generamos una nueva columna con los impactos distributivos, donde sum(.) es el valor de la columna que estamos usando
-                                            .names = "DI_{.col}")) %>%                                            # cambiamos el nombre de la columna añadiendo DI al nombre de columna que esta usando
-             dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))            # cambiamos los nombres de las columnas que empiezen por DI_GASTOT a DI_ solo (gsub es para sustituir y lo segundo para que solo se fije en las que empiezan por DI_GASTOT)
-    )
-    is_d_impacts[[paste0('di_',var_a,'_',var_b)]] = get(paste0('di_',var_a,'_',var_b))                                                     # añadir el resultado a la lista con el nombre di_g
-
-    # check for NAs in col1 or col2. If so, stop
-    tmp <- get(paste0('di_',var_a,'_',var_b))
-    if (sum(is.na(tmp[[1]])) != 0 | sum(is.na(tmp[[2]])) != 0) {
-      print(head(tmp))
-      stop(paste0("There are NAs in di_",var_a,"_",var_b))
+    # ensure that var_a and var_b are in the dataset (as column names)
+    if (var_a %in% colnames(data) & var_b %in% colnames(data)) {
+      gastotS_cols <- grep("^GASTOT_s", names(data), value = TRUE)                                           # generamos un vector con todos los nombres que empiecen por GASTOT_s
+      assign(paste0('di_',var_a,"_",var_b),                                                                                # asignamos todo lo que se calcula debajo a di_ g (del loop)
+             data %>%
+               dplyr::group_by(!!dplyr::sym(var_a),!!dplyr::sym(var_b)) %>%                                                          # agrupamos por g, sym es para que entienda el valor de g (sustituye el get)
+               dplyr::summarise(VARIABLE_A = var_a,                                                                # crear las columnas siguientes
+                                VARIABLE_B = var_b,                                                                # crear las columnas siguientes
+                                WEIGHT = sum(FACTOR),
+                                dplyr::across(dplyr::all_of(gastotS_cols),                                          # para todas las columnas que estan en gastotS_cols
+                                              list(DI_s = ~ (sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),            # generamos una nueva columna con los impactos distributivos, donde sum(.) es el valor de la columna que estamos usando
+                                              .names = "DI_{.col}")) %>%                                            # cambiamos el nombre de la columna añadiendo DI al nombre de columna que esta usando
+               dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))                   # cambiamos los nombres de las columnas que empiezen por DI_GASTOT a DI_ solo (gsub es para sustituir y lo segundo para que solo se fije en las que empiezan por DI_GASTOT)
+      )
+      is_d_impacts[[paste0('di_',var_a,'_',var_b)]] = get(paste0('di_',var_a,'_',var_b))     # añadir el resultado a la lista con el nombre di_g
+    } else {
+      if (var_a %in% colnames(data) & !var_b %in% colnames(data)) {warning(paste0(var_b," is not present in the dataset"))}
+      else if (!var_a %in% colnames(data) & var_b %in% colnames(data)) {warning(paste0(var_a," is not present in the dataset"))}
+      else {warning(paste0(var_a, "and ", var_b," are not present in the dataset"))}
     }
   }
 
   if (fig == T) {
 
-    intersectional_graph(data = d_impacts, var)
+    intersectional_graph(data = is_d_impacts, pairs)
 
   }
 

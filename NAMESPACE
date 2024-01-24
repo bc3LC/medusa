@@ -2,6 +2,8 @@
 
 export(add_coicop)
 export(adjust_wh)
+export(adjust_wh_is)
+export(available_var_impact)
 export(basic_graph)
 export(elevate_hbs)
 export(impact)

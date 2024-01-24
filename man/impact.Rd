@@ -4,7 +4,13 @@
 \alias{impact}
 \title{Details: main function to calculate the distributional impacts based in one or more socioeconomic or demographic variables}
 \usage{
-impact(data, var = categories$categories, fig = F)
+impact(
+  data,
+  var = categories$categories,
+  fig = F,
+  save = T,
+  file_name = "D_impacts"
+)
 }
 \arguments{
 \item{data}{input data calculate}

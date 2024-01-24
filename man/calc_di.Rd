@@ -4,16 +4,29 @@
 \alias{calc_di}
 \title{Details: main function to calculate distributional impacts for different price shocks}
 \usage{
-calc_di(year, elevate = F, iimpact = F, var = "all", fig = F, save = T)
+calc_di(
+  year,
+  elevate = F,
+  var_impact = "all",
+  var_intersec = NULL,
+  fig = T,
+  save = T,
+  file_name_impact = "D_impact",
+  file_name_intersec = "DI_impact"
+)
 }
 \arguments{
 \item{year}{year for simulation, options = c(2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021)}
 
 \item{elevate}{elevation to national accounting, options = c (T, F)}
 
-\item{save}{save the results, options = c (T, F)}
+\item{var_impact}{variable/s de acuerdo a la/s que quieres calcular el impacto distributivo, por defecto van a ser todos, pero se puede seleccionar solo una variable o un vector de variables, si no quieres indicar NULL, si quieres ver todas las opciones corre `available_var_impact()`}
 
-\item{country}{country for simulation, in this case the package works only for Spain (ES)}
+\item{var_intersec}{variables de acuerdo a las que quieres calcular el impacto distributivo interseccional (es decir, se pueden cruzar dos variables), por defecto va a ser NULL, si quieres insertar una tabla con columnas llamadas category_a y category_b}
+
+\item{fig}{if TRUE (by default) create and save the figures of the distributional impacts. If FALSE do not create neither save.}
+
+\item{save}{save the results, options = c (T, F)}
 }
 \description{
 Details: main function to calculate distributional impacts for different price shocks

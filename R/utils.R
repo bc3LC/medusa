@@ -251,7 +251,7 @@ add_coicop <- function(data, year) {
 
 
   # **********************************************************************
-  # 2. Add coicop categories according to de lists aggregation
+  # 2. Add coicop categories according to the lists aggregation
   # **********************************************************************
 
   # Add consumption variables
@@ -262,8 +262,8 @@ add_coicop <- function(data, year) {
   }
 
   # Ensure that the sum of expenditure of the categories created matches the original total expenditure of the survey
-  if (sum(epf_hg$GASTOT/epf_hg$FACTOR, na.rm = TRUE) == sum(rowSums(dplyr::select(epf_hg, contains(coicop))), na.rm = TRUE)){
-    print(paste0("Add coicop procedure is correct"))
+  if (sum(epf_hg$GASTOT/epf_hg$FACTOR, na.rm = TRUE) != sum(rowSums(dplyr::select(epf_hg, contains(coicop))), na.rm = TRUE)){
+    stop("Add coicop procedure is wrong")
   }
 
 
@@ -306,8 +306,8 @@ elevate_hbs <- function(data, year, country = "ES") {
                    POBLACIONCN  = HOGARESCN *NMIEMB )
 
   # Make sure that the population adjusted to the NA matches the NA population to know if the adjustment is well done.
-  if (round(sum(epf_hg$POBLACIONCN), digits = 0) == round( pop_NA, digits = 0) ){
-    print(paste0("AJUSTE POBLACION is correct"))
+  if (round(sum(epf_hg$POBLACIONCN), digits = 0) != round( pop_NA, digits = 0) ){
+    stop("Population adjustment is wrong")
   }
 
   # ************************************************************
@@ -406,10 +406,8 @@ elevate_hbs <- function(data, year, country = "ES") {
   epf_hg <- epf_hg %>% dplyr::mutate(GASTOT_CNR = rowSums(dplyr::select(epf_hg, contains('_CNR')))) #check
 
   # Asegurarse de que la suma de gastos del fichero de hogares y el de hh_g coinciden
-  if (round(sum(epf_hg$GASTOT_CNR)) == gf_na) {
-    print(paste0("AJUSTE RESIDENTES/NO RESIDENTES is correct"))
-  }else{
-    print(paste0("AJUSTE RESIDENTES/NO RESIDENTES is wrong"))
+  if (round(sum(epf_hg$GASTOT_CNR)) != gf_na) {
+    stop("Elevation to National Accounts is wrong")
   }
 
   return(epf_hg)
@@ -421,12 +419,13 @@ elevate_hbs <- function(data, year, country = "ES") {
 #'
 #' Details: function to apply a specific price shock to the different COICOP categories of the Household Budget Survey (HBS)
 #' @param data input data from the HBS to apply the price shocks
+#' @param shocks a dataset with the price shocks per coicop to be applied. The format of the dataset has to correspond to the predefined one in the package. To save a csv file with the right format to enter the price shocks run `ex_shocks()`. You can enter more scenarios by including more columns to the right (e.g. s3). A price shock greater than 1 indicates a price increase (e.g. 1.1 indicates a 10% increase) and less than 1 indicates a price decrease (e.g. 0.9 indicates a 10% decrease). The COICOP variables correspond to the aggregate variables of the package, if you are not going to aggregate the COICOP variables you have to replace the column labels by the COICOP variables that appear in your dataset.
 #' @return a dataset with the HBS data and the new expenses for COICOP categories after the application of the price shock
 #' @export
-price_shock <- function(data) {
+price_shock <- function(data, shocks) {
 
   # Get the shock list
-  shocks <- get("shocks")
+  # shocks <- get("shocks")
 
   if(year >= 2016){
     shocks <- shocks[!(shocks$coicop %in% "EUR_A_023"),]
@@ -540,7 +539,6 @@ adjust_wh_is <- function(data, var_w, var_h) {
 basic_graph <- function(data, var = categories$categories){
   if (!dir.exists("figures")) {dir.create("figures")}
   for (g in var) {
-    print(g)
     datapl <- data[[paste0("di_",g)]] %>%
       tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
       dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", ""))

@@ -18,6 +18,7 @@ ex_shocks <- function(){
 #' @param var_intersec set of variables (2) according to which you want to calculate the intersectional distributional impacts. If "all", it calculates the distributional impacts for each of the combinations of variables specified in the package. If not, you can indicate the set of variables according to which you want to calculate the intersectional distributional impacts. If you wish to see the set of variables for which the calculation is available, run `available_var_intersec()`. To enter a set of variables for the calculation, it must follow the same format as the output of `available_var_intersec()`, i.e. a table whose columns have category_a and category_b as their titles.  If you do not want to calculate distributional impacts, indicate NULL (by default).
 #' @param fig if TRUE (by default) create and save the figures of the distributional impacts calculated by the function. If FALSE do not create neither save.
 #' @param save if TRUE saves the dataframes with the results for the distributional impacts calculated by the function. If FALSE do not save.
+#' @return a list containing the generated datasets summarising the basic or/and the intersectional distributional impacts per selected variable or set of variables.
 #' @export
 calc_di <-function(year, elevate=F, shocks, var_impact = "all", var_intersec = NULL,
                    fig=T, save=T, file_name_impact = "D_impact", file_name_intersec = "DI_impact") {
@@ -66,6 +67,18 @@ calc_di <-function(year, elevate=F, shocks, var_impact = "all", var_intersec = N
 
    }
 
+   # create a list to return
+   return_list <- list()
+
+   if(!is.null(var_impact)){
+     return_list[["di"]] <- di
+   }
+
+   if(!is.null(var_intersec)){
+     return_list[["dii"]] <- dii
+   }
+
+   return(return_list)
 }
 
 # available_var_impact

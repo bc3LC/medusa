@@ -2,15 +2,20 @@
 % Please edit documentation in R/utils.R
 \name{elevate_hbs}
 \alias{elevate_hbs}
-\title{Details: main function to elevate the Spanish Household Budget Survey (HBS)}
+\title{Details: function to elevate the Spanish Household Budget Survey (HBS) to national accounting.}
 \usage{
 elevate_hbs(data, year, country = "ES")
 }
 \arguments{
-\item{data}{description}
+\item{data}{dataset with the data from the HBS}
 
-\item{year}{year of the HBS you want to elevate}
+\item{year}{year of the HBS you want to elevate to national accounting}
+
+\item{country}{country of the HBS you want to elevate. By default "ES" (for the moment it only works for Spain, so DO NOT TOUCH)}
+}
+\value{
+a dataset with the HBS data where expenses are elevated to national accounting
 }
 \description{
-Details: main function to elevate the Spanish Household Budget Survey (HBS)
+Details: function to elevate the Spanish Household Budget Survey (HBS) to national accounting.
 }

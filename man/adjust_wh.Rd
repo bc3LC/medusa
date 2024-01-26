@@ -2,17 +2,20 @@
 % Please edit documentation in R/utils.R
 \name{adjust_wh}
 \alias{adjust_wh}
-\title{Details: main function to create a graph to summarize the distributional impact based in one or more socioeconomic or demographic variable (one plot per variable)}
+\title{Details: function to adjust the width and height of a basic graph depending on the number of scenarios and labels}
 \usage{
 adjust_wh(data, var_w, var_h)
 }
 \arguments{
-\item{data}{description}
+\item{data}{a dataset used to create a basic graph}
 
-\item{var_w}{description}
+\item{var_w}{variable on which the width of the basic graph depends}
 
-\item{var_h}{description}
+\item{var_h}{variable on which the height of the basic graph depends}
+}
+\value{
+a list containing the width and the height of the basic graph to be created
 }
 \description{
-Details: main function to create a graph to summarize the distributional impact based in one or more socioeconomic or demographic variable (one plot per variable)
+Details: function to adjust the width and height of a basic graph depending on the number of scenarios and labels
 }

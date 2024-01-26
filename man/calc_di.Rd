@@ -2,11 +2,12 @@
 % Please edit documentation in R/main.R
 \name{calc_di}
 \alias{calc_di}
-\title{Details: main function to calculate distributional impacts for different price shocks}
+\title{Details: main function to calculate the distributional impacts for different price shocks and to save the results and the figures}
 \usage{
 calc_di(
   year,
   elevate = F,
+  shocks,
   var_impact = "all",
   var_intersec = NULL,
   fig = T,
@@ -16,18 +17,23 @@ calc_di(
 )
 }
 \arguments{
-\item{year}{year for simulation, options = c(2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021)}
+\item{year}{year for the simulation. Available time series: 2006-2021}
 
-\item{elevate}{elevation to national accounting, options = c (T, F)}
+\item{elevate}{if TRUE elevate the HBS to national accounting. If FALSE (by default) do not elevate.}
 
-\item{var_impact}{variable/s de acuerdo a la/s que quieres calcular el impacto distributivo, por defecto van a ser todos, pero se puede seleccionar solo una variable o un vector de variables, si no quieres indicar NULL, si quieres ver todas las opciones corre `available_var_impact()`}
+\item{shocks}{a dataset with the price shocks per coicop to be applied. The format of the dataset has to correspond to the predefined one in the package. To save a csv file with the right format to enter the price shocks run `ex_shocks()`. You can enter more scenarios by including more columns to the right (e.g. s3). A price shock greater than 1 indicates a price increase (e.g. 1.1 indicates a 10% increase) and less than 1 indicates a price decrease (e.g. 0.9 indicates a 10% decrease).}
 
-\item{var_intersec}{variables de acuerdo a las que quieres calcular el impacto distributivo interseccional (es decir, se pueden cruzar dos variables), por defecto va a ser NULL, si quieres insertar una tabla con columnas llamadas category_a y category_b}
+\item{var_impact}{variable(s) according to which you want to calculate distributional impacts. If "all" (by default) calculates the distributional impacts for each of the variables specified in the package. If not, you can indicate the variable on the basis of which you want to calculate the distributional impacts. If not, you can indicate a variable or a vector of variables to calculate distributional impacts.If you want to see the variables for which the calculation is available run `available_var_impact()`. If you do not want to calculate distributional impacts per variable indicate NULL.}
 
-\item{fig}{if TRUE (by default) create and save the figures of the distributional impacts. If FALSE do not create neither save.}
+\item{var_intersec}{set of variables (2) according to which you want to calculate the intersectional distributional impacts. If "all", it calculates the distributional impacts for each of the combinations of variables specified in the package. If not, you can indicate the set of variables according to which you want to calculate the intersectional distributional impacts. If you wish to see the set of variables for which the calculation is available, run `available_var_intersec()`. To enter a set of variables for the calculation, it must follow the same format as the output of `available_var_intersec()`, i.e. a table whose columns have category_a and category_b as their titles.  If you do not want to calculate distributional impacts, indicate NULL (by default).}
 
-\item{save}{save the results, options = c (T, F)}
+\item{fig}{if TRUE (by default) create and save the figures of the distributional impacts calculated by the function. If FALSE do not create neither save.}
+
+\item{save}{if TRUE saves the dataframes with the results for the distributional impacts calculated by the function. If FALSE do not save.}
+}
+\value{
+a list containing the generated datasets summarising the basic or/and the intersectional distributional impacts per selected variable or set of variables.
 }
 \description{
-Details: main function to calculate distributional impacts for different price shocks
+Details: main function to calculate the distributional impacts for different price shocks and to save the results and the figures
 }

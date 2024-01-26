@@ -2,18 +2,18 @@
 % Please edit documentation in R/utils.R
 \name{load_rawhbs}
 \alias{load_rawhbs}
-\title{Details: main function to load the Spanish Household Budget Survey (HBS)}
+\title{Details: function to load the Spanish Household Budget Survey (HBS)}
 \usage{
 load_rawhbs(year, path)
 }
 \arguments{
 \item{year}{year of the HBS you want to load}
 
-\item{path}{LOCAL path to the folder where the epf's are stored. Not included in the pkg.}
+\item{path}{Local path to the folder where the HBS's are stored. Not included in the package.}
 }
 \value{
 a list with the 3 files of the HBS
 }
 \description{
-Details: main function to load the Spanish Household Budget Survey (HBS)
+Details: function to load the Spanish Household Budget Survey (HBS)
 }

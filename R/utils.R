@@ -3,9 +3,9 @@ library(magrittr)
 
 # rename_values
 #'
-#' Details: function to rename the codified values of the dataset to the meaningful values detailed in the mapping included in the package
-#' @param data dataset to be standardized
-#' @param current_var column name to be standardized
+#' Details: function to rename the codified values of the dataset to the meaningful values detailed in the mapping included in the package.
+#' @param data dataset to be standardized.
+#' @param current_var column name to be standardized.
 #' @return a dataset with labels renamed based in the mapping included in the package.
 #' @export
 rename_values = function(data, current_var) {
@@ -30,8 +30,8 @@ rename_values = function(data, current_var) {
 
 # standardize
 #'
-#' Details: function to standarize data names
-#' @param data dataset to be standardized
+#' Details: function to standarize data names.
+#' @param data dataset to be standardized.
 #' @return a dataset with the variables and labels renamed based in the mapping included in the package.
 #' @export
 standardize <- function(data) {
@@ -63,10 +63,10 @@ standardize <- function(data) {
 
 # load_rawhbs
 #'
-#' Details: function to load the Spanish Household Budget Survey (HBS)
-#' @param year year of the HBS you want to load
+#' Details: function to load the Spanish Household Budget Survey (HBS).
+#' @param year year of the HBS you want to load.
 #' @param path Local path to the folder where the HBS's are stored. Not included in the package.
-#' @return a list with the 3 files of the HBS
+#' @return a list with the 3 files of the HBS.
 #' @export
 load_rawhbs <- function(year, path) {
 
@@ -230,9 +230,9 @@ load_rawhbs <- function(year, path) {
 # add_coicop
 #'
 #' Details: function to add COICOP categories in the Spanish Household Budget Survey (HBS) according to the aggregation (coicop_year) specified in the package.
-#' @param data dataset with the data from the HBS
-#' @param year year of the HBS to be modified according to the aggregation specified in the package
-#' @return a dataset with HBS data where COICOP categories are aggregated according to the classification specified in the package
+#' @param data dataset with the data from the HBS.
+#' @param year year of the HBS to be modified according to the aggregation specified in the package.
+#' @return a dataset with HBS data where COICOP categories are aggregated according to the classification specified in the package.
 #' @export
 add_coicop <- function(data, year) {
 
@@ -274,10 +274,10 @@ add_coicop <- function(data, year) {
 # elevate_hbs
 #'
 #' Details: function to elevate the Spanish Household Budget Survey (HBS) to national accounting.
-#' @param data dataset with the data from the HBS
-#' @param year year of the HBS you want to elevate to national accounting
-#' @param country country of the HBS you want to elevate. By default "ES" (for the moment it only works for Spain, so DO NOT TOUCH)
-#' @return a dataset with the HBS data where expenses are elevated to national accounting
+#' @param data dataset with the data from the HBS.
+#' @param year year of the HBS you want to elevate to national accounting.
+#' @param country country of the HBS you want to elevate. By default "ES" (for the moment it only works for Spain, so DO NOT TOUCH).
+#' @return a dataset with the HBS data where expenses are elevated to national accounting.
 #' @export
 elevate_hbs <- function(data, year, country = "ES") {
 
@@ -417,12 +417,13 @@ elevate_hbs <- function(data, year, country = "ES") {
 
 # price_shock
 #'
-#' Details: function to apply a specific price shock to the different COICOP categories of the Household Budget Survey (HBS)
-#' @param data input data from the HBS to apply the price shocks
+#' Details: function to apply a specific price shock to the different COICOP categories of the Household Budget Survey (HBS).
+#' @param data input data from the HBS to apply the price shocks.
 #' @param shocks a dataset with the price shocks per coicop to be applied. The format of the dataset has to correspond to the predefined one in the package. To save a csv file with the right format to enter the price shocks run `ex_shocks()`. You can enter more scenarios by including more columns to the right (e.g. s3). A price shock greater than 1 indicates a price increase (e.g. 1.1 indicates a 10% increase) and less than 1 indicates a price decrease (e.g. 0.9 indicates a 10% decrease). The COICOP variables correspond to the aggregate variables of the package, if you are not going to aggregate the COICOP variables you have to replace the column labels by the COICOP variables that appear in your dataset.
-#' @return a dataset with the HBS data and the new expenses for COICOP categories after the application of the price shock
+#' @param year base year for the simulation. It must be the same as the year of the HBS.
+#' @return a dataset with the HBS data and the new expenses for COICOP categories after the application of the price shock.
 #' @export
-price_shock <- function(data, shocks) {
+price_shock <- function(data, shocks, year) {
 
   # Get the shock list
   # shocks <- get("shocks")
@@ -471,11 +472,11 @@ price_shock <- function(data, shocks) {
 
 # adjust_wh
 #'
-#' Details: function to adjust the width and height of a basic graph depending on the number of scenarios and labels
-#' @param data a dataset used to create a basic graph
-#' @param var_w variable on which the width of the basic graph depends
-#' @param var_h variable on which the height of the basic graph depends
-#' @return a list containing the width and the height of the basic graph to be created
+#' Details: function to adjust the width and height of a basic graph depending on the number of scenarios and labels.
+#' @param data a dataset used to create a basic graph.
+#' @param var_w variable on which the width of the basic graph depends.
+#' @param var_h variable on which the height of the basic graph depends.
+#' @return a list containing the width and the height of the basic graph to be created.
 #' @export
 adjust_wh <- function(data, var_w, var_h) {
   base_w <- 110
@@ -501,11 +502,11 @@ adjust_wh <- function(data, var_w, var_h) {
 
 # adjust_wh_is
 #'
-#' Details: function to adjust the width and height of a intersectional graph depending on the number of scenarios and labels
-#' @param data a dataset used to create an intersectional graph
-#' @param var_w variable on which the width of the intersectional graph depends
-#' @param var_h variable on which the height of the intersectional graph depends
-#' @return a list containing the width and the height of the intersectional graph to be created
+#' Details: function to adjust the width and height of a intersectional graph depending on the number of scenarios and labels.
+#' @param data a dataset used to create an intersectional graph.
+#' @param var_w variable on which the width of the intersectional graph depends.
+#' @param var_h variable on which the height of the intersectional graph depends.
+#' @return a list containing the width and the height of the intersectional graph to be created.
 #' @export
 adjust_wh_is <- function(data, var_w, var_h) {
   base_w <- 90
@@ -531,10 +532,10 @@ adjust_wh_is <- function(data, var_w, var_h) {
 
 # basic_graph
 #'
-#' Details: function to create a basic graph to summarize the distributional impact based in one or more socioeconomic or demographic variable (one plot per variable) (INTERNAL FUNCTION)
-#' @param data a dataset with the input data needed to generate a basic graph
+#' Details: function to create a basic graph to summarize the distributional impact based in one or more socioeconomic or demographic variable (one plot per variable) (INTERNAL FUNCTION).
+#' @param data a dataset with the input data needed to generate a basic graph.
 #' @param var variable(s) according to which you want to generate the graph. If categories$categories (by default) creates a graph with the distributional impacts for each of the variables specified in the package. If not, you can indicate a variable or a vector of variables to crate the graph.If you want to see the variables for which the function is available run `available_var_impact()`.
-#' @return a graph per selected variable/s summarizing distributional impacts
+#' @return a graph per selected variable/s summarizing distributional impacts.
 #' @export
 basic_graph <- function(data, var = categories$categories){
   if (!dir.exists("figures")) {dir.create("figures")}
@@ -564,7 +565,7 @@ basic_graph <- function(data, var = categories$categories){
 
 # impact
 #'
-#' Details: function to calculate the distributional impacts based in one or more socioeconomic or demographic variables (one impact per variable)
+#' Details: function to calculate the distributional impacts based in one or more socioeconomic or demographic variables (one impact per variable).
 #' @param data a dataset with the input data needed to calculate distributional impacts. The dataset should contain both the household expenditures collected in the HBS and the expenditures after applying the price shock.
 #' @param var variable(s) according to which you want to calculate distributional impacts. If categories$categories (by default) calculates the distributional impacts for each of the variables specified in the package. If not, you can indicate a variable or a vector of variables to calculate distributional impacts.If you want to see the variables for which the calculation is available run `available_var_impact()`.
 #' @param save If TRUE (by default) saves a list of the generated datasets (.RData) summarising the distributional impacts per selected variable. If FALSE do not save.
@@ -613,10 +614,10 @@ impact <- function(data, var = categories$categories, save = T, file_name = "D_i
 
 # intersectional_graph
 #'
-#' Details: function to create an intersectional graph to summarize the distributional impact based in the intersection of two socioeconomic or demographic variables (2 variables per plot)
-#' @param data a dataset with the input data needed to generate the intersectional graph
+#' Details: function to create an intersectional graph to summarize the distributional impact based in the intersection of two socioeconomic or demographic variables (2 variables per plot).
+#' @param data a dataset with the input data needed to generate the intersectional graph.
 #' @param pairs set of variables (2) according to which you want to create the intersectional graph. If is_categories (by default), it generates the intersectional graph for each of the combinations of variables specified in the package. If not, you can indicate the set of variables according to which you want to generste the intersectional graph. If you wish to see the set of variables for which the calculation is available, run `available_var_intersec()`. To enter a set of variables for the calculation, it must follow the same format as the output of `available_var_intersec()`, i.e. a table whose columns have category_a and category_b as their titles.
-#' @return a graph per selected set of variables summarizing the distributional impacts
+#' @return a graph per selected set of variables summarizing the distributional impacts.
 #' @export
 intersectional_graph <- function(data, pairs = is_categories){
   if (!dir.exists("figures")) {dir.create("figures")}
@@ -646,7 +647,7 @@ intersectional_graph <- function(data, pairs = is_categories){
 
 # impact_intersectional
 #'
-#' #' Details: function to calculate the distributional impacts based in the intersection of two socioeconomic or demographic variables (2 variables per impact)
+#' Details: function to calculate the distributional impacts based in the intersection of two socioeconomic or demographic variables (2 variables per impact).
 #' @param data a dataset with the input data needed to calculate the intersectional distributional impacts. The dataset should contain both the household expenditures collected in the HBS and the expenditures after applying the price shock.
 #' @param pairs set of variables (2) according to which you want to calculate distributional impacts. If is_categories (by default) calculates the intersectional distributional impacts for each of the set of variables specified in the package. If not, you can indicate the set of variables according to which you want to calculate the intersectional distributional impacts.If you want to see the set of variables for which the calculation is available run `available_var_intersec()`. To enter a set of variables for the calculation, it must follow the same format as the output of `available_var_intersec()`, i.e. a table whose columns have category_a and category_b as their titles.
 #' @param save If TRUE (by default) saves a list of the generated datasets (.RData) summarising the intersectional distributional impacts per selected set of variable. If FALSE do not save.

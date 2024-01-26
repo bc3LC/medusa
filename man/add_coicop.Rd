@@ -2,15 +2,18 @@
 % Please edit documentation in R/utils.R
 \name{add_coicop}
 \alias{add_coicop}
-\title{Details: main function to add coicop categories in the Spanish Household Budget Survey (HBS)}
+\title{Details: function to add COICOP categories in the Spanish Household Budget Survey (HBS) according to the aggregation (coicop_year) specified in the package.}
 \usage{
 add_coicop(data, year)
 }
 \arguments{
-\item{data}{description}
+\item{data}{dataset with the data from the HBS}
 
-\item{year}{year of the HBS you want to use}
+\item{year}{year of the HBS to be modified according to the aggregation specified in the package}
+}
+\value{
+a dataset with HBS data where COICOP categories are aggregated according to the classification specified in the package
 }
 \description{
-Details: main function to add coicop categories in the Spanish Household Budget Survey (HBS)
+Details: function to add COICOP categories in the Spanish Household Budget Survey (HBS) according to the aggregation (coicop_year) specified in the package.
 }

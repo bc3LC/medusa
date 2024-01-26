@@ -2,23 +2,30 @@
 % Please edit documentation in R/utils.R
 \name{impact}
 \alias{impact}
-\title{Details: main function to calculate the distributional impacts based in one or more socioeconomic or demographic variables}
+\title{Details: function to calculate the distributional impacts based in one or more socioeconomic or demographic variables (one impact per variable)}
 \usage{
 impact(
   data,
   var = categories$categories,
-  fig = F,
   save = T,
-  file_name = "D_impacts"
+  file_name = "D_impacts",
+  fig = T
 )
 }
 \arguments{
-\item{data}{input data calculate}
+\item{data}{a dataset with the input data needed to calculate distributional impacts. The dataset should contain both the household expenditures collected in the HBS and the expenditures after applying the price shock.}
 
-\item{var}{socioeconomic or demographic variable/s for which distributional impacts are calculated. By default: all variables in categories.}
+\item{var}{variable(s) according to which you want to calculate distributional impacts. If categories$categories (by default) calculates the distributional impacts for each of the variables specified in the package. If not, you can indicate a variable or a vector of variables to calculate distributional impacts.If you want to see the variables for which the calculation is available run `available_var_impact()`.}
 
-\item{fig}{generates and saves a figure that summarises the distributional impacts. By default it is T, for the figure/s not to be saved indicate F}
+\item{save}{If TRUE (by default) saves a list of the generated datasets (.RData) summarising the distributional impacts per selected variable. If FALSE do not save.}
+
+\item{file_name}{name of the file to save the results, if save TRUE. By default "D_impacts".}
+
+\item{fig}{generates and saves a graph that summarises the distributional impacts. By default it is TRUE, for the graph/s not to be generated and saved indicate FALSE.}
+}
+\value{
+a list containing the generated datasets (.RData) summarising the distributional impacts per selected variable.
 }
 \description{
-Details: main function to calculate the distributional impacts based in one or more socioeconomic or demographic variables
+Details: function to calculate the distributional impacts based in one or more socioeconomic or demographic variables (one impact per variable)
 }

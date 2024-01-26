@@ -2,10 +2,10 @@
 % Please edit documentation in R/main.R
 \name{available_var_impact}
 \alias{available_var_impact}
-\title{Details: main function to calculate distributional impacts for different price shocks}
+\title{Details: function that returns the variables for which the calculation of basic distributional impacts is available}
 \usage{
 available_var_impact()
 }
 \description{
-Details: main function to calculate distributional impacts for different price shocks
+Details: function that returns the variables for which the calculation of basic distributional impacts is available
 }

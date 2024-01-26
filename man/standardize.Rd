@@ -9,6 +9,9 @@ standardize(data)
 \arguments{
 \item{data}{dataset to be standardized}
 }
+\value{
+a dataset with the variables and labels renamed based in the mapping included in the package.
+}
 \description{
 Details: function to standarize data names
 }

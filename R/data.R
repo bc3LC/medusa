@@ -76,10 +76,10 @@
 #' @format .RData
 "epf_list_2018"
 
-#' #' Clean hbs list for 2019
-#' #'
-#' #' @source medusa
-#' #' @format .RData
+#' Clean hbs list for 2019
+#'
+#' @source medusa
+#' @format .RData
 #' "epf_list_2019"
 
 #' Clean hbs list for 2020
@@ -93,6 +93,7 @@
 #' @source medusa
 #' @format .RData
 "epf_list_2021"
+
 #' Mapping to rename socioeconomic variables
 #'
 #' @source medusa

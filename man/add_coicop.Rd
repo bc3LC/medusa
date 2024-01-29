@@ -7,12 +7,12 @@
 add_coicop(data, year)
 }
 \arguments{
-\item{data}{dataset with the data from the HBS}
+\item{data}{dataset with the data from the HBS.}
 
-\item{year}{year of the HBS to be modified according to the aggregation specified in the package}
+\item{year}{year of the HBS to be modified according to the aggregation specified in the package.}
 }
 \value{
-a dataset with HBS data where COICOP categories are aggregated according to the classification specified in the package
+a dataset with HBS data where COICOP categories are aggregated according to the classification specified in the package.
 }
 \description{
 Details: function to add COICOP categories in the Spanish Household Budget Survey (HBS) according to the aggregation (coicop_year) specified in the package.

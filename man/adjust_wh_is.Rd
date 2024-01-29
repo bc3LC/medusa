@@ -2,20 +2,20 @@
 % Please edit documentation in R/utils.R
 \name{adjust_wh_is}
 \alias{adjust_wh_is}
-\title{Details: function to adjust the width and height of a intersectional graph depending on the number of scenarios and labels}
+\title{Details: function to adjust the width and height of a intersectional graph depending on the number of scenarios and labels.}
 \usage{
 adjust_wh_is(data, var_w, var_h)
 }
 \arguments{
-\item{data}{a dataset used to create an intersectional graph}
+\item{data}{a dataset used to create an intersectional graph.}
 
-\item{var_w}{variable on which the width of the intersectional graph depends}
+\item{var_w}{variable on which the width of the intersectional graph depends.}
 
-\item{var_h}{variable on which the height of the intersectional graph depends}
+\item{var_h}{variable on which the height of the intersectional graph depends.}
 }
 \value{
-a list containing the width and the height of the intersectional graph to be created
+a list containing the width and the height of the intersectional graph to be created.
 }
 \description{
-Details: function to adjust the width and height of a intersectional graph depending on the number of scenarios and labels
+Details: function to adjust the width and height of a intersectional graph depending on the number of scenarios and labels.
 }

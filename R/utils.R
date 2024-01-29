@@ -262,7 +262,7 @@ add_coicop <- function(data, year) {
   }
 
   # Ensure that the sum of expenditure of the categories created matches the original total expenditure of the survey
-  if (sum(epf_hg$GASTOT/epf_hg$FACTOR, na.rm = TRUE) != sum(rowSums(dplyr::select(epf_hg, contains(coicop))), na.rm = TRUE)){
+  if (round(sum(epf_hg$GASTOT/epf_hg$FACTOR, na.rm = TRUE)) != round(sum(rowSums(dplyr::select(epf_hg, contains(coicop))), na.rm = TRUE))){
     stop("Add coicop procedure is wrong")
   }
 

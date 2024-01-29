@@ -2,7 +2,7 @@
 % Please edit documentation in R/main.R
 \name{calc_di}
 \alias{calc_di}
-\title{Details: main function to calculate the distributional impacts for different price shocks and to save the results and the figures}
+\title{calc_di}
 \usage{
 calc_di(
   year,
@@ -10,14 +10,14 @@ calc_di(
   shocks,
   var_impact = "all",
   var_intersec = NULL,
-  fig = T,
   save = T,
   file_name_impact = "D_impact",
-  file_name_intersec = "DI_impact"
+  file_name_intersec = "DI_impact",
+  fig = T
 )
 }
 \arguments{
-\item{year}{year for the simulation. Available time series: 2006-2021}
+\item{year}{year for the simulation. Available time series: 2006-2021.}
 
 \item{elevate}{if TRUE elevate the HBS to national accounting. If FALSE (by default) do not elevate.}
 
@@ -27,13 +27,17 @@ calc_di(
 
 \item{var_intersec}{set of variables (2) according to which you want to calculate the intersectional distributional impacts. If "all", it calculates the distributional impacts for each of the combinations of variables specified in the package. If not, you can indicate the set of variables according to which you want to calculate the intersectional distributional impacts. If you wish to see the set of variables for which the calculation is available, run `available_var_intersec()`. To enter a set of variables for the calculation, it must follow the same format as the output of `available_var_intersec()`, i.e. a table whose columns have category_a and category_b as their titles.  If you do not want to calculate distributional impacts, indicate NULL (by default).}
 
-\item{fig}{if TRUE (by default) create and save the figures of the distributional impacts calculated by the function. If FALSE do not create neither save.}
-
 \item{save}{if TRUE saves the dataframes with the results for the distributional impacts calculated by the function. If FALSE do not save.}
+
+\item{file_name_impact}{name of the file to save the results of basic distributional impacts, if save TRUE. By default "D_impacts".}
+
+\item{file_name_intersec}{name of the file to save the results of the intersectional distributional impacts, if save TRUE. By default "DI_impacts".}
+
+\item{fig}{if TRUE (by default) create and save the figures of the distributional impacts calculated by the function. If FALSE do not create neither save.}
 }
 \value{
 a list containing the generated datasets summarising the basic or/and the intersectional distributional impacts per selected variable or set of variables.
 }
 \description{
-Details: main function to calculate the distributional impacts for different price shocks and to save the results and the figures
+Main function to calculate the distributional impacts for different price shocks and to save the results and the figures.
 }

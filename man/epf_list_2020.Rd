@@ -3,27 +3,23 @@
 \docType{data}
 \name{epf_list_2020}
 \alias{epf_list_2020}
-\title{#' Clean hbs list for 2019
-#'
-#' @source medusa
-#' @format .RData
-"epf_list_2019"
-Clean hbs list for 2020}
+\title{Clean hbs list for 2019}
 \format{
+.RData
+"epf_list_2019"
+Clean hbs list for 2020
+
 .RData
 }
 \source{
+medusa
+
 medusa
 }
 \usage{
 epf_list_2020
 }
 \description{
-#' Clean hbs list for 2019
-#'
-#' @source medusa
-#' @format .RData
-"epf_list_2019"
-Clean hbs list for 2020
+Clean hbs list for 2019
 }
 \keyword{datasets}

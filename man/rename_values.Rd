@@ -2,18 +2,18 @@
 % Please edit documentation in R/utils.R
 \name{rename_values}
 \alias{rename_values}
-\title{Details: function to rename the codified values of the dataset to the meaningful values detailed in the mapping included in the package}
+\title{Details: function to rename the codified values of the dataset to the meaningful values detailed in the mapping included in the package.}
 \usage{
 rename_values(data, current_var)
 }
 \arguments{
-\item{data}{dataset to be standardized}
+\item{data}{dataset to be standardized.}
 
-\item{current_var}{column name to be standardized}
+\item{current_var}{column name to be standardized.}
 }
 \value{
 a dataset with labels renamed based in the mapping included in the package.
 }
 \description{
-Details: function to rename the codified values of the dataset to the meaningful values detailed in the mapping included in the package
+Details: function to rename the codified values of the dataset to the meaningful values detailed in the mapping included in the package.
 }

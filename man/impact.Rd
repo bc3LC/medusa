@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{impact}
 \alias{impact}
-\title{Details: function to calculate the distributional impacts based in one or more socioeconomic or demographic variables (one impact per variable)}
+\title{Details: function to calculate the distributional impacts based in one or more socioeconomic or demographic variables (one impact per variable).}
 \usage{
 impact(
   data,
@@ -27,5 +27,5 @@ impact(
 a list containing the generated datasets (.RData) summarising the distributional impacts per selected variable.
 }
 \description{
-Details: function to calculate the distributional impacts based in one or more socioeconomic or demographic variables (one impact per variable)
+Details: function to calculate the distributional impacts based in one or more socioeconomic or demographic variables (one impact per variable).
 }

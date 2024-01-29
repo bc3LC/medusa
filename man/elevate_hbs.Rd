@@ -7,14 +7,14 @@
 elevate_hbs(data, year, country = "ES")
 }
 \arguments{
-\item{data}{dataset with the data from the HBS}
+\item{data}{dataset with the data from the HBS.}
 
-\item{year}{year of the HBS you want to elevate to national accounting}
+\item{year}{year of the HBS you want to elevate to national accounting.}
 
-\item{country}{country of the HBS you want to elevate. By default "ES" (for the moment it only works for Spain, so DO NOT TOUCH)}
+\item{country}{country of the HBS you want to elevate. By default "ES" (for the moment it only works for Spain, so DO NOT TOUCH).}
 }
 \value{
-a dataset with the HBS data where expenses are elevated to national accounting
+a dataset with the HBS data where expenses are elevated to national accounting.
 }
 \description{
 Details: function to elevate the Spanish Household Budget Survey (HBS) to national accounting.

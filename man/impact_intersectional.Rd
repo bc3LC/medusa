@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{impact_intersectional}
 \alias{impact_intersectional}
-\title{#' Details: function to calculate the distributional impacts based in the intersection of two socioeconomic or demographic variables (2 variables per impact)}
+\title{Details: function to calculate the distributional impacts based in the intersection of two socioeconomic or demographic variables (2 variables per impact).}
 \usage{
 impact_intersectional(
   data,
@@ -27,5 +27,5 @@ impact_intersectional(
 a list containing the generated datasets (.RData) summarising the intersectional distributional impacts per selected set of variables.
 }
 \description{
-#' Details: function to calculate the distributional impacts based in the intersection of two socioeconomic or demographic variables (2 variables per impact)
+Details: function to calculate the distributional impacts based in the intersection of two socioeconomic or demographic variables (2 variables per impact).
 }

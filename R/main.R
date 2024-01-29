@@ -1,16 +1,16 @@
 # ex_shocks
 #'
 #' Details: function to save a csv file in which the change in prices must be introduced to apply a price shock. Save the file, introduce the price shocks and load in R.The COICOP variables of the file correspond to the aggregate variables of the package, if you are not going to aggregate the COICOP variables you have to replace the column labels by the COICOP variables that appear in your dataset.
+#' @return description
 #' @export
 ex_shocks <- function(){
   exshock <- get("shocks")
   write.csv(exshock, file = "Example_shocks.csv", row.names = F)
 }
 
-# calc_di
+#' calc_di
 #'
-#' Details: main function to calculate the distributional impacts for different price shocks and to save the results and the figures.
-#'
+#' Main function to calculate the distributional impacts for different price shocks and to save the results and the figures.
 #' @param year year for the simulation. Available time series: 2006-2021.
 #' @param elevate if TRUE elevate the HBS to national accounting. If FALSE (by default) do not elevate.
 #' @param shocks a dataset with the price shocks per coicop to be applied. The format of the dataset has to correspond to the predefined one in the package. To save a csv file with the right format to enter the price shocks run `ex_shocks()`. You can enter more scenarios by including more columns to the right (e.g. s3). A price shock greater than 1 indicates a price increase (e.g. 1.1 indicates a 10% increase) and less than 1 indicates a price decrease (e.g. 0.9 indicates a 10% decrease).

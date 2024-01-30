@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{standardize}
 \alias{standardize}
-\title{Details: function to standarize data names.}
+\title{standardize}
 \usage{
 standardize(data)
 }
@@ -13,5 +13,5 @@ standardize(data)
 a dataset with the variables and labels renamed based in the mapping included in the package.
 }
 \description{
-Details: function to standarize data names.
+Function to standarize data names.
 }

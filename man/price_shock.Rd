@@ -2,20 +2,30 @@
 % Please edit documentation in R/utils.R
 \name{price_shock}
 \alias{price_shock}
-\title{Details: function to apply a specific price shock to the different COICOP categories of the Household Budget Survey (HBS).}
+\title{price_shock}
 \usage{
 price_shock(data, shocks, year)
 }
 \arguments{
 \item{data}{input data from the HBS to apply the price shocks.}
 
-\item{shocks}{a dataset with the price shocks per coicop to be applied. The format of the dataset has to correspond to the predefined one in the package. To save a csv file with the right format to enter the price shocks run `ex_shocks()`. You can enter more scenarios by including more columns to the right (e.g. s3). A price shock greater than 1 indicates a price increase (e.g. 1.1 indicates a 10% increase) and less than 1 indicates a price decrease (e.g. 0.9 indicates a 10% decrease). The COICOP variables correspond to the aggregate variables of the package, if you are not going to aggregate the COICOP variables you have to replace the column labels by the COICOP variables that appear in your dataset.}
+\item{shocks}{a dataset with the price shocks per coicop to be applied.
+The format of the dataset has to correspond to the predefined one in the package.
+To save a csv file with the right format to enter the price shocks run `ex_shocks()`.
+You can enter more scenarios by including more columns to the right (e.g. s3).
+A price shock greater than 1 indicates a price increase (e.g. 1.1 indicates a
+10\% increase) and less than 1 indicates a price decrease (e.g. 0.9 indicates a
+10\% decrease). The COICOP variables correspond to the aggregate variables of
+the package, if you are not going to aggregate the COICOP variables you have to
+replace the column labels by the COICOP variables that appear in your dataset.}
 
 \item{year}{base year for the simulation. It must be the same as the year of the HBS.}
 }
 \value{
-a dataset with the HBS data and the new expenses for COICOP categories after the application of the price shock.
+a dataset with the HBS data and the new expenses for COICOP categories
+after the application of the price shock.
 }
 \description{
-Details: function to apply a specific price shock to the different COICOP categories of the Household Budget Survey (HBS).
+Function to apply a specific price shock to the different COICOP
+categories of the Household Budget Survey (HBS).
 }

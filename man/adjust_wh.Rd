@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{adjust_wh}
 \alias{adjust_wh}
-\title{Details: function to adjust the width and height of a basic graph depending on the number of scenarios and labels.}
+\title{adjust_wh}
 \usage{
 adjust_wh(data, var_w, var_h)
 }
@@ -17,5 +17,6 @@ adjust_wh(data, var_w, var_h)
 a list containing the width and the height of the basic graph to be created.
 }
 \description{
-Details: function to adjust the width and height of a basic graph depending on the number of scenarios and labels.
+Function to adjust the width and height of a basic graph depending
+on the number of scenarios and labels.
 }

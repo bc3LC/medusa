@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{rename_values}
 \alias{rename_values}
-\title{Details: function to rename the codified values of the dataset to the meaningful values detailed in the mapping included in the package.}
+\title{rename_values}
 \usage{
 rename_values(data, current_var)
 }
@@ -15,5 +15,6 @@ rename_values(data, current_var)
 a dataset with labels renamed based in the mapping included in the package.
 }
 \description{
-Details: function to rename the codified values of the dataset to the meaningful values detailed in the mapping included in the package.
+Function to rename the codified values of the dataset to the meaningful
+values detailed in the mapping included in the package.
 }

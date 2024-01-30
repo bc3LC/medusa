@@ -2,10 +2,15 @@
 % Please edit documentation in R/main.R
 \name{available_var_intersec}
 \alias{available_var_intersec}
-\title{Details: function that returns the variables for which the calculation of intersectional distributional impacts is available.}
+\title{available_var_intersec}
 \usage{
 available_var_intersec()
 }
+\value{
+set of variables for which the calculation of intersectional
+distributional impacts is available
+}
 \description{
-Details: function that returns the variables for which the calculation of intersectional distributional impacts is available.
+Function that returns the set of variables for which the calculation
+of intersectional distributional impacts is available.
 }

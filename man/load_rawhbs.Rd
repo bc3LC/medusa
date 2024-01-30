@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{load_rawhbs}
 \alias{load_rawhbs}
-\title{Details: function to load the Spanish Household Budget Survey (HBS).}
+\title{load_rawhbs}
 \usage{
 load_rawhbs(year, path)
 }
@@ -15,5 +15,5 @@ load_rawhbs(year, path)
 a list with the 3 files of the HBS.
 }
 \description{
-Details: function to load the Spanish Household Budget Survey (HBS).
+Function to load the Spanish Household Budget Survey (HBS).
 }

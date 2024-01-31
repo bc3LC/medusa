@@ -46,18 +46,57 @@ calc_di( year,
 
 ## Example 2. How to enter the variables for which we want `calc_di` to calculate distributional impacts
 
-###  Introducir variables individuales (var_impact)
+###  Introduce individual variables (var_impact)
 
 1. To know the variables for which the calculation of basic distributional impacts is available run the following function.  
 ```r
 available_var_impact()
 ```
-2. 
+2. Select one of the variables that the function returns in the console. For example, "ZONA".
 
-### Introducir un conjunto de variables (var_intersec)
+3. Enter that variable in the `var_impact` argument of `calc_di`. By default, `var_impact = "all"` , i.e. it calculates the distributional impacts for all variables returned by `available_var_impact()`. For more information on variables click [here](https://bc3lc.github.io/medusa/articles/AvailableVariables.html). 
+ ``` r
+calc_di( year,                 
+		 elevate = F,
+		 shocks ,   
+		 var_impact = "ZONA",       # Indicate here the selected variable
+		 ...)
+```
 
-1. To know the set of variables for which the calculation of intersectional distributional impacts is available run the following function.  
+4. In case you want to calculate distributional impacts for several variables, e.g. for "ZONE" and "TAMAMU", create a vector with these variables and enter it in the `var_impact` argument of `calc_di`.
+ ``` r
+#Create a vector
+vars <- c("ZONA", "TAMAMU")
+
+#Introduce the vector in var_impact argument
+calc_di( year,                 
+		 elevate = F,
+		 shocks ,   
+		 var_impact = vars,       # Indicate here the name of the vector with the selected variables
+		 ...)
+```
+
+### Introduce a set of variables (var_intersec)
+
+1. To know the set of variables for which the calculation of intersectional distributional impacts is available run the following function.  The function returns a table with the set of variables (category_a and category_b) for which the calculation of intersectional distributional impacts is available.
 ```r
 available_var_intersec()
 ```
-2.
+2. Create a table with the set of variables for which you want to calculate distributional impacts in the format predefined in the package. To do this, run the following function that saves a csv file in your directory, open it and delete the rows with the combinations you are not interested in. Once you have a table with only the set of variables you are interested in, save it. 
+```r
+ex_var_intersec()
+```
+3. Upload the edited file to R by running the following function in the terminal:
+``` r
+file_name <- read.csv(file,        # File name or full file path
+	         header = TRUE,
+	         ...)                  # Additional arguments
+``` 
+4. Enter the file in the `var_intersec` argument in `calc_di`. By default, `var_intersec = NULL` , i.e. iif no data is entered in this argument it will not calculate any intersectional impacts, it will only calculate distributional impacts for individual variables. For more information on variables click [here](https://bc3lc.github.io/medusa/articles/AvailableVariables.html).
+ ``` r
+calc_di( year,                 
+		 elevate = F,
+		 shocks ,   
+		 var_intersec = file_name,       # Indicate here the file name of the selected set of variables
+		 ...)
+```

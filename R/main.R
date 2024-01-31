@@ -136,3 +136,16 @@ available_var_intersec <- function(){
   av_var_intersec <- is_categories
   print(av_var_intersec)
 }
+
+#' ex_var_intersec
+#'
+#' Function to save a csv file in which the set of variables must be
+#' introduced for the calculation of intersectional distributional impacts.
+#' Save the file, keep just the conbinations you are interested in and load in R.
+#' @return a csv file with the set of variables for which the calculation of
+#' intersectional distributional impacts is available
+#' @export
+ex_var_intersec <- function(){
+  av_var_intersec <- get("is_categories")
+  write.csv(av_var_intersec, file = "Var_Intersec.csv", row.names = F)
+}

@@ -10,7 +10,7 @@ vignette: >
  `medusa` allows for the calculation of distributional impacts according to numerous socio-economic and demographic variables of households. The variables for which the package currently works are detailed and described below.
 
 | Variable | Description | Labels |
-|----------|-------------|--------|
+|--------|-------------|-------------|
 | QUINTIL | The quintile variable distributes households into 5 groups according to their income [[1]](#1), with 1 representing the poorest households in the distribution and 5 the richest. | 1-5 |
 | DECIL | The decile variable distributes households into 10 groups according to their income [[1]](#1), with 1 representing the poorest households in the distribution and 10 the richest. | 1-10 |
 | VENTIL | The variable ventil distributes households into 20 groups according to their income [[1]](#1), with 1 representing the poorest households in the distribution and 20 the richest. | 1-20 |

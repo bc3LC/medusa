@@ -1,5 +1,5 @@
 ---
-title: "PackgeData"
+title: "PackageData"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{PackageData}

@@ -1,0 +1,63 @@
+---
+title: "Tutorials"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tutorials}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Step by step tutorials
+
+## Example 1. How to enter price shocks in `calc_di`
+
+1. Download the example file into your 	directory by running the following function in the terminal:
+
+``` r
+ex_shocks() 
+``` 
+
+2. Go to the defined folder in your directory and open the csv "Example_shocks". 
+
+3. Define the scenarios: Each column s_ is a scenario. To run `calc_di` for a single scenario delete column s2. To add another scenario, copy column s2 to the right and change the heading to s3 (and so on for the other scenarios: s4, s5...). 
+
+4. Enter the price shocks: Each row corresponds to a COICOP code [[1]](#1) . Enter in each row the price change to be applied to each coicop in each scenario (column).  A price shock greater than 1 indicates a price increase (e.g. 1.1 indicates a 10% increase) and less than 1 indicates a price decrease (e.g. 0.9 indicates a 10% decrease). If there is no shock in that category, keep 1.
+
+5. Save the edited csv file.
+
+6. Upload the edited file to R by running the following function in the terminal:
+``` r
+file_name <- read.csv(file,        # File name or full file path
+	         header = TRUE,        # Read the header (TRUE)
+	         sep = ",",            # Value separator
+	         dec = ".",            # Decimal point
+	         ...)                  # Additional arguments
+``` 
+
+7.  Indicate to `calc_di` that this is the file from which to take the price shocks to be applied.
+``` r
+calc_di( year,                 
+		 elevate = F,
+		 shocks = file_name,   # Indicate here your file name
+		 ...)
+``` 
+
+<small><i>  <a  name="1">[1]</a> The COICOP variables of the file correspond to the aggregate variables of the package, if you are not going to aggregate the COICOP variables you have to replace the column labels by the COICOP variables that appear in your dataset.
+
+## Example 2. How to enter the variables for which we want `calc_di` to calculate distributional impacts
+
+###  Introducir variables individuales (var_impact)
+
+1. To know the variables for which the calculation of basic distributional impacts is available run the following function.  
+```r
+available_var_impact()
+```
+2. 
+
+### Introducir un conjunto de variables (var_intersec)
+
+1. To know the set of variables for which the calculation of intersectional distributional impacts is available run the following function.  
+```r
+available_var_intersec()
+```
+2.

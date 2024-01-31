@@ -2,8 +2,8 @@ pandoc: 3.1.1
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
-  newVignetteName1: newVignetteName1.html
-  newVignetteName2: newVignetteName2.html
-  newVignetteName3: newVignetteName3.html
-last_built: 2024-01-30T14:28Z
+  AvailableVariables: AvailableVariables.html
+  PackageData: PackageData.html
+  Tutorials: Tutorials.html
+last_built: 2024-01-31T07:30Z
 

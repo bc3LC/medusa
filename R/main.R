@@ -72,6 +72,15 @@ calc_di <-function(year, elevate=F, shocks, var_impact = "all", var_intersec = N
   # apply the price shocks
   if(elevate == F){
     epf <- epf_hg
+
+    # Get the mapping list
+    lists <- get(paste0("coicop_", year))
+
+    # Convert lists df to vectors
+    for (r in colnames(lists)) {
+      assign(r, lists %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))      # Extrae una columna y se le asigna al nombre de la columna en un vector
+    }
+
     for (c in coicop) {
       new = paste0( c, "_CNR")
       var = c

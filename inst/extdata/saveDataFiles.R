@@ -158,6 +158,9 @@ use_data(categories, overwrite=T)
 is_categories = read.csv(paste0(rawDataFolder,"is_categories.csv"),header=T)
 use_data(is_categories, overwrite=T)
 
+# graph_labels
+graph_labels = read.csv(paste0(rawDataFolder,"graph_labels.csv"),header=T)
+use_data(graph_labels, overwrite=T)
 
 
 

@@ -221,5 +221,8 @@
 #' @format .csv
 "is_categories"
 
-
-
+#' List containing long names for the socioeconomic and demographic categories to introduce them on the axes of the graphs
+#'
+#' @source medusa
+#' @format .csv
+"graph_labels"

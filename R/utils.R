@@ -564,15 +564,36 @@ basic_graph <- function(data, var = categories$categories){
       tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
       dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", ""))
 
-    pl <- ggplot2::ggplot(datapl, ggplot2::aes(x = !!dplyr::sym(g), y = Impact)) +
+    # Para definir el nombre largo de la variable que va a ir en el título del eje
+    clean_g <- graph_labels %>%
+      dplyr::filter(VARIABLE == g) %>%
+      dplyr::pull(VAR_CLEAN)
+
+    # Para ordenar los labels en el eje x necesitamos definir un vector con el orden (meto los de todas las variables en uno)
+    order <- c("Sin hijos/as", "Con hijos/as", "Familia numerosa", "España", "UE27", "Otros Europa", "Resto mundo", "Sin estudios", "Primaria", "ESO", "Bachiller-FP", "Superiores")
+
+    pl <- ggplot2::ggplot(datapl %>%
+                            dplyr::filter(! get(g) %in% c("No consta", "NA", "Otros")),
+                          ggplot2::aes(x = factor(!!dplyr::sym(g), order), y = Impact, fill = Scenario)) +
       ggplot2::geom_col(position = ggplot2::position_dodge(width = 1)) +
       ggplot2::facet_grid(.~Scenario) +
-      ggplot2::labs(y = "Change in welfare (%)", x = g) +
-      ggplot2::theme(legend.position = "bottom") +
+      ggplot2::scale_fill_manual(values=c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7" )) +
+      ggplot2::labs(y = "Cambio en el bienestar (%)", x = clean_g) +
+      ggplot2::theme(legend.position = "none") +
       ggplot2::theme(text = ggplot2::element_text(size = 16))
-    if (g %in% c("CCAA")) {
+
+
+    if (g %in% c("DECIL")) {
+      pl = pl + ggplot2::scale_x_continuous(breaks = 1:10, labels = 1:10)
+    }
+
+    if (g %in% c("CCAA", "TIPHOGAR", "HIJOS", "EDADPR", "PAISPR", "SPROFESIONALPR", "ESTUDIOSPR")) {
       pl <- pl +
         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.25))
+    }
+
+    if (g %in% c("HIJOS")) {
+      pl = pl + ggplot2::scale_x_continuous(breaks = 1:10, labels = 1:10)
     }
 
     adj_wh <- adjust_wh(datapl, var_w = "Scenario", var_h = NULL)

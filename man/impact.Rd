@@ -9,7 +9,8 @@ impact(
   var = categories$categories,
   save = T,
   file_name = "D_impacts",
-  fig = T
+  fig = T,
+  shocks_scenario_names
 )
 }
 \arguments{
@@ -30,6 +31,8 @@ summarising the distributional impacts per selected variable. If FALSE do not sa
 
 \item{fig}{generates and saves a graph that summarises the distributional impacts.
 By default it is TRUE, for the graph/s not to be generated and saved indicate FALSE.}
+
+\item{shocks_scenario_names}{vector of the names of the considered scenario shocks}
 }
 \value{
 a list containing the generated datasets (.RData) summarising the

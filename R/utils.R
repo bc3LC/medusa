@@ -551,10 +551,17 @@ adjust_wh_is <- function(data, var_w, var_h) {
 #' @param data dataset g g
 #' @param g g
 order_var <- function(data, g){
-  data[[g]] <- factor(g, levels = c("Sin hijos/as", "Con hijos/as", "Familia numerosa"))
-
-  data <- data %>%
+  if (g == "HIJOS"){
+    data <- data %>%
     dplyr::mutate(HIJOS = factor(HIJOS, levels = c("Sin hijos/as", "Con hijos/as", "Familia numerosa")))
+  } else if (g == "PAISPR") {
+    data <- data %>%
+    dplyr::mutate(PAISPR = factor(PAISPR, levels = c("España", "UE27", "Otros Europa", "Resto mundo")))
+  } else if (g == "ESTUDIOSPR") {
+    data <- data %>%
+      dplyr::mutate(ESTUDIOSPR = factor(ESTUDIOSPR, levels = c("Sin estudios", "Primaria", "ESO", "Bachiller-FP", "Superiores")))
+  }
+  return(data)
 }
 
 
@@ -576,14 +583,15 @@ basic_graph <- function(data, var = categories$categories){
     datapl <- data[[paste0("di_",g)]] %>%
       tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
       dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", "")) %>%
-      dplyr::filter(! get(g) %in% c("No consta", "NA", "Otros"))
+      dplyr::filter(! get(g) %in% c("No consta", "NA", "Otros")) %>%
+      order_var(., g)
 
     # Para definir el nombre largo de la variable que va a ir en el título del eje
     clean_g <- graph_labels %>%
       dplyr::filter(VARIABLE == g) %>%
       dplyr::pull(VAR_CLEAN)
 
-    pl <- ggplot2::ggplot(data ,
+    pl <- ggplot2::ggplot(datapl,
                           ggplot2::aes(x = !!dplyr::sym(g), y = Impact, fill = Scenario)) +
       ggplot2::geom_col(position = ggplot2::position_dodge(width = 1)) +
       ggplot2::facet_grid(.~Scenario) +

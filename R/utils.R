@@ -564,7 +564,6 @@ order_var <- function(data, g){
   return(data)
 }
 
-
 #' basic_graph
 #'
 #' Function to create a basic graph to summarize the distributional impact
@@ -608,10 +607,6 @@ basic_graph <- function(data, var = categories$categories){
     if (g %in% c("CCAA", "TIPHOGAR", "HIJOS", "EDADPR", "PAISPR", "SPROFESIONALPR", "ESTUDIOSPR")) {
       pl <- pl +
         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.25))
-    }
-
-    if (g %in% c("HIJOS")) {
-      pl = pl + ggplot2::scale_x_continuous(breaks = 1:10, labels = 1:10)
     }
 
     adj_wh <- adjust_wh(datapl, var_w = "Scenario", var_h = NULL)
@@ -755,7 +750,7 @@ intersectional_graph <- function(data, pairs = is_categories){
 #' @return a list containing the generated datasets (.RData) summarising the intersectional
 #' distributional impacts per selected set of variables.
 #' @export
-dimpact_intersectional <- function(data, pairs = is_categories, save = T, file_name = "DI_impact", fig = T,
+impact_intersectional <- function(data, pairs = is_categories, save = T, file_name = "DI_impact", fig = T,
                                   shocks_scenario_names) {
 
   is_d_impacts = list()                                                                                        # Generamos una lista vacia

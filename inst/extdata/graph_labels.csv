@@ -1,20 +1,20 @@
 VARIABLE,VAR_CLEAN
-QUINTIL,Quintil de renta
-DECIL,Decil de renta
-VENTIL,Ventil de renta
-PERCENTIL,Percentil de renta
-CCAA,Comunidad Autónoma
-TAMAMU,Tamaño del municipio de residencia
-ZONA,Zona de residencia
-TIPHOGAR,Tipo de hogar
-HIJOS,Hijos en el hogar
-POBREZA,Situación de pobreza
-GENEROPR,Género de la persona de referencia
-GRADOFEM,Grado de feminización del hogar
-EDADPR,Edad de la persona de referencia
-PAISPR,País de nacimiento de la persona de referencia
-ESTUDIOSPR,Estudios completados por la persona de referencia
-SPROFESIONALPR,Situación profesional de la persona de referencia
-TIPOCONTPR,Tipo de contrato de la persona de referencia
-JORNADAPR,Tipo de jornada de la persona de referencia
-REGIMENVP,Régimen de tenencia de la vivienda principal
+QUINTILE,Income quintile
+DECIL,Income decile
+VENTIL,Income ventile
+PERCENTIL,Income percentile
+REGION,Region of residence
+MUNISIZE,Size of municipality of residence
+ZONE,Zone of residence
+HHTYPE,Type of household
+CHILDREN,Children in the household
+POVERTY,Poverty status
+GENDERRP,Gender of the reference person
+FEMDEGREE,Degree of feminisation of the household
+AGERP,Age of the reference person
+COUNTRYRP,Country of birth of the reference person
+STUDIESRP,Studies completed by the reference person
+PROFESSIONALSRP,Professional status of the reference person
+CONTTYPERPRP,Type of contract of the reference person
+WORKDAYRP,Type of working hours of the reference person
+REGMR,Tenancy regime of the main dwelling

@@ -1,5 +1,7 @@
 library(usethis)
 library(magrittr)
+options(dplyr.summarise.inform = FALSE)
+
 
 #' rename_values
 #'

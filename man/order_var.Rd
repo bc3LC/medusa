@@ -7,10 +7,13 @@
 order_var(data, g)
 }
 \arguments{
-\item{data}{dataset g g}
+\item{data}{dataset in which we want to order the labels of the socioeconomic and demographic variables}
 
-\item{g}{g}
+\item{g}{variable for which we want to sort the labels}
+}
+\value{
+a dataset in which the labels are ordered for the selected socioeconomic or demographic variable
 }
 \description{
-Function to order the labels of the socioeconomic and demopraphic variables
+Function to order the labels of the socioeconomic and demographic variables
 }

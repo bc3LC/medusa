@@ -547,9 +547,11 @@ adjust_wh_is <- function(data, var_w, var_h) {
 
 #' order_var
 #'
-#' Function to order the labels of the socioeconomic and demopraphic variables
-#' @param data dataset g g
-#' @param g g
+#' Function to order the labels of the socioeconomic and demographic variables
+#' @param data dataset in which we want to order the labels of the socioeconomic and demographic variables
+#' @param g variable for which we want to sort the labels
+#' @return a dataset in which the labels are ordered for the selected socioeconomic or demographic variable
+#' @export
 order_var <- function(data, g){
   if (g == "HIJOS"){
     data <- data %>%
@@ -707,13 +709,47 @@ intersectional_graph <- function(data, pairs = is_categories){
       tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
       dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", ""))
 
-    pl <- ggplot2::ggplot(datapl, ggplot2::aes(x = !!dplyr::sym(var_a), y = Impact)) +
+    # Para definir el nombre largo de la variable que va a ir en el título del eje
+    clean_a <- graph_labels %>%
+      dplyr::filter(VARIABLE == var_a) %>%
+      dplyr::pull(VAR_CLEAN)
+    clean_b <- graph_labels %>%
+      dplyr::filter(VARIABLE == var_b) %>%
+      dplyr::pull(VAR_CLEAN)
+
+    if (var_a %in% c("QUINTIL", "DECIL", "VENTIL", "PERCENTIL")) {
+
+      pl <- ggplot2::ggplot(datapl, ggplot2::aes(x = !!dplyr::sym(var_a), y = Impact, colour = Scenario, fill = Scenario)) +
       ggplot2::geom_point() +
       ggplot2::geom_line() +
       ggplot2::facet_grid(as.formula(paste0("~",var_b,"~Scenario"))) +
-      ggplot2::labs(y = "Change in welfare (%)", x = var_a) +
-      ggplot2::theme(legend.position = "bottom") +
+      ggplot2::scale_colour_manual(values=c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7" )) +
+      ggplot2::labs(y = "Cambio en el bienestar (%)", x = clean_a) +
+      ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~., name = clean_b)) +
+      ggplot2::theme(legend.position = "none") +
       ggplot2::theme(text = ggplot2::element_text(size = 16))
+
+    } else {
+
+      pl <- ggplot2::ggplot(datapl, ggplot2::aes(x = !!dplyr::sym(var_a), y = Impact, fill = Scenario)) +
+        ggplot2::geom_col(position = ggplot2::position_dodge(width = 1)) +
+        ggplot2::facet_grid(as.formula(paste0("~",var_b,"~Scenario"))) +
+        ggplot2::scale_fill_manual(values=c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7" )) +
+        ggplot2::labs(y = "Cambio en el bienestar (%)", x = clean_a) +
+        ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~., name = clean_b))+
+        ggplot2::theme(legend.position = "none") +
+        ggplot2::theme(text = ggplot2::element_text(size = 16))
+
+    }
+
+    if (var_a %in% c("DECIL")) {
+      pl = pl + ggplot2::scale_x_continuous(breaks = 1:10, labels = 1:10)
+    }
+
+    if (var_a %in% c("CCAA", "TIPHOGAR", "HIJOS", "EDADPR", "PAISPR", "SPROFESIONALPR", "ESTUDIOSPR")) {
+      pl <- pl +
+        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.25))
+    }
 
     adj_wh <- adjust_wh_is(datapl, var_w = "Scenario", var_h = var_b)
     ggplot2::ggsave(pl, file = paste0("figures/DI_",var_a,"_", var_b,".png"), width = adj_wh$width  , height = adj_wh$heigth , units = "mm")

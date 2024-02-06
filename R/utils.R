@@ -621,17 +621,19 @@ basic_graph <- function(data, var = categories$categories){
 #' @param file_name name of the file to save the results, if save TRUE. By default "D_impacts".
 #' @param fig generates and saves a graph that summarises the distributional impacts.
 #' By default it is TRUE, for the graph/s not to be generated and saved indicate FALSE.
+#' @param shocks_scenario_names vector of the names of the considered scenario shocks
 #' @return a list containing the generated datasets (.RData) summarising the
 #' distributional impacts per selected variable.
 #' @export
-impact <- function(data, var = categories$categories, save = T, file_name = "D_impacts", fig = T) {
+impact <- function(data, var = categories$categories, save = T, file_name = "D_impacts", fig = T,
+                   shocks_scenario_names) {
 
   d_impacts = list()                                                                                        # Generamos una lista vacia
   missing_vars = c()
 
   for (g in var) {
     if (g %in% colnames(data)) {
-      gastotS_cols <- grep("^GASTOT_s", names(data), value = TRUE)                                           # generamos un vector con todos los nombres que empiecen por GASTOT_s
+      gastotS_cols <- intersect(paste('GASTOT',shocks_scenario_names,sep='_'), names(data))                                          # generamos un vector con todos los nombres de los escenarios de los shocks que están en el dataset
       assign(paste0('di_',g),                                                                                # asignamos todo lo que se calcula debajo a di_ g (del loop)
              data %>%
                dplyr::group_by(!!dplyr::sym(g)) %>%                                                          # agrupamos por g, sym es para que entienda el valor de g (sustituye el get)
@@ -731,10 +733,12 @@ intersectional_graph <- function(data, pairs = is_categories){
 #' @param file_name name of the file to save the results, if save TRUE. By default "DI_impacts".
 #' @param fig generates and saves a graph that summarises the intersectional distributional
 #' impacts. By default it is TRUE, for the graph/s not to be generated and saved indicate FALSE.
+#' @param shocks_scenario_names vector of the names of the considered scenario shocks
 #' @return a list containing the generated datasets (.RData) summarising the intersectional
 #' distributional impacts per selected set of variables.
 #' @export
-impact_intersectional <- function(data, pairs = is_categories, save = T, file_name = "DI_impact", fig = T) {
+dimpact_intersectional <- function(data, pairs = is_categories, save = T, file_name = "DI_impact", fig = T,
+                                  shocks_scenario_names) {
 
   is_d_impacts = list()                                                                                        # Generamos una lista vacia
   missing_vars = c()
@@ -743,7 +747,7 @@ impact_intersectional <- function(data, pairs = is_categories, save = T, file_na
     var_b = pairs$category_b[r]   # te coge el valor de pair en la columna a en la row r
     # ensure that var_a and var_b are in the dataset (as column names)
     if (var_a %in% colnames(data) & var_b %in% colnames(data)) {
-      gastotS_cols <- grep("^GASTOT_s", names(data), value = TRUE)                                           # generamos un vector con todos los nombres que empiecen por GASTOT_s
+      gastotS_cols <- intersect(paste('GASTOT',shocks_scenario_names,sep='_'), names(data))                                          # generamos un vector con todos los nombres de los escenarios de los shocks que están en el dataset
       assign(paste0('di_',var_a,"_",var_b),                                                                                # asignamos todo lo que se calcula debajo a di_ g (del loop)
              data %>%
                dplyr::group_by(!!dplyr::sym(var_a),!!dplyr::sym(var_b)) %>%                                                          # agrupamos por g, sym es para que entienda el valor de g (sustituye el get)

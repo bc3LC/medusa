@@ -47,3 +47,13 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# epf
+inst/extdata/epf_2*
+
+# outputs & figures
+figures/*
+outputs*
+
+# try
+prueba*

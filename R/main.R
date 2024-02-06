@@ -89,7 +89,10 @@ calc_di <-function(year, elevate=F, shocks, var_impact = "all", var_intersec = N
     }
   }
 
-   epf <- price_shock(epf, shocks = shocks, year = year)
+  epf <- price_shock(epf, shocks = shocks, year = year)
+
+  # names of the scenario shocks
+  shocks_scenario_names = names(shocks)[3:length(names(shocks))]
 
   # calculate distributional impacts
   if(!is.null(var_impact)){
@@ -97,7 +100,9 @@ calc_di <-function(year, elevate=F, shocks, var_impact = "all", var_intersec = N
     if(var_impact == "all"){
       var_impact = categories$categories
       }
-    di <- impact(epf, var = var_impact, save = save, file_name = file_name_impact, fig = fig)
+    di <- impact(epf, var = var_impact, save = save,
+                 file_name = file_name_impact, fig = fig,
+                 shocks_scenario_names = shocks_scenario_names)
 
   }
 
@@ -105,7 +110,9 @@ calc_di <-function(year, elevate=F, shocks, var_impact = "all", var_intersec = N
      if(var_intersec == "all"){
        var_intersec = is_categories
      }
-     dii <- impact_intersectional(epf, pairs = var_intersec, save = save, file_name = file_name_intersec, fig = fig)
+     dii <- impact_intersectional(epf, pairs = var_intersec, save = save,
+                                  file_name = file_name_intersec, fig = fig,
+                                  shocks_scenario_names = shocks_scenario_names)
 
    }
 

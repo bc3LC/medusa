@@ -87,6 +87,9 @@ calc_di <-function(year, elevate=F, shocks, var_impact = "all", var_intersec = N
       epf <- epf %>%
         dplyr::mutate({{new}} := get(var))
     }
+
+    epf <- epf %>%
+      dplyr::mutate(GASTOT_CNR = rowSums(dplyr::select(epf, contains('_CNR'))))
   }
 
   epf <- price_shock(epf, shocks = shocks, year = year)

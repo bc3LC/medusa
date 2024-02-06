@@ -129,10 +129,13 @@ following function in the terminal:</li>
 <ol start="2" style="list-style-type: decimal">
 <li><p>Go to the defined folder in your directory and open the csv
 “Example_shocks”.</p></li>
-<li><p>Define the scenarios: Each column s_ is a scenario. To run
-<code>calc_di</code> for a single scenario delete column s2. To add
-another scenario, copy column s2 to the right and change the heading to
-s3 (and so on for the other scenarios: s4, s5…).</p></li>
+<li><p>Define the scenarios: Each column Scenario__ is a scenario. To
+run <code>calc_di</code> for a single scenario delete column Scenario2.
+To add another scenario, copy column Scenario2 to the right and change
+the heading to Scenario3. You can also rename the scenarios by changing
+the heading of each column (e.g. renaming “Scenario1” to “Shock1”). It
+is recommended to keep the names short, as additional variables with
+this name will be created later and inserted into the graphs.</p></li>
 <li><p>Enter the price shocks: Each row corresponds to a COICOP code <a href="#id_1">[1]</a> . Enter in each row the price change to be applied
 to each coicop in each scenario (column). A price shock greater than 1
 indicates a price increase (e.g. 1.1 indicates a 10% increase) and less

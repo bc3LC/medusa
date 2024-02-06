@@ -545,6 +545,19 @@ adjust_wh_is <- function(data, var_w, var_h) {
 
 }
 
+#' order_var
+#'
+#' Function to order the labels of the socioeconomic and demopraphic variables
+#' @param data dataset g g
+#' @param g g
+order_var <- function(data, g){
+  data[[g]] <- factor(g, levels = c("Sin hijos/as", "Con hijos/as", "Familia numerosa"))
+
+  data <- data %>%
+    dplyr::mutate(HIJOS = factor(HIJOS, levels = c("Sin hijos/as", "Con hijos/as", "Familia numerosa")))
+}
+
+
 #' basic_graph
 #'
 #' Function to create a basic graph to summarize the distributional impact
@@ -562,19 +575,16 @@ basic_graph <- function(data, var = categories$categories){
   for (g in var) {
     datapl <- data[[paste0("di_",g)]] %>%
       tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
-      dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", ""))
+      dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", "")) %>%
+      dplyr::filter(! get(g) %in% c("No consta", "NA", "Otros"))
 
     # Para definir el nombre largo de la variable que va a ir en el título del eje
     clean_g <- graph_labels %>%
       dplyr::filter(VARIABLE == g) %>%
       dplyr::pull(VAR_CLEAN)
 
-    # Para ordenar los labels en el eje x necesitamos definir un vector con el orden (meto los de todas las variables en uno)
-    order <- c("Sin hijos/as", "Con hijos/as", "Familia numerosa", "España", "UE27", "Otros Europa", "Resto mundo", "Sin estudios", "Primaria", "ESO", "Bachiller-FP", "Superiores")
-
-    pl <- ggplot2::ggplot(datapl %>%
-                            dplyr::filter(! get(g) %in% c("No consta", "NA", "Otros")),
-                          ggplot2::aes(x = factor(!!dplyr::sym(g), order), y = Impact, fill = Scenario)) +
+    pl <- ggplot2::ggplot(data ,
+                          ggplot2::aes(x = !!dplyr::sym(g), y = Impact, fill = Scenario)) +
       ggplot2::geom_col(position = ggplot2::position_dodge(width = 1)) +
       ggplot2::facet_grid(.~Scenario) +
       ggplot2::scale_fill_manual(values=c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7" )) +

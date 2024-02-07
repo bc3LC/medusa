@@ -4,10 +4,10 @@ library(magrittr)
 
 test_that("Test1_Available basic variables", {
   test_result <- available_var_impact()
-  test_expect <- c("QUINTIL", "DECIL", "VENTIL", "PERCENTIL","CCAA",
-                   "TAMAMU",   "ZONA", "TIPHOGAR", "HIJOS", "POBREZA",
-                   "GENEROPR", "GRADOFEM", "EDADPR", "PAISPR", "ESTUDIOSPR",
-                   "SPROFESIONALPR", "TIPOCONTPR", "JORNADAPR", "REGIMENVP")
+  test_expect <- c("QUINTILE", "DECILE", "VENTILE", "PERCENTILE", "REGION",
+                   "MUNISIZE", "ZONE", "HHTYPE", "CHILDREN", "POVERTY",
+                   "GENDERRP", "FEMDEGREE", "AGERP", "COUNTRYRP", "STUDIESRP",
+                   "PROFESSIONALSRP", "CONTTYPERP", "WORKDAYRP", "REGMR")
   testthat::expect_equal(test_result, test_expect)
 })
 

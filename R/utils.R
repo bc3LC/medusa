@@ -13,8 +13,8 @@ options(dplyr.summarise.inform = FALSE)
 #' @export
 rename_values = function(data, current_var) {
   exchange_data = mapping %>%                                             # te junta los dos df (mapping y data)
-    dplyr::filter(VAR == current_var) %>%                                 # pero solo coge la parte que nos interesa (solo cuando el valor de la variable es igual a current_var)
-    dplyr::select(value, NOMBRE) %>%
+    dplyr::filter(VAR_EN == current_var) %>%                                 # pero solo coge la parte que nos interesa (solo cuando el valor de la variable es igual a current_var)
+    dplyr::select(value, NAME) %>%
     dplyr::distinct()
 
   if (current_var != "NMIEMB" | (current_var == "NMIEMB" & sum(is.na(unique(exchange_data$value))) == 0) ) {                     # miramos si hay algun na en value y si es así no se aplica lo de abajo (para evitar errores con NMIEMB)
@@ -23,7 +23,7 @@ rename_values = function(data, current_var) {
       dplyr::mutate(value = as.character(value)) %>%                           # te convierte en caracter
       dplyr::left_join(exchange_data, by = "value") %>%                        # se queda solo con las columnas que nos interesan (value y nombre)
       dplyr::select(-value) %>%                                                # te elimina la columna value
-      dplyr::rename_with(~current_var, 'NOMBRE')                               # te renombra de nombre a current_var
+      dplyr::rename_with(~current_var, 'NAME')                               # te renombra de nombre a current_var
   }
 
 
@@ -42,19 +42,19 @@ standardize <- function(data) {
   old_names = colnames(data)                                                # te crea un vector con los nombres de las columnas
   new_names = dplyr::left_join(data.frame(VAR_EPF = old_names),             # el vector de los nombres de las columnas se convierte en un df y el nombre de la columna es VAR_EPF
                                mapping %>%
-                                 dplyr::select(VAR_EPF, VAR) %>%            # dentro del mapping selecciona solo las columnas que nos interesan
+                                 dplyr::select(VAR_EPF, VAR_EN) %>%            # dentro del mapping selecciona solo las columnas que nos interesan
                                  dplyr::distinct(.),                        # para eliminar duplicados
                                by = 'VAR_EPF') %>%                          # Haces el left join en funcion a var_epf
-    dplyr::mutate(VAR = ifelse(is.na(VAR), VAR_EPF, VAR)) %>%               # cuando es na te pone var_epf y si no te pone var
-    dplyr::pull(VAR)                                                        # para solo quedarte con la columna var (como vector)
+    dplyr::mutate(VAR_EN = ifelse(is.na(VAR_EN), VAR_EPF, VAR_EN)) %>%               # cuando es na te pone var_epf y si no te pone var
+    dplyr::pull(VAR_EN)                                                        # para solo quedarte con la columna var (como vector)
   colnames(data) = new_names                                                # asignamos a los nombres de las columnas el nuevo vector
 
   # rename values' codes to values' names for all items whose name is in the
   # renamed mapping's column and have not NA values
   ccitems = mapping %>%
-    dplyr::filter(VAR %in% intersect(unique(mapping$VAR), new_names),
+    dplyr::filter(VAR_EN %in% intersect(unique(mapping$VAR_EN), new_names),
                   !is.na(value)) %>%
-    dplyr::pull(VAR) %>%
+    dplyr::pull(VAR_EN) %>%
     unique()
   for (cc in ccitems) {                                                     # para todas las columnas donde se puede hacer mapping de la variables sobreescribimos el dataset standarizado (con función rename_value)
     data = rename_values(data, cc)
@@ -92,7 +92,7 @@ load_rawhbs <- function(year, path) {
   }
 
   # Rename socioeconomic variables
-  epf_hh0 <- standardize(epf_hh)
+  epf_hh <- standardize(epf_hh)
 
 
   # ************************************************************
@@ -144,7 +144,7 @@ load_rawhbs <- function(year, path) {
   # 3. Create new socioeconomic variables
   # **********************************************************************
 
-  # Create the variable DECIL (on total expenditure in equivalent consumption units and by weights)
+  # Create the variable DECILE (on total expenditure in equivalent consumption units and by weights)
   epf_hg <- dplyr::mutate(epf_hg, GASTOT_UC2 = GASTOT/(FACTOR*UC2))
   Nquantiles <- function(x, w = NULL, s, t = NULL) {
     if (is.null(t)) {
@@ -169,24 +169,24 @@ load_rawhbs <- function(year, path) {
     return(y)
   }
 
-  epf_hg$DECIL <- Nquantiles(epf_hg$GASTOT_UC2, w = epf_hg$FACTOR , 10)
+  epf_hg$DECILE <- Nquantiles(epf_hg$GASTOT_UC2, w = epf_hg$FACTOR , 10)
 
-  # Create the variable: QUINTIL
-  epf_hg$QUINTIL <- Nquantiles(epf_hg$GASTOT_UC2, w = epf_hg$FACTOR , 5)
+  # Create the variable: QUINTILE
+  epf_hg$QUINTILE <- Nquantiles(epf_hg$GASTOT_UC2, w = epf_hg$FACTOR , 5)
 
-  # Create the variable: VENTIL
-  epf_hg$VENTIL <- Nquantiles(epf_hg$GASTOT_UC2, w = epf_hg$FACTOR , 20)
+  # Create the variable: VENTILE
+  epf_hg$VENTILE <- Nquantiles(epf_hg$GASTOT_UC2, w = epf_hg$FACTOR , 20)
 
-  # Create the variable: PERCENTIL
-  epf_hg$PERCENTIL <- Nquantiles(epf_hg$GASTOT_UC2, w = epf_hg$FACTOR , 100)
+  # Create the variable: PERCENTILE
+  epf_hg$PERCENTILE <- Nquantiles(epf_hg$GASTOT_UC2, w = epf_hg$FACTOR , 100)
 
   # Create PAISPR for 2006-2010
   if(year %in% c(2006, 2007, 2008,2009,2010)){
   epf_hg <- epf_hg %>%
-    dplyr::mutate(PAISPR = ifelse(NACIONA_SP == 1 , "España",
-                           ifelse(NACIONA_SP != 1 & PAISSP == 1, "UE27",
-                           ifelse(NACIONA_SP != 1 & PAISSP == 2, "Otros Europa",
-                           ifelse(NACIONA_SP != 1 & PAISSP == 3, "Resto mundo", "No consta")))))
+    dplyr::mutate(COUNTRYRP = ifelse(NACIONA_SP == 1 , "Spain",
+                              ifelse(NACIONA_SP != 1 & PAISSP == 1, "EU27",
+                              ifelse(NACIONA_SP != 1 & PAISSP == 2, "Other Europe",
+                              ifelse(NACIONA_SP != 1 & PAISSP == 3, "Rest of world", "Not provided")))))
   }
 
   # Create the variables in gender data from the HBS's individuals file: GRADOFEM
@@ -196,16 +196,16 @@ load_rawhbs <- function(year, path) {
                       number_female = sum( SEXO == 6 & EDAD >= 14)                ) %>%    # number_female : number of female members in the household
     dplyr::mutate   ( share_female  = number_female/(number_male + number_female) ) %>%    # perce_female  : share of female members in the household
 
-    dplyr::mutate   ( GRADOFEM =  ifelse(share_female <  0.2                     , "GF1",
-                                  ifelse(share_female >= 0.2 & share_female < 0.4, "GF2",
-                                  ifelse(share_female >= 0.4 & share_female < 0.6, "GF3",
-                                  ifelse(share_female >= 0.6 & share_female < 0.8, "GF4",
-                                  ifelse(share_female >= 0.8                      ,"GF5", "Not provided"))))))
+    dplyr::mutate   ( FEMDEGREE =  ifelse(share_female <  0.2                     , "FD1",
+                                   ifelse(share_female >= 0.2 & share_female < 0.4, "FD2",
+                                   ifelse(share_female >= 0.4 & share_female < 0.6, "FD3",
+                                   ifelse(share_female >= 0.6 & share_female < 0.8, "FD4",
+                                   ifelse(share_female >= 0.8                      ,"FD5", "Not provided"))))))
 
-  # Create the variable: POBREZA
+  # Create the variable: POVERTY
   med_gastot <- spatstat.geom::weighted.median(epf_hg$GASTOT_UC2, epf_hg$FACTOR, na.rm = TRUE)
   u_pobreza <- 0.6*med_gastot
-  epf_hg <- dplyr::mutate(epf_hg, POBREZA =ifelse(GASTOT_UC2 < u_pobreza, "En riesgo", "Sin riesgo"))
+  epf_hg <- dplyr::mutate(epf_hg, POVERTY =ifelse(GASTOT_UC2 < u_pobreza, "At risk", "No risk"))
 
   # Merge the data generated at the household level by HA04 (household ID) in hg dataset
   if (year == 2019) {

@@ -563,16 +563,16 @@ order_var <- function(data, g){
     dplyr::mutate(COUNTRYRP = factor(COUNTRYRP, levels = c("Spain", "EU27", "Other Europe", "Rest of world")))
   } else if (g == "STUDIESRP") {
     data <- data %>%
-    dplyr::mutate(STUDIESRP = factor(STUDIESRP, levels = c("Without studies", "Primary education", "Secondary education", "Post-secondary non tertiary education", "Higher education")))
+    dplyr::mutate(STUDIESRP = factor(STUDIESRP, levels = c("Without studies", "Primary education", "Secondary education", "Post-secondary education", "Higher education")))
   } else if (g == "REGMR") {
     data <- data %>%
-    dplyr::mutate(REGMR = factor(REGMR, levels = c("Ownership", "Rented", "Relinquish")))
+    dplyr::mutate(REGMR = factor(REGMR, levels = c("Rented","Ownership", "Relinquish")))
   } else if (g == "PROFESSIONALSRP") {
     data <- data %>%
-    dplyr::mutate(PROFESSIONALSRP = factor(PROFESSIONALSRP, levels = c("Employee", "Self-employed", "Employer")))
+    dplyr::mutate(PROFESSIONALSRP = factor(PROFESSIONALSRP, levels = c("Employee", "Self-employed ", "Employer")))
   } else if (g == "AGERP") {
     data <- data %>%
-      dplyr::mutate(AGERP = factor(AGERP, levels = c("Young", "Adult", "Elder")))
+      dplyr::mutate(AGERP = factor(AGERP, levels = c("Young", "Adult", "Elder ")))
   }
   return(data)
 }
@@ -719,6 +719,7 @@ intersectional_graph <- function(data, pairs = is_categories){
     datapl <- data[[paste0("di_", var_a, "_", var_b)]] %>%
       tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
       dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", "")) %>%
+      dplyr::filter(! get(g) %in% c("Not provided", "NA", "Others")) %>%
       order_var(., var_a) %>%
       order_var(., var_b)
 

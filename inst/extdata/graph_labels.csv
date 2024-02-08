@@ -1,8 +1,8 @@
 VARIABLE,VAR_CLEAN
 QUINTILE,Income quintile
-DECIL,Income decile
-VENTIL,Income ventile
-PERCENTIL,Income percentile
+DECILE,Income decile
+VENTILE,Income ventile
+PERCENTILE,Income percentile
 REGION,Region of residence
 MUNISIZE,Size of municipality of residence
 ZONE,Zone of residence
@@ -15,6 +15,6 @@ AGERP,Age of the reference person
 COUNTRYRP,Country of birth of the reference person
 STUDIESRP,Studies completed by the reference person
 PROFESSIONALSRP,Professional status of the reference person
-CONTTYPERPRP,Type of contract of the reference person
+CONTTYPERP,Type of contract of the reference person
 WORKDAYRP,Type of working hours of the reference person
 REGMR,Tenancy regime of the main dwelling

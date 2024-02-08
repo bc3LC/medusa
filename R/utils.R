@@ -180,7 +180,7 @@ load_rawhbs <- function(year, path) {
   # Create the variable: PERCENTILE
   epf_hg$PERCENTILE <- Nquantiles(epf_hg$GASTOT_UC2, w = epf_hg$FACTOR , 100)
 
-  # Create PAISPR for 2006-2010
+  # Create COUNTRYRP for 2006-2010
   if(year %in% c(2006, 2007, 2008,2009,2010)){
   epf_hg <- epf_hg %>%
     dplyr::mutate(COUNTRYRP = ifelse(NACIONA_SP == 1 , "Spain",
@@ -299,7 +299,7 @@ elevate_hbs <- function(data, year, country = "ES") {
   pop_NA <- pop_NA$values
 
   # Calculate survey population: sum of households x members
-  pop_hbs <- sum(epf_hg$FACTOR*epf_hg$NMIEMB)
+  pop_hbs <- sum(epf_hg$FACTOR*epf_hg$NMEMBERS)
 
   # Calculate the population adjustment factor (NA/HBS)
   pop_adf <- pop_NA/pop_hbs
@@ -307,8 +307,8 @@ elevate_hbs <- function(data, year, country = "ES") {
   # Apply the population adjustment factor (factor hbs x pop_adf).
   epf_hg <- epf_hg %>%
     dplyr::mutate (HOGARESCN    = FACTOR * pop_adf  ,
-                   POBLACION    = FACTOR * NMIEMB   ,
-                   POBLACIONCN  = HOGARESCN *NMIEMB )
+                   POBLACION    = FACTOR * NMEMBERS   ,
+                   POBLACIONCN  = HOGARESCN *NMEMBERS )
 
   # Make sure that the population adjusted to the NA matches the NA population to know if the adjustment is well done.
   if (round(sum(epf_hg$POBLACIONCN), digits = 0) != round( pop_NA, digits = 0) ){
@@ -555,15 +555,24 @@ adjust_wh_is <- function(data, var_w, var_h) {
 #' @return a dataset in which the labels are ordered for the selected socioeconomic or demographic variable
 #' @export
 order_var <- function(data, g){
-  if (g == "HIJOS"){
+  if (g == "CHILDREN"){
     data <- data %>%
-    dplyr::mutate(HIJOS = factor(HIJOS, levels = c("Sin hijos/as", "Con hijos/as", "Familia numerosa")))
-  } else if (g == "PAISPR") {
+    dplyr::mutate(CHILDREN = factor(CHILDREN, levels = c("No children", "With children", "Large family")))
+  } else if (g == "COUNTRYRP") {
     data <- data %>%
-    dplyr::mutate(PAISPR = factor(PAISPR, levels = c("España", "UE27", "Otros Europa", "Resto mundo")))
-  } else if (g == "ESTUDIOSPR") {
+    dplyr::mutate(COUNTRYRP = factor(COUNTRYRP, levels = c("Spain", "EU27", "Other Europe", "Rest of world")))
+  } else if (g == "STUDIESRP") {
     data <- data %>%
-      dplyr::mutate(ESTUDIOSPR = factor(ESTUDIOSPR, levels = c("Sin estudios", "Primaria", "ESO", "Bachiller-FP", "Superiores")))
+    dplyr::mutate(STUDIESRP = factor(STUDIESRP, levels = c("Without studies", "Primary education", "Secondary education", "Post-secondary non tertiary education", "Higher education")))
+  } else if (g == "REGMR") {
+    data <- data %>%
+    dplyr::mutate(REGMR = factor(REGMR, levels = c("Ownership", "Rented", "Relinquish")))
+  } else if (g == "PROFESSIONALSRP") {
+    data <- data %>%
+    dplyr::mutate(PROFESSIONALSRP = factor(PROFESSIONALSRP, levels = c("Employee", "Self-employed", "Employer")))
+  } else if (g == "AGERP") {
+    data <- data %>%
+      dplyr::mutate(AGERP = factor(AGERP, levels = c("Young", "Adult", "Elder")))
   }
   return(data)
 }
@@ -586,7 +595,7 @@ basic_graph <- function(data, var = categories$categories){
     datapl <- data[[paste0("di_",g)]] %>%
       tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
       dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", "")) %>%
-      dplyr::filter(! get(g) %in% c("No consta", "NA", "Otros")) %>%
+      dplyr::filter(! get(g) %in% c("Not provided", "NA", "Others")) %>%
       order_var(., g)
 
     # Para definir el nombre largo de la variable que va a ir en el título del eje
@@ -599,16 +608,16 @@ basic_graph <- function(data, var = categories$categories){
       ggplot2::geom_col(position = ggplot2::position_dodge(width = 1)) +
       ggplot2::facet_grid(.~Scenario) +
       ggplot2::scale_fill_manual(values=c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7" )) +
-      ggplot2::labs(y = "Cambio en el bienestar (%)", x = clean_g) +
+      ggplot2::labs(y = "Change in welfare (%)", x = clean_g) +
       ggplot2::theme(legend.position = "none") +
       ggplot2::theme(text = ggplot2::element_text(size = 16))
 
 
-    if (g %in% c("DECIL")) {
+    if (g %in% c("DECILE")) {
       pl = pl + ggplot2::scale_x_continuous(breaks = 1:10, labels = 1:10)
     }
 
-    if (g %in% c("CCAA", "TIPHOGAR", "HIJOS", "EDADPR", "PAISPR", "SPROFESIONALPR", "ESTUDIOSPR")) {
+    if (g %in% c("REGION", "HHTYPE", "CHILDREN", "AGERP", "COUNTRYRP", "PROFESSIONALSRP", "STUDIESRP")) {
       pl <- pl +
         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.25))
     }
@@ -709,7 +718,9 @@ intersectional_graph <- function(data, pairs = is_categories){
     var_b = pairs$category_b[r]
     datapl <- data[[paste0("di_", var_a, "_", var_b)]] %>%
       tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
-      dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", ""))
+      dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", "")) %>%
+      order_var(., var_a) %>%
+      order_var(., var_b)
 
     # Para definir el nombre largo de la variable que va a ir en el título del eje
     clean_a <- graph_labels %>%
@@ -719,14 +730,14 @@ intersectional_graph <- function(data, pairs = is_categories){
       dplyr::filter(VARIABLE == var_b) %>%
       dplyr::pull(VAR_CLEAN)
 
-    if (var_a %in% c("QUINTIL", "DECIL", "VENTIL", "PERCENTIL")) {
+    if (var_a %in% c("QUINTILE", "DECILE", "VENTILE", "PERCENTILE")) {
 
       pl <- ggplot2::ggplot(datapl, ggplot2::aes(x = !!dplyr::sym(var_a), y = Impact, colour = Scenario, fill = Scenario)) +
       ggplot2::geom_point() +
       ggplot2::geom_line() +
       ggplot2::facet_grid(as.formula(paste0("~",var_b,"~Scenario"))) +
       ggplot2::scale_colour_manual(values=c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7" )) +
-      ggplot2::labs(y = "Cambio en el bienestar (%)", x = clean_a) +
+      ggplot2::labs(y = "Change in welfare (%)", x = clean_a) +
       ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~., name = clean_b)) +
       ggplot2::theme(legend.position = "none") +
       ggplot2::theme(text = ggplot2::element_text(size = 16))
@@ -737,18 +748,18 @@ intersectional_graph <- function(data, pairs = is_categories){
         ggplot2::geom_col(position = ggplot2::position_dodge(width = 1)) +
         ggplot2::facet_grid(as.formula(paste0("~",var_b,"~Scenario"))) +
         ggplot2::scale_fill_manual(values=c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7" )) +
-        ggplot2::labs(y = "Cambio en el bienestar (%)", x = clean_a) +
+        ggplot2::labs(y = "Change in welfare (%)", x = clean_a) +
         ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~., name = clean_b))+
         ggplot2::theme(legend.position = "none") +
         ggplot2::theme(text = ggplot2::element_text(size = 16))
 
     }
 
-    if (var_a %in% c("DECIL")) {
-      pl = pl + ggplot2::scale_x_continuous(breaks = 1:10, labels = 1:10)
+    if (var_a %in% c("DECILE")) {
+      pl = pl + ggplot2::scale_x_continuous(breaks = 1:10, labels = 1:10, name = clean_a)
     }
 
-    if (var_a %in% c("CCAA", "TIPHOGAR", "HIJOS", "EDADPR", "PAISPR", "SPROFESIONALPR", "ESTUDIOSPR")) {
+    if (var_a %in% c("REGION", "HHTYPE", "CHILDREN", "AGERP", "COUNTRYRP", "PROFESSIONALSRP", "STUDIESRP")) {
       pl <- pl +
         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.25))
     }

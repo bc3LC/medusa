@@ -69,9 +69,10 @@ standardize <- function(data) {
 #' Function to load the Spanish Household Budget Survey (HBS).
 #' @param year year of the HBS you want to load.
 #' @param path Local path to the folder where the HBS's are stored. Not included in the package.
+#' @param path_outputs path to save the results (RData)
 #' @return a list with the 3 files of the HBS.
 #' @export
-load_rawhbs <- function(year, path) {
+load_rawhbs <- function(year, path, path_outputs) {
 
 
   # ************************************************************
@@ -225,7 +226,7 @@ load_rawhbs <- function(year, path) {
   # **********************************************************************
 
   epf_list <- list(epf_hg = epf_hg, epf_hgm = epf_hgm, epf_hc = epf_hc)
-  save(epf_list, file = paste0("inst/extdata/epf_lists/epf_list_", year,".RData"))
+  save(epf_list, file = paste0(path_outputs,"/epf_list_", year,".RData"))
 
 }
 

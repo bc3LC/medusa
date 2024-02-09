@@ -50,3 +50,7 @@ inst/extdata/Example_*
 figures/
 outputs_di/
 outputs_dii/
+
+
+# Tests
+tests/testthat/test_input/csv*

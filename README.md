@@ -1,5 +1,8 @@
 # MEDUSA - Modelling Equity and DistribUtional impacts for Socioeconomic Analysis
 
+[![docs](https://github.com/bc3LC/medusa/actions/workflows/docs.yaml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/docs.yaml)
+[![pages-build-deployment](https://github.com/bc3LC/medusa/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/pages/pages-build-deployment)
+
 ## <a name="contents"></a>Contents
 
 <!-- ------------------------>

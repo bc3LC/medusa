@@ -53,4 +53,5 @@ outputs_dii/
 
 
 # Tests
-tests/testthat/test_input/csv*
+tests/testthat/test_inputs/csv/*
+tests/testthat/test_outputs/*

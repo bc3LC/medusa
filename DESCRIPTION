@@ -33,9 +33,12 @@ Imports:
 	tidyr,
 	ggplot2,
 	reshape2,
-	stringr
+	stringr,
+	rpackageutils,
+	here
 Suggests: 
     rmarkdown,
-    testthat
+    testthat,
+    devtools
 VignetteBuilder: 
     knitr

@@ -23,22 +23,23 @@ Imports:
     usethis,
     knitr,
     dplyr,
-	reshape2,
-	restatapi,
-	rgcam,
-	markdown,
-	png, 
-	magrittr,
-	restatapi,
-	tidyr,
-	ggplot2,
-	reshape2,
-	stringr,
-	rpackageutils,
-	here
+  	reshape2,
+  	restatapi,
+  	markdown,
+  	png, 
+  	magrittr,
+  	restatapi,
+  	tidyr,
+  	ggplot2,
+  	reshape2,
+  	stringr,
+  	rpackageutils,
+  	here
 Suggests: 
     rmarkdown,
     testthat,
     devtools
 VignetteBuilder: 
     knitr
+Remotes:
+    github::JGCRI/rpackageutils

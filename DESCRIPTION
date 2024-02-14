@@ -34,11 +34,12 @@ Imports:
   	reshape2,
   	stringr,
   	here
+Remotes:
+    github::JGCRI/rpackageutils
 Suggests: 
     rmarkdown,
     testthat,
     devtools
 VignetteBuilder: 
     knitr
-Remotes:
-    github::JGCRI/rpackageutils
+

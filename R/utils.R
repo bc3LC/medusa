@@ -570,10 +570,10 @@ order_var <- function(data, g){
     dplyr::mutate(REGMR = factor(REGMR, levels = c("Rented","Ownership", "Relinquish")))
   } else if (g == "PROFESSIONALSRP") {
     data <- data %>%
-    dplyr::mutate(PROFESSIONALSRP = factor(PROFESSIONALSRP, levels = c("Employee", "Self-employed ", "Employer")))
+    dplyr::mutate(PROFESSIONALSRP = factor(PROFESSIONALSRP, levels = c("Employee", "Self-employed", "Employer")))
   } else if (g == "AGERP") {
     data <- data %>%
-      dplyr::mutate(AGERP = factor(AGERP, levels = c("Young", "Adult", "Elder ")))
+      dplyr::mutate(AGERP = factor(AGERP, levels = c("Young", "Adult", "Elder")))
   }
   return(data)
 }
@@ -720,7 +720,8 @@ intersectional_graph <- function(data, pairs = is_categories){
     datapl <- data[[paste0("di_", var_a, "_", var_b)]] %>%
       tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
       dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", "")) %>%
-      dplyr::filter(! get(g) %in% c("Not provided", "NA", "Others")) %>%
+      dplyr::filter(! get(var_a) %in% c("Not provided", "NA", "Others")) %>%
+      dplyr::filter(! get(var_b) %in% c("Not provided", "NA", "Others")) %>%
       order_var(., var_a) %>%
       order_var(., var_b)
 

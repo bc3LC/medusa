@@ -131,35 +131,35 @@ detailed and described below.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>QUINTIL</td>
+<td>QUINTILE</td>
 <td>The quintile variable distributes households into 5 groups according
 to their income <a href="#id_1">[1]</a>, with 1 representing the poorest
 households in the distribution and 5 the richest.</td>
 <td>1-5</td>
 </tr>
 <tr class="even">
-<td>DECIL</td>
+<td>DECILE</td>
 <td>The decile variable distributes households into 10 groups according
 to their income <a href="#id_1">[1]</a>, with 1 representing the poorest
 households in the distribution and 10 the richest.</td>
 <td>1-10</td>
 </tr>
 <tr class="odd">
-<td>VENTIL</td>
+<td>VENTILE</td>
 <td>The variable ventil distributes households into 20 groups according
 to their income <a href="#id_1">[1]</a>, with 1 representing the poorest
 households in the distribution and 20 the richest.</td>
 <td>1-20</td>
 </tr>
 <tr class="even">
-<td>PERCENTIL</td>
+<td>PERCENTILE</td>
 <td>The percentile variable distributes households into 100 groups
 according to their income <a href="#id_1">[1]</a>, with 1 representing
 the poorest households in the distribution and 100 the richest.</td>
 <td>1-100</td>
 </tr>
 <tr class="odd">
-<td>CCAA</td>
+<td>REGION</td>
 <td>Autonomous Community of residence of the household (NUTS2).</td>
 <td>Andalucía <br> Aragón <br> Asturias <br> Baleares <br> Canarias <br>
 Cantabria <br> Castilla y León <br> Castilla La Mancha <br> Cataluña
@@ -168,49 +168,45 @@ Murcia <br> Navarra <br> País Vasco <br> La Rioja <br> Ceuta <br>
 Melilla</td>
 </tr>
 <tr class="even">
-<td>TAMAMU</td>
+<td>MUNISIZE</td>
 <td>Size of municipality of residence.</td>
 <td>&gt;10.000: Municipalities with more than 10,000 inhabitants <br>
 &lt;10.000: Small municipality with less than 10,000 inhabitants</td>
 </tr>
 <tr class="odd">
-<td>ZONA</td>
+<td>ZONE</td>
 <td>Level of rurality of the household’s area of residence</td>
-<td>Urbana: densely populated urban area <br> Semiurbana: semiurban area
+<td>Urban: densely populated urban area <br> Semi-urban: semi-urban area
 with an intermediate population density <br> Rural: rural area with a
 low population density</td>
 </tr>
 <tr class="even">
-<td>TIPHOGAR</td>
+<td>HHTYPE</td>
 <td>Household type.</td>
-<td>Personas mayores solas: Elderly alone <br> Personas solas: Single
-person <br> Monoparental: Single parent <br> Parejas mayores: Elderly
-couples <br> Parejas sin hijos/as: Couples without children <br> Parejas
-con hijos/as: Couples with children <br> Parejas con hijos/as: Couples
-with children <br> Parejas con hijos/as: Couples with children <br>
-Monoparental: Single parent <br> Parejas con hijos/as: Couples with
-children <br> Otros: Others</td>
+<td>Elderly alone <br> Single person <br> Single parent <br> Elderly
+couples <br> Couples without children <br> Couples with children <br>
+Others</td>
 </tr>
 <tr class="odd">
-<td>HIJOS</td>
+<td>CHILDREN</td>
 <td>Number of household members under 18 years.</td>
-<td>Sin hijos/as: No children <br> Con hijos/as: With 1 or 2 children
-<br> Familia numerosa: Large family with 3 or more children</td>
+<td>No children <br> With children: With 1 or 2 children <br> Large
+family: Large family with 3 or more children</td>
 </tr>
 <tr class="even">
-<td>POBREZA</td>
+<td>POVERTY</td>
 <td>The household is at risk of poverty if its income <a href="#id_1">[1]</a> is below 60% of the national median.</td>
-<td>En riesgo: At risk of poverty <br> Sin riesgo: without risk of
-falling into poverty</td>
+<td>At risk: At risk of general poverty <br> No risk: without risk of
+falling into general poverty</td>
 </tr>
 <tr class="odd">
-<td>GENEROPR</td>
+<td>GENDERRP</td>
 <td>Gender of the reference person of the household.</td>
-<td>Hombre: when the household reference person is a man <br> Mujer:
-when the household reference person is a woman</td>
+<td>Man: when the household reference person is a man <br> Woman: when
+the household reference person is a woman</td>
 </tr>
 <tr class="even">
-<td>GRADOFEM</td>
+<td>FEMDEGREE</td>
 <td>Feminization degree of the household.</td>
 <td>FD1: households in which less than 20% of the household members are
 women <br> FD2:households in which 20-40% of the household members are
@@ -220,55 +216,55 @@ female <br> FD5: households in which more than 80% of the household
 members are women</td>
 </tr>
 <tr class="odd">
-<td>EDADPR</td>
+<td>AGERP</td>
 <td>Age of the reference person in the household. The age is calculated
 as at the date of completion of the household file.</td>
-<td>Joven: Young person aged 30 years or less <br> Persona adulta: Adult
-person between 30 and 65 years of age <br> Persona mayor: Elderly person
-aged 65 years or more</td>
+<td>Young: Young person aged 30 years or less <br> Adult: Adult person
+between 30 and 65 years of age <br> Elder: Elderly person aged 65 years
+or more</td>
 </tr>
 <tr class="even">
-<td>PAISPR</td>
+<td>COUNTRYRP</td>
 <td>Country of birth of the reference person of the household.</td>
-<td>España: when the reference person in the household was born in Spain
-<br> UE27: when the reference person of the household was born in an
-EU27 country (excluding Spain) <br> Otros Europa: when the reference
+<td>Spain: when the reference person in the household was born in Spain
+<br> EU27: when the reference person of the household was born in an
+EU27 country (excluding Spain) <br> Other Europe: when the reference
 person of the household was born in a European country outside the EU27
-<br> Resto mundo: when the reference person of the household was born in
-a country in the rest of the world, i.e. in a non-European country</td>
+<br> Rest of world: when the reference person of the household was born
+in a country in the rest of the world, i.e. in a non-European
+country</td>
 </tr>
 <tr class="odd">
-<td>ESTUDIOSPR</td>
+<td>STUDIESRP</td>
 <td>Education level completed by the reference person of the
 household.</td>
-<td>Sin estudios: Without studies <br> Primaria: Primary education <br>
-ESO: Secondary education <br> Bachiller-FP: Post-secondary non tertiary
-education <br> Superiores: Higher education</td>
+<td>Without studies <br> Primary education <br> Secondary education <br>
+Post-secondary education <br> Higher education</td>
 </tr>
 <tr class="even">
-<td>SPROFESIONALPR</td>
+<td>PROFESSIONALSRP</td>
 <td>Professional status of the reference person of the household.</td>
-<td>Asalariada: Employee <br> Autonoma: Self-employed <br> Empleadora:
-Employer <br> Otros: Others <br> No aplica: Do not apply</td>
+<td>Employee <br> Self-employed <br> Employer <br> Otros: Others <br> No
+aplica: Do not apply</td>
 </tr>
 <tr class="odd">
-<td>TIPOCONTPR</td>
+<td>CONTTYPERP</td>
 <td>Type of employment contract of the reference person of the
 household.</td>
-<td>Indefinido: Indefinite contract <br> Temporal: Temporary contract
-<br> No aplica: Do not apply</td>
+<td>Indefinite: Indefinite contract <br> Temporary: Temporary contract
+<br> Not apply: Do not apply</td>
 </tr>
 <tr class="even">
-<td>JORNADAPR</td>
+<td>WORKDAYRP</td>
 <td>Working hours of the reference person of the household.</td>
-<td>Completa: Full time <br> Parcial: Part time <br> No aplica: Do not
-apply</td>
+<td>Full time <br> Part time <br> Not apply: Do not apply</td>
 </tr>
 <tr class="odd">
-<td>REGIMENVP</td>
+<td>REGMR</td>
 <td>Tenure status of the household’s main residence.</td>
-<td>Propiedad: with home ownership with or without mortgage <br>
-Alquiler: with rented housing <br> Cesión: ……</td>
+<td>Ownership: with home ownership with or without mortgage <br> Rented:
+with rented housing <br> Relinquish: when you use a dwelling free of
+charge</td>
 </tr>
 </tbody>
 </table>

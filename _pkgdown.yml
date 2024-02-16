@@ -5,6 +5,9 @@ navbar:
   left:
     - icon: fa-home
       href: index.html
+    - icon: fa-solid fa-magnifying-glass-chart
+      text: "The Model"
+      href: articles/TheModel.html
     - text: "Packge Data"
       icon: fa-solid fa-chart-pie
       menu:
@@ -12,9 +15,6 @@ navbar:
          href: articles/PackageData.html
       -  text: Available Variables
          href: articles/AvailableVariables.html
-    - icon: fas fa-book
-      text: "Tutorials"
-      href: articles/Tutorials.html
     - icon: fa-file-code-o
       text: "Reference"
       href: reference/index.html

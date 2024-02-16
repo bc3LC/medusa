@@ -28,12 +28,12 @@ Imports:
   	markdown,
   	png, 
   	magrittr,
-  	restatapi,
   	tidyr,
   	ggplot2,
-  	reshape2,
   	stringr,
-  	here
+  	here,
+	spatstat.geom,
+	tibble
 Remotes:
     github::JGCRI/rpackageutils
 Suggests: 

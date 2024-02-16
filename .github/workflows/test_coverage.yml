@@ -45,7 +45,7 @@ jobs:
       # - name: Test coverage
       #   run: |
       #     cov <- covr::package_coverage()
-      #     covr:::report(cov, file = "coverage.xml")
+      #     covr::report(cov, file = "coverage.xml")
       #   shell: Rscript {0}
 
       - uses: codecov/codecov-action@v3

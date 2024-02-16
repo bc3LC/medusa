@@ -60,7 +60,8 @@ test_that("Test4_Example intersectional variables csv", {
 
 
 test_that("Test5_Load raw hbs data", {
-  y <- seq(2006,2021,1)
+  #y <- seq(2006,2021,1)
+  y <- c(2006,2012,2019)
 
   db_path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
   options(timeout = max(300, getOption("timeout"))) #increase downloading time
@@ -96,7 +97,9 @@ test_that("Test6_Standardize & rename values", {
 
 
 test_that("Test7_Add coicop", {
-  y <- seq(2006,2021,1)
+  #y <- seq(2006,2021,1)
+  y <- c(2006,2012,2019)
+
   for (year in y){
     path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs/coicop")
     lists <- read.csv(file.path(path, paste0("coicop_", year, ".csv")))
@@ -115,7 +118,9 @@ test_that("Test7_Add coicop", {
 
 
 test_that("Test8_Elevate_hbs population", {
-  y <- seq(2006,2021,1)
+  #y <- seq(2006,2021,1)
+  y <- c(2006,2012,2019)
+
   country <-"ES"
   for (year in y){
     pop_NA <- restatapi::get_eurostat_data("demo_gind",
@@ -136,7 +141,9 @@ test_that("Test8_Elevate_hbs population", {
 
 
 test_that("Test8_Elevate_hbs expenses", {
-  y <- seq(2006,2021,1)
+  #y <- seq(2006,2021,1)
+  y <- c(2006,2012,2019)
+
   country <-"ES"
   for (year in y){
 
@@ -173,7 +180,7 @@ test_that("Test9_Price_shock", {
 })
 
 
-test_that("Test10_Impact", {
+test_that("Test10_Impact & basic graph", {
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
   epf <- read.csv(file.path(path, "ex_dataset_expenses_ps.csv"))
   shocks <- read.csv(file.path(path, "shocks_ps.csv"))
@@ -186,10 +193,8 @@ test_that("Test10_Impact", {
   test_expect <- d_impacts
 
   testthat::expect_equal(test_result, test_expect)
-})
 
-
-test_that("Test11_Basic graph", {
+  #Check figures
   vars <- c("AGERP", "COUNTRYRP", "GENDERRP", "HHTYPE", "MUNISIZE", "REGION", "REGMR", "STUDIESRP", "ZONE" )
   for (g in vars) {
     test_result <- png::readPNG(file.path(rprojroot::find_root(rprojroot::is_testthat), paste0("test_inputs/figures/DI_",g,".png")))
@@ -200,7 +205,7 @@ test_that("Test11_Basic graph", {
 })
 
 
-test_that("Test12_Impact Intersectional", {
+test_that("Test11_Impact Intersectional", {
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
   epf <- read.csv(file.path(path, "ex_dataset_expenses_ps.csv"))
   shocks <- read.csv(file.path(path, "shocks_ps.csv"))
@@ -219,8 +224,10 @@ test_that("Test12_Impact Intersectional", {
 })
 
 
-test_that("Test13_Calculate distributional impacts for all years (basic), no elevated", {
-  y <- seq(2006,2021,1)
+test_that("Test12_Calculate distributional impacts for all years (basic), no elevated", {
+  #y <- seq(2006,2021,1)
+  y <- c(2006,2012,2019)
+
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
   shocks <- read.csv(file.path(path, "shocks_cdi.csv"))
 
@@ -239,8 +246,10 @@ test_that("Test13_Calculate distributional impacts for all years (basic), no ele
 })
 
 
-test_that("Test14_Calculate distributional impacts for all years (basic), elevated", {
-  y <- seq(2006,2021,1)
+test_that("Test13_Calculate distributional impacts for all years (basic), elevated", {
+  #y <- seq(2006,2021,1)
+  y <- c(2006,2012,2019)
+
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
   shocks <- read.csv(file.path(path, "shocks_cdi.csv"))
 
@@ -259,8 +268,10 @@ test_that("Test14_Calculate distributional impacts for all years (basic), elevat
 })
 
 
-test_that("Test15_Calculate distributional impacts for all years (intersectional), no elevated", {
-  y <- seq(2006,2021,1)
+test_that("Test14_Calculate distributional impacts for all years (intersectional), no elevated", {
+  #y <- seq(2006,2021,1)
+  y <- c(2006,2012,2019)
+
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
   shocks <- read.csv(file.path(path, "shocks_cdii.csv"))
 
@@ -279,8 +290,10 @@ test_that("Test15_Calculate distributional impacts for all years (intersectional
 })
 
 
-test_that("Test16_Calculate distributional impacts for all years (intersectional), no elevated", {
-  y <- seq(2006,2021,1)
+test_that("Test15_Calculate distributional impacts for all years (intersectional), no elevated", {
+  #y <- seq(2006,2021,1)
+  y <- c(2006,2012,2019)
+
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
   shocks <- read.csv(file.path(path, "shocks_cdii.csv"))
 

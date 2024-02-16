@@ -2,8 +2,9 @@
 
 [![docs](https://github.com/bc3LC/medusa/actions/workflows/docs.yaml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/docs.yaml)
 [![pages-build-deployment](https://github.com/bc3LC/medusa/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/pages/pages-build-deployment)
-[![build](https://github.com/bc3LC/medusa/actions/workflows/build.yaml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/build.yaml)
 [![test_coverage](https://github.com/bc3LC/medusa/actions/workflows/test_coverage.yml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/test_coverage.yml)
+[![codecov](https://codecov.io/gh/bc3LC/medusa/graph/badge.svg?token=VSmmxRUGO2)](https://codecov.io/gh/bc3LC/medusa)
+[![build](https://github.com/bc3LC/medusa/actions/workflows/build.yaml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/build.yaml)
 
 ## <a name="contents"></a>Contents
 

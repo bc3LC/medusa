@@ -74,7 +74,7 @@ test_that("Test5_Load raw hbs data", {
     epf_hh <- read.csv(file.path(path, paste0("/epf_", year, "_h.csv")))
     test_expect <- round(sum(epf_hh$GASTOT/epf_hh$FACTOR, na.rm = TRUE))
 
-    load_rawhbs(year = year, path = file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs/csv"),
+    load_rawhbs(year = year, path = file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs/csv/"),
                 path_outputs = file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs"))
     load(file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs",paste0("/epf_list_", year, ".RData")))
     epf_hg <- epf_list$epf_hg

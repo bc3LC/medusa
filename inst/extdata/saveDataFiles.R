@@ -1,5 +1,6 @@
 # Converting raw data into package data
 library(usethis)
+library(magrittr)
 
 rawDataFolder = paste0(here::here(),"/inst/extdata/")
 
@@ -68,7 +69,7 @@ epf_list_2021 = get(load(paste0(rawDataFolder,"/epf_lists/epf_list_2021.RData"))
 use_data(epf_list_2021, overwrite=T)
 
 # mapping
-mapping = read.csv(paste0(rawDataFolder,"mapping.csv"),header=T) %>%
+mapping = read.csv(paste0(rawDataFolder,"mapping.csv"),header=T, fileEncoding = "UTF-8-BOM") %>%
   # substitue all empty items for NA
   dplyr::mutate_all(~dplyr::na_if(., ""))
 use_data(mapping, overwrite=T)
@@ -142,7 +143,7 @@ coicop_2021 = read.csv(paste0(rawDataFolder,"coicop_2021.csv"),header=T, fileEnc
 use_data(coicop_2021, overwrite=T)
 
 # gcfhogares95_22
-gcfhogares95_22 = read.csv(paste0(rawDataFolder,"gcfhogares95_22.csv"),header=T) %>%
+gcfhogares95_22 = read.csv(paste0(rawDataFolder,"gcfhogares95_22.csv"),header=T, fileEncoding = "UTF-8-BOM") %>%
   dplyr::rename_with(~gsub("^X", "", .x), starts_with("X"))
 use_data(gcfhogares95_22, overwrite=T)
 

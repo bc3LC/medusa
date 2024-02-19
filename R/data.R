@@ -80,7 +80,7 @@
 #'
 #' @source medusa
 #' @format .RData
-#' "epf_list_2019"
+"epf_list_2019"
 
 #' Clean hbs list for 2020
 #'
@@ -208,6 +208,12 @@
 #' @source medusa
 #' @format .csv
 "gcfhogares95_22"
+
+#' Example csv file in which the change in prices must be introduced to apply a price shock
+#'
+#' @source medusa
+#' @format .csv
+"shocks"
 
 #' List containing the socioeconomic and demographic categories for the calculation of distributional impacts
 #'

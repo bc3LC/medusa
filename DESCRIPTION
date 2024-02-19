@@ -32,10 +32,10 @@ Imports:
   	stringr,
   	here,
 	spatstat.geom,
-	tibble
+	tibble,
+	restatapi
 Remotes:
-    github::JGCRI/rpackageutils,
-	github::eurostat/restatapi
+    github::JGCRI/rpackageutils
 Suggests: 
     rmarkdown,
     testthat,

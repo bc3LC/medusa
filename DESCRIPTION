@@ -24,7 +24,6 @@ Imports:
     knitr,
     dplyr,
   	reshape2,
-  	restatapi,
   	markdown,
   	png, 
   	magrittr,
@@ -36,6 +35,7 @@ Imports:
 	tibble
 Remotes:
     github::JGCRI/rpackageutils
+	github::eurostat/restatapi
 Suggests: 
     rmarkdown,
     testthat,

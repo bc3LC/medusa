@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev_k
 
 jobs:
   R-CMD:
@@ -31,17 +32,14 @@ jobs:
       - name: Install libraries
         if: startsWith(matrix.config.os, 'ubuntu')
         run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /opt/ghc
-          sudo rm -rf "/usr/local/share/boost"
-          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          sudo rm -rf /opt/hostedtoolcache
           sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
           sudo apt-get update
           sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev libudunits2-dev libgdal-dev libgeos-dev libproj-dev libmagick++-dev libavfilter-dev libharfbuzz-dev libfribidi-dev
 
       - name: Install dependencies
         run: |
-          install.packages(c("remotes","rcmdcheck","restatapi"), repos = "https://cloud.r-project.org")
+          install.packages(c("remotes","rcmdcheck"), repos = "https://cloud.r-project.org")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_github("JGCRI/rpackageutils")
           remotes::install_github("eurostat/restatapi")

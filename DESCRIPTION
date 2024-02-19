@@ -14,7 +14,7 @@ Authors@R: c(person("Eva", "Alonso-Epelde", email = "eva.alonso@bc3research.org"
 Description: Description of your R package medusa.
 URL: https://github.com/bc3LC/medusa
 BugReports: https://github.com/bc3LC/medusa/issues
-Depends: R (>= 2.10)
+Depends: R (>= 3.5)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -31,11 +31,11 @@ Imports:
   	ggplot2,
   	stringr,
   	here,
-	spatstat.geom,
-	tibble,
-	restatapi
+	  spatstat.geom,
+	  tibble
 Remotes:
     github::JGCRI/rpackageutils
+    github::eurostat/restatapi
 Suggests: 
     rmarkdown,
     testthat,

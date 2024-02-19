@@ -34,7 +34,7 @@ Imports:
 	  spatstat.geom,
 	  tibble
 Remotes:
-    github::JGCRI/rpackageutils
+    github::JGCRI/rpackageutils,
     github::eurostat/restatapi
 Suggests: 
     rmarkdown,

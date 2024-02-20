@@ -189,14 +189,14 @@ test_that("Test10_Impact & basic graph", {
   setwd(path)
   test_result <- impact(epf, shocks_scenario_names = shocks_scenario_names)
 
-  test_expect <- load(path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs/D_impacts.RData"))
-  test_expect <- d_impacts
+  assign("test_expect", get(load(file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs/D_impacts.RData"))))
 
   testthat::expect_equal(test_result, test_expect)
 
   #Check figures
   vars <- c("AGERP", "COUNTRYRP", "GENDERRP", "HHTYPE", "MUNISIZE", "REGION", "REGMR", "STUDIESRP", "ZONE" )
   for (g in vars) {
+    print(g)
     test_result <- png::readPNG(file.path(rprojroot::find_root(rprojroot::is_testthat), paste0("test_inputs/figures/DI_",g,".png")))
     test_expect <- png::readPNG(file.path(rprojroot::find_root(rprojroot::is_testthat), paste0("test_outputs/figures/DI_",g,".png")))
 

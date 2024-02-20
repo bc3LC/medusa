@@ -16,6 +16,7 @@ test_that("Test2_Available intersectional variables", {
   test_result <- available_var_intersec()
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
   test_expect <- read.csv(file = paste0(path, "/is_categories.csv"),
+                          fileEncoding = "UTF-8-BOM",
                           header = TRUE,
                           sep = ",",
                           dec = ".")
@@ -28,11 +29,13 @@ test_that("Test3_Example shocks", {
   ex_shocks()
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")
   test_result <- read.csv(file = paste0(path, "/Example_shocks.csv"),
+                          fileEncoding = "UTF-8-BOM",
                           header = TRUE,
                           sep = ",",
                           dec = ".")
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
   test_expect <- read.csv(file = paste0(path, "/shocks.csv"),
+                          fileEncoding = "UTF-8-BOM",
                           header = TRUE,
                           sep = ",",
                           dec = ".")
@@ -45,12 +48,14 @@ test_that("Test4_Example intersectional variables csv", {
   ex_var_intersec()
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")
   test_result <- read.csv(file = paste0(path, "/Var_Intersec.csv"),
+                          fileEncoding = "UTF-8-BOM",
                           header = TRUE,
                           sep = ",",
                           dec = ".")
 
    path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
   test_expect <- read.csv(file = paste0(path, "/is_categories.csv"),
+                          fileEncoding = "UTF-8-BOM",
                           header = TRUE,
                           sep = ",",
                           dec = ".")
@@ -71,7 +76,7 @@ test_that("Test5_Load raw hbs data", {
 
   for (year in y){
     path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs/csv")
-    epf_hh <- read.csv(file.path(path, paste0("/epf_", year, "_h.csv")))
+    epf_hh <- read.csv(file.path(path, paste0("/epf_", year, "_h.csv")), header=T, fileEncoding = "UTF-8-BOM")
     test_expect <- round(sum(epf_hh$GASTOT/epf_hh$FACTOR, na.rm = TRUE))
 
     load_rawhbs(year = year, path = file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs/csv/"),
@@ -87,9 +92,9 @@ test_that("Test5_Load raw hbs data", {
 
 test_that("Test6_Standardize & rename values", {
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
-  test_expect <- read.csv(file.path(path, "ex_dataset_renamed.csv"))
+  test_expect <- read.csv(file.path(path, "ex_dataset_renamed.csv"), header=T, fileEncoding = "UTF-8-BOM")
 
-  epf_hh <- read.csv(file.path(path, "ex_dataset.csv"))
+  epf_hh <- read.csv(file.path(path, "ex_dataset.csv"), header=T, fileEncoding = "UTF-8-BOM")
   test_result <- standardize(epf_hh)
 
   testthat::expect_equal(test_result, test_expect)
@@ -170,11 +175,11 @@ test_that("Test8_Elevate_hbs expenses", {
 
 test_that("Test9_Price_shock", {
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
-  epf <- read.csv(file.path(path, "ex_dataset_expenses.csv"))
-  shocks <- read.csv(file.path(path, "shocks_ps.csv"))
+  epf <- read.csv(file.path(path, "ex_dataset_expenses.csv"), header=T, fileEncoding = "UTF-8-BOM")
+  shocks <- read.csv(file.path(path, "shocks_ps.csv"), header=T, fileEncoding = "UTF-8-BOM")
   test_result <- price_shock(epf, shocks, 2006)
 
-  test_expect <- read.csv(file.path(path, "ex_dataset_expenses_ps.csv"))
+  test_expect <- read.csv(file.path(path, "ex_dataset_expenses_ps.csv"), header=T, fileEncoding = "UTF-8-BOM")
 
   testthat::expect_equal(test_result, test_expect)
 })
@@ -182,8 +187,8 @@ test_that("Test9_Price_shock", {
 
 test_that("Test10_Impact & basic graph", {
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
-  epf <- read.csv(file.path(path, "ex_dataset_expenses_ps.csv"))
-  shocks <- read.csv(file.path(path, "shocks_ps.csv"))
+  epf <- read.csv(file.path(path, "ex_dataset_expenses_ps.csv"), header=T, fileEncoding = "UTF-8-BOM")
+  shocks <- read.csv(file.path(path, "shocks_ps.csv"), header=T, fileEncoding = "UTF-8-BOM")
   shocks_scenario_names <- names(shocks)[3:length(names(shocks))]
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")
   setwd(path)
@@ -196,7 +201,6 @@ test_that("Test10_Impact & basic graph", {
   #Check figures
   vars <- c("AGERP", "COUNTRYRP", "GENDERRP", "HHTYPE", "MUNISIZE", "REGION", "REGMR", "STUDIESRP", "ZONE" )
   for (g in vars) {
-    print(g)
     test_result <- png::readPNG(file.path(rprojroot::find_root(rprojroot::is_testthat), paste0("test_inputs/figures/DI_",g,".png")))
     test_expect <- png::readPNG(file.path(rprojroot::find_root(rprojroot::is_testthat), paste0("test_outputs/figures/DI_",g,".png")))
 
@@ -207,8 +211,8 @@ test_that("Test10_Impact & basic graph", {
 
 test_that("Test11_Impact Intersectional", {
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
-  epf <- read.csv(file.path(path, "ex_dataset_expenses_ps.csv"))
-  shocks <- read.csv(file.path(path, "shocks_ps.csv"))
+  epf <- read.csv(file.path(path, "ex_dataset_expenses_ps.csv"), header=T, fileEncoding = "UTF-8-BOM")
+  shocks <- read.csv(file.path(path, "shocks_ps.csv"), header=T, fileEncoding = "UTF-8-BOM")
   shocks_scenario_names <- names(shocks)[3:length(names(shocks))]
   category_a <- c("AGERP", "GENDERRP", "COUNTRYRP", "ZONE", "REGION")
   category_b <- c("GENDERRP", "COUNTRYRP", "REGMR", "HHTYPE", "MUNISIZE")
@@ -229,7 +233,7 @@ test_that("Test12_Calculate distributional impacts for all years (basic), no ele
   y <- c(2006,2012,2019)
 
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
-  shocks <- read.csv(file.path(path, "shocks_cdi.csv"))
+  shocks <- read.csv(file.path(path, "shocks_cdi.csv"), header=T, fileEncoding = "UTF-8-BOM")
 
   for (year in y){
     path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")
@@ -251,7 +255,7 @@ test_that("Test13_Calculate distributional impacts for all years (basic), elevat
   y <- c(2006,2012,2019)
 
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
-  shocks <- read.csv(file.path(path, "shocks_cdi.csv"))
+  shocks <- read.csv(file.path(path, "shocks_cdi.csv"), header=T, fileEncoding = "UTF-8-BOM")
 
   for (year in y){
     path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")
@@ -273,7 +277,7 @@ test_that("Test14_Calculate distributional impacts for all years (intersectional
   y <- c(2006,2012,2019)
 
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
-  shocks <- read.csv(file.path(path, "shocks_cdii.csv"))
+  shocks <- read.csv(file.path(path, "shocks_cdii.csv"), header=T, fileEncoding = "UTF-8-BOM")
 
   for (year in y){
     path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")
@@ -295,7 +299,7 @@ test_that("Test15_Calculate distributional impacts for all years (intersectional
   y <- c(2006,2012,2019)
 
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
-  shocks <- read.csv(file.path(path, "shocks_cdii.csv"))
+  shocks <- read.csv(file.path(path, "shocks_cdii.csv"), header=T, fileEncoding = "UTF-8-BOM")
 
   for (year in y){
     path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")

@@ -187,7 +187,7 @@ library(usethis)
 #
 
 test_that("Test10_Impact & basic graph", {
-  # path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
+  path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
   # epf <- read.csv(file.path(path, "ex_dataset_expenses_ps.csv"), header=T, fileEncoding = "UTF-8-BOM", stringsAsFactors = FALSE)
   # # Function to decode HTML entities in col4
   # decode_html <- function(text) {

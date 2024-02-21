@@ -206,8 +206,8 @@ test_that("Test10_Impact & basic graph", {
   #Check figures
   vars <- c("AGERP", "COUNTRYRP", "GENDERRP", "HHTYPE", "MUNISIZE", "REGION", "REGMR", "STUDIESRP", "ZONE" )
   for (g in vars) {
-    test_result <- png::readPNG(file.path(rprojroot::find_root(rprojroot::is_testthat), paste0("test_inputs/figures/DI_",g,".png")))
-    test_expect <- png::readPNG(file.path(rprojroot::find_root(rprojroot::is_testthat), paste0("test_outputs/figures/DI_",g,".png")))
+    test_result <- imager::load.image(file.path(rprojroot::find_root(rprojroot::is_testthat), paste0("test_inputs/figures/DI_",g,".png")))
+    test_expect <- imager::load.image(file.path(rprojroot::find_root(rprojroot::is_testthat), paste0("test_outputs/figures/DI_",g,".png")))
 
     testthat::expect_equal(test_result, test_expect)
   }

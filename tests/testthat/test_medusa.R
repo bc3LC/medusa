@@ -1,6 +1,7 @@
 library(medusa)
 library(testthat)
 library(magrittr)
+library(usethis)
 
 # test_that("Test1_Available basic variables", {
 #   test_result <- available_var_impact()
@@ -186,15 +187,18 @@ library(magrittr)
 #
 
 test_that("Test10_Impact & basic graph", {
-  path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
-  epf <- read.csv(file.path(path, "ex_dataset_expenses_ps.csv"), header=T, fileEncoding = "UTF-8-BOM", stringsAsFactors = FALSE)
-  # Function to decode HTML entities in col4
-  decode_html <- function(text) {
-    xml2::xml_text(xml2::read_xml(paste0("<x>", text, "</x>")))
-  }
-  # Applying the function to decode HTML entities in col4
-  epf$REGION <- sapply(epf$REGION, decode_html)
+  # path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
+  # epf <- read.csv(file.path(path, "ex_dataset_expenses_ps.csv"), header=T, fileEncoding = "UTF-8-BOM", stringsAsFactors = FALSE)
+  # # Function to decode HTML entities in col4
+  # decode_html <- function(text) {
+  #   xml2::xml_text(xml2::read_xml(paste0("<x>", text, "</x>")))
+  # }
+  # # Applying the function to decode HTML entities in col4
+  # epf$REGION <- sapply(epf$REGION, decode_html)
   # use_data(epf, overwrite = T)
+
+
+  assign("epf", get(load(file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs/epf.rda"))))
 
   shocks <- read.csv(file.path(path, "shocks_ps.csv"), header=T, fileEncoding = "UTF-8-BOM")
   shocks_scenario_names <- names(shocks)[3:length(names(shocks))]
@@ -207,13 +211,13 @@ test_that("Test10_Impact & basic graph", {
   testthat::expect_equal(test_result, test_expect)
 
   #Check figures
-  # vars <- c("AGERP", "COUNTRYRP", "GENDERRP", "HHTYPE", "MUNISIZE", "REGION", "REGMR", "STUDIESRP", "ZONE" )
-  # for (g in vars) {
-  #   test_result <- png::readPNG(file.path(rprojroot::find_root(rprojroot::is_testthat), paste0("test_inputs/figures/DI_",g,".png")))
-  #   test_expect <- png::readPNG(file.path(rprojroot::find_root(rprojroot::is_testthat), paste0("test_outputs/figures/DI_",g,".png")))
-  #
-  #   testthat::expect_equal(test_result, test_expect)
-  # }
+  vars <- c("AGERP", "COUNTRYRP", "GENDERRP", "HHTYPE", "MUNISIZE", "REGION", "REGMR", "STUDIESRP", "ZONE" )
+  for (g in vars) {
+    test_result <- png::readPNG(file.path(rprojroot::find_root(rprojroot::is_testthat), paste0("test_inputs/figures/DI_",g,".png")))
+    test_expect <- png::readPNG(file.path(rprojroot::find_root(rprojroot::is_testthat), paste0("test_outputs/figures/DI_",g,".png")))
+
+    testthat::expect_equal(test_result, test_expect)
+  }
 })
 #
 #

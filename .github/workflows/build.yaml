@@ -40,17 +40,17 @@ jobs:
 
       - name: Install dependencies a
         run: |
-          install.packages(c("imager"), repos = "https://cloud.r-project.org")
-          remotes::install_deps(dependencies = TRUE)
-        shell: Rscript {0}
-
-      - name: Install dependencies b
-        run: |
           install.packages(c("remotes","rcmdcheck"), repos = "https://cloud.r-project.org")
           install.packages(c("rjson"), repos = "https://cloud.r-project.org")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_github("JGCRI/rpackageutils")
           remotes::install_github("eurostat/restatapi")
+        shell: Rscript {0}
+
+      - name: Install dependencies b
+        run: |
+          install.packages(c("imager"), repos = "https://cloud.r-project.org")
+          remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
 
       - name: Check

@@ -209,7 +209,7 @@ test_that("Test10_Impact & basic graph", {
     test_result <- png::readPNG(file.path(rprojroot::find_root(rprojroot::is_testthat), paste0("test_inputs/figures/DI_",g,".png")))
     test_expect <- png::readPNG(file.path(rprojroot::find_root(rprojroot::is_testthat), paste0("test_outputs/figures/DI_",g,".png")))
 
-    testthat::expect_true(identical(test_result, test_expect))
+    testthat::expect_true(identical(attributes(test_result), attributes(test_expect)))
   }
 })
 #

@@ -49,7 +49,8 @@ jobs:
 
       - name: Install dependencies b
         run: |
-          install.packages(c("igraph","imager"), repos = "https://cloud.r-project.org")
+          install.packages("igraph", type="binary", repos = "https://cloud.r-project.org")
+          install.packages(c("imager"), repos = "https://cloud.r-project.org")
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
 

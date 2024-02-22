@@ -39,7 +39,6 @@ Remotes:
 Suggests: 
     rmarkdown,
     testthat,
-    devtools,
-    imager
+    devtools
 VignetteBuilder: 
     knitr

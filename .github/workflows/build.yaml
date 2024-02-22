@@ -38,20 +38,13 @@ jobs:
           sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev libudunits2-dev libgdal-dev libgeos-dev libproj-dev libmagick++-dev libavfilter-dev libharfbuzz-dev libfribidi-dev
           sudo apt-get install -y r-cran-rjson
 
-      - name: Install dependencies a
+      - name: Install dependencies
         run: |
           install.packages(c("remotes","rcmdcheck"), repos = "https://cloud.r-project.org")
           install.packages(c("rjson"), repos = "https://cloud.r-project.org")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_github("JGCRI/rpackageutils")
           remotes::install_github("eurostat/restatapi")
-        shell: Rscript {0}
-
-      - name: Install dependencies b
-        run: |
-          install.packages("igraph", type="binary", repos = "https://cloud.r-project.org")
-          install.packages(c("imager"), repos = "https://cloud.r-project.org")
-          remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
 
       - name: Check

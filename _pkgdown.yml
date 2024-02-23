@@ -15,6 +15,9 @@ navbar:
          href: articles/PackageData.html
       -  text: Available Variables
          href: articles/AvailableVariables.html
+    - icon: fas fa-book
+      text: "Tutorials"
+      href: articles/Tutorials.html
     - icon: fa-file-code-o
       text: "Reference"
       href: reference/index.html

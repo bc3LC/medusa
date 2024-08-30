@@ -223,5 +223,9 @@ calc_ep <- function(){
   TOT_ITPLIHC <- sum(epf_hg$ITPLIHC)
   TPLIHC      <- TOT_ITPLIHC/TOT_FACTOR
 
+  # Vulnerable Transport Users (VTU)
+  TOT_ITPVTU <- sum(epf_hg$ITPVTU)
+  TPVTU      <- TOT_ITPVTU/TOT_FACTOR
+
 
 }

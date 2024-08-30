@@ -149,44 +149,45 @@ id_ep2 <- function(data){
 #' @param data dataset with the data from the HBS.
 #' @return a dataset with HBS data where transport poor households are identified.
 #' @export
-# id_tp <- function(data){
-#
-#   # Calculate the variables needed for TP indices calculation
-#   data <- data %>%
-#     dplyr::mutate(transport = EUR_07221 + EUR_07222 + EUR_07223 + EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07350,  # transport expenditure
-#                   transport_eq = transport/UC2,                                                                                           # equivalent transport expenditure
-#                   total_eq = GASTOT/(FACTOR*UC2) ,                                                                                        # equivalent total expenditure
-#                   share_transport = transport_eq/total_eq,                                                                                # share of transport expenditure
-#                   transpub = EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07350,                                       # public transport expenditure
-#                   transpub_eq = transpub/UC2,                                                                                             # equivalent public transport expenditure
-#                   exp_atc = GASTOT - transport_eq,                                                                                        # total expenditure after transport costs
-#                   exp_athc = exp_atc - EUR_04110 - EUR_04210)                                                                             # total expenditure after energy and housing costs
-#
-#   # Remove household without transport or public transport expenses
-#   data2 <- data[data$transport>0, ]
-#   data3 <- data[data$transpub>0, ]
-#
-#   # Calculate medians and thresholds
-#   med_stransp   <- spatstat.geom::weighted.median(data2$share_transport, w= data2$FACTOR, na.rm = TRUE)
-#   med_transp    <- spatstat.geom::weighted.median(data2$transport_eq, w= data2$FACTOR,  na.rm = TRUE)
-#   med_transpub  <- spatstat.geom::weighted.median(data3$transpub_eq, w= data3$FACTOR,  na.rm = TRUE)
-#   data <- data %>%
-#     dplyr::mutate(med_exp    = spatstat.geom::weighted.median(total_eq, w= FACTOR, na.rm = TRUE),        # income median (using expenditure as a better proxy of permanent income)
-#                   poverty_t  = med_exp*0.6)                                                              # poverty threshold
-#
-#   # Calculate energy poverty indices
-#   data <- data %>%
-#     dplyr::mutate(ITP10PC     = base::ifelse(share_transport >= 0.10 , FACTOR, 0),                                                                            # 10% index
-#                   ID_TP10PC   = base::ifelse(share_transport >= 0.10 , "Vulnerable", "No vulnerable"),                                                        # 10% ID
-#                   ITP2M       = base::ifelse(share_transport >= 2*med_stransp , FACTOR, 0 ),                                                                  # 2M index
-#                   ID_TP2M     = base::ifelse(share_transport >= 2*med_stransp , "Vulnerable", "No vulnerable"),                                               # 2M ID
-#                   ITPLIHC     = base::ifelse(transport_eq >= med_transp & exp_athc <= poverty_t, FACTOR, 0),                                                  # LIHC index
-#                   ID_TPLIHC   = base::ifelse(transport_eq >= med_transp & exp_athc <= poverty_t, "Vulnerable", "No vulnerable"),                              # LIHC ID
-#                   ITPVTU      = base::ifelse(share_transport >= 2*med_stransp & transpub < med_transpub & total_eq < med_exp, FACTOR , 0),                    # VTU index
-#                   ID_TPVTU    = base::ifelse(share_transport >= 2*med_stransp & transpub < med_transpub & total_eq < med_exp, "Vulnerable", "No vulnerable")) # VTU ID
-#
-#   return(data)
-# }
+id_tp <- function(data){
+
+  # Calculate the variables needed for TP indices calculation
+  data <- data %>%
+    dplyr::mutate(transport = EUR_07221 + EUR_07222 + EUR_07223 + EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07350,  # transport expenditure
+                  transport_eq = transport/UC2,                                                                                  # equivalent transport expenditure
+                  total_eq = GASTOT/(FACTOR*UC2),                                                                                         # equivalent total expenditure
+                  share_transport = transport_eq/total_eq,                                                                                # share of transport expenditure
+                  transpub = EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07350,                                       # public transport expenditure
+                  transpub_eq = transpub/(FACTOR*UC2),                                                                                    # equivalent public transport expenditure
+                  exp_atc = total_eq - transport_eq,                                                                                      # total expenditure after transport costs
+                  exp_athc = exp_atc - ((EUR_04110 - EUR_04210)/UC2),                                                            # total expenditure after energy and housing costs
+                  exp_ahc = total_eq - ((EUR_04110 - EUR_04210)/UC2))
+
+  # Remove household without transport or public transport expenses
+  data2 <- data[data$transport>0, ]
+  data3 <- data[data$transpub_eq>0, ]
+
+  # Calculate medians and thresholds
+  med_stransp   <- spatstat.geom::weighted.median(data2$share_transport, w= data2$FACTOR, na.rm = TRUE)
+  med_transp    <- spatstat.geom::weighted.median(data2$transport_eq, w= data2$FACTOR,  na.rm = TRUE)
+  med_transpub  <- spatstat.geom::weighted.median(data3$transpub_eq, w= data3$FACTOR,  na.rm = TRUE)
+  data <- data %>%
+    dplyr::mutate(med_exp    = spatstat.geom::weighted.median(exp_ahc, w= FACTOR, na.rm = TRUE),        # income median (using expenditure as a better proxy of permanent income)
+                  poverty_t  = med_exp*0.6)                                                              # poverty threshold
+
+  # Calculate energy poverty indices
+  data <- data %>%
+    dplyr::mutate(ITP10PC     = base::ifelse(share_transport >= 0.10 , FACTOR, 0),                                                                            # 10% index
+                  ID_TP10PC   = base::ifelse(share_transport >= 0.10 , "Vulnerable", "No vulnerable"),                                                        # 10% ID
+                  ITP2M       = base::ifelse(share_transport >= 2*med_stransp , FACTOR, 0 ),                                                                  # 2M index
+                  ID_TP2M     = base::ifelse(share_transport >= 2*med_stransp , "Vulnerable", "No vulnerable"),                                               # 2M ID
+                  ITPLIHC     = base::ifelse(transport_eq >= med_transp & exp_athc <= poverty_t, FACTOR, 0),                                                  # LIHC index
+                  ID_TPLIHC   = base::ifelse(transport_eq >= med_transp & exp_athc <= poverty_t, "Vulnerable", "No vulnerable"),                              # LIHC ID
+                  ITPVTU      = base::ifelse(share_transport >= 2*med_stransp & transpub < med_transpub & total_eq < med_exp, FACTOR , 0),                    # VTU index
+                  ID_TPVTU    = base::ifelse(share_transport >= 2*med_stransp & transpub < med_transpub & total_eq < med_exp, "Vulnerable", "No vulnerable")) # VTU ID
+
+  return(data)
+}
 
 
 #' load_rawhbs
@@ -346,8 +347,8 @@ load_rawhbs <- function(year, path, path_outputs) {
     epf_hg <- id_ep1(epf_hg)
   }
 
-  # # Create the variables for transport poor households
-  # epf_hg <- id_tp(epf_hg)
+  # Create the variables for transport poor households
+  epf_hg <- id_tp(epf_hg)
 
   # **********************************************************************
   # 4. Remove GASTOT NA
@@ -364,14 +365,14 @@ load_rawhbs <- function(year, path, path_outputs) {
 
 }
 
-2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016
-2017,2018,2019,2020,2021
-
-year <- c(2010,2015)
-for (year in year) {
-  print(year)
-  load_rawhbs(year = year, path = path, path_outputs = path_outputs)
-}
+# 2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016
+# 2017,2018,2019,2020,2021
+#
+# year <- c(2010,2015)
+# for (year in year) {
+#   print(year)
+#   load_rawhbs(year = year, path = path, path_outputs = path_outputs)
+# }
 
 #' add_coicop
 #'

@@ -64,6 +64,131 @@ standardize <- function(data) {
 }
 
 
+#' id_ep1
+#'
+#' Function to identify energy poor households from 2016
+#' @param data dataset with the data from the HBS.
+#' @return a dataset with HBS data where energy poor households are identified.
+#' @export
+id_ep1 <- function(data){
+
+  # Calculate the variables needed for EP indices calculation
+  data <- data %>%
+    dplyr::mutate(endom = EUR_04511 + EUR_04521 + EUR_04523 + EUR_04531 + EUR_04541 + EUR_04548 + EUR_04549,  # domestic energy expenditure
+                  endom_eq = endom/UC2,                         # equivalent domestic energy
+                  total_eq = GASTOT/(FACTOR*UC2) ,              # equivalent total expenditure
+                  share_endom = endom_eq/total_eq,              # share of domestic energy
+                  exp_aec = total_eq - endom_eq,                # total expenditure after energy costs
+                  exp_aehc = exp_aec - EUR_04110 - EUR_04210)   # total expenditure after energy and housing costs
+
+  # Calculate medians and thresholds
+  data <- data %>%
+    dplyr::mutate(med_sendom = spatstat.geom::weighted.median(share_endom, w= FACTOR, na.rm = TRUE),   # median of the share of domestic energy
+                  med_endom  = spatstat.geom::weighted.median(endom_eq, w= FACTOR,  na.rm = TRUE),     # median of domestic energy expenditure
+                  med_exp    = spatstat.geom::weighted.median(total_eq, w= FACTOR, na.rm = TRUE),      # income median (using expenditure as a better proxy of permanent income)
+                  poverty_t  = med_exp*0.6 )                                            # poverty threshold
+
+  # Calculate energy poverty indices
+  data <- data %>%
+    dplyr::mutate(IEP10PC     = base::ifelse(share_endom >= 0.10 , FACTOR, 0),                                                   # 10% index
+                  ID_EP10PC   = base::ifelse(share_endom >= 0.10 , "Vulnerable", "No vulnerable"),                               # 10% ID
+                  IEP2M       = base::ifelse(share_endom >= 2*med_sendom , FACTOR, 0 ),                                          # 2M index
+                  ID_EP2M     = base::ifelse(share_endom >= 2*med_sendom , "Vulnerable", "No vulnerable"),                       # 2M ID
+                  IEPHEP      = base::ifelse(endom_eq <= med_endom/2 , FACTOR, 0),                                               # HEP index
+                  ID_EPHEP    = base::ifelse(endom_eq <= med_endom/2 , "Vulnerable", "No vulnerable"),                           # HEP ID
+                  IEPHEP_LI   = base::ifelse(endom_eq <= med_endom/2 & exp_aec <= poverty_t, FACTOR, 0),                         # HEP_LI index
+                  ID_EPHEP_LI = base::ifelse(endom_eq <= med_endom/2 & exp_aec <= poverty_t, "Vulnerable", "No vulnerable"),     # HEP_LI ID
+                  IEPLIHC     = base::ifelse(endom_eq >= med_endom & exp_aec <= poverty_t, FACTOR, 0),                           # LIHC index
+                  ID_EPLIHC   = base::ifelse(endom_eq >= med_endom & exp_aec <= poverty_t, "Vulnerable", "No vulnerable"))       # LIHC ID
+
+  return(data)
+}
+
+#' id_ep2
+#'
+#' Function to identify energy poor households before 2016 (included)
+#' @param data dataset with the data from the HBS.
+#' @return a dataset with HBS data where energy poor households are identified.
+#' @export
+id_ep2 <- function(data){
+
+  # Calculate the variables needed for EP indices calculation
+  data <- data %>%
+    dplyr::mutate(endom = rowSums(dplyr::select(., any_of(c("EUR_04511", "EUR_04521", "EUR_04523", "EUR_04531", "EUR_04541", "EUR_04551"))), na.rm = TRUE),  # domestic energy expenditure
+                  endom_eq = endom/UC2,                         # equivalent domestic energy
+                  total_eq = GASTOT/(FACTOR*UC2) ,              # equivalent total expenditure
+                  share_endom = endom_eq/total_eq,              # share of domestic energy
+                  exp_aec = total_eq - endom_eq)                # total expenditure after energy costs
+
+  # Calculate medians and thresholds
+  data <- data %>%
+    dplyr::mutate(med_sendom = spatstat.geom::weighted.median(share_endom, w= FACTOR, na.rm = TRUE),   # median of the share of domestic energy
+                  med_endom  = spatstat.geom::weighted.median(endom_eq, w= FACTOR,  na.rm = TRUE),     # median of domestic energy expenditure
+                  med_exp    = spatstat.geom::weighted.median(total_eq, w= FACTOR, na.rm = TRUE),      # income median (using expenditure as a better proxy of permanent income)
+                  poverty_t  = med_exp*0.6 )                                            # poverty threshold
+
+  # Calculate energy poverty indices
+  data <- data %>%
+    dplyr::mutate(IEP10PC     = base::ifelse(share_endom >= 0.10 , FACTOR, 0),                                                   # 10% index
+                  ID_EP10PC   = base::ifelse(share_endom >= 0.10 , "Vulnerable", "No vulnerable"),                               # 10% ID
+                  IEP2M       = base::ifelse(share_endom >= 2*med_sendom , FACTOR, 0 ),                                          # 2M index
+                  ID_EP2M     = base::ifelse(share_endom >= 2*med_sendom , "Vulnerable", "No vulnerable"),                       # 2M ID
+                  IEPHEP      = base::ifelse(endom_eq <= med_endom/2 , FACTOR, 0),                                               # HEP index
+                  ID_EPHEP    = base::ifelse(endom_eq <= med_endom/2 , "Vulnerable", "No vulnerable"),                           # HEP ID
+                  IEPHEP_LI   = base::ifelse(endom_eq <= med_endom/2 & exp_aec <= poverty_t, FACTOR, 0),                         # HEP_LI index
+                  ID_EPHEP_LI = base::ifelse(endom_eq <= med_endom/2 & exp_aec <= poverty_t, "Vulnerable", "No vulnerable"),     # HEP_LI ID
+                  IEPLIHC     = base::ifelse(endom_eq >= med_endom & exp_aec <= poverty_t, FACTOR, 0),                           # LIHC index
+                  ID_EPLIHC   = base::ifelse(endom_eq >= med_endom & exp_aec <= poverty_t, "Vulnerable", "No vulnerable"))       # LIHC ID
+
+  return(data)
+}
+
+#' id_tp
+#'
+#' Function to identify transport poor households before 2015 (included)
+#' @param data dataset with the data from the HBS.
+#' @return a dataset with HBS data where transport poor households are identified.
+#' @export
+# id_tp <- function(data){
+#
+#   # Calculate the variables needed for TP indices calculation
+#   data <- data %>%
+#     dplyr::mutate(transport = EUR_07221 + EUR_07222 + EUR_07223 + EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07350,  # transport expenditure
+#                   transport_eq = transport/UC2,                                                                                           # equivalent transport expenditure
+#                   total_eq = GASTOT/(FACTOR*UC2) ,                                                                                        # equivalent total expenditure
+#                   share_transport = transport_eq/total_eq,                                                                                # share of transport expenditure
+#                   transpub = EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07350,                                       # public transport expenditure
+#                   transpub_eq = transpub/UC2,                                                                                             # equivalent public transport expenditure
+#                   exp_atc = GASTOT - transport_eq,                                                                                        # total expenditure after transport costs
+#                   exp_athc = exp_atc - EUR_04110 - EUR_04210)                                                                             # total expenditure after energy and housing costs
+#
+#   # Remove household without transport or public transport expenses
+#   data2 <- data[data$transport>0, ]
+#   data3 <- data[data$transpub>0, ]
+#
+#   # Calculate medians and thresholds
+#   med_stransp   <- spatstat.geom::weighted.median(data2$share_transport, w= data2$FACTOR, na.rm = TRUE)
+#   med_transp    <- spatstat.geom::weighted.median(data2$transport_eq, w= data2$FACTOR,  na.rm = TRUE)
+#   med_transpub  <- spatstat.geom::weighted.median(data3$transpub_eq, w= data3$FACTOR,  na.rm = TRUE)
+#   data <- data %>%
+#     dplyr::mutate(med_exp    = spatstat.geom::weighted.median(total_eq, w= FACTOR, na.rm = TRUE),        # income median (using expenditure as a better proxy of permanent income)
+#                   poverty_t  = med_exp*0.6)                                                              # poverty threshold
+#
+#   # Calculate energy poverty indices
+#   data <- data %>%
+#     dplyr::mutate(ITP10PC     = base::ifelse(share_transport >= 0.10 , FACTOR, 0),                                                                            # 10% index
+#                   ID_TP10PC   = base::ifelse(share_transport >= 0.10 , "Vulnerable", "No vulnerable"),                                                        # 10% ID
+#                   ITP2M       = base::ifelse(share_transport >= 2*med_stransp , FACTOR, 0 ),                                                                  # 2M index
+#                   ID_TP2M     = base::ifelse(share_transport >= 2*med_stransp , "Vulnerable", "No vulnerable"),                                               # 2M ID
+#                   ITPLIHC     = base::ifelse(transport_eq >= med_transp & exp_athc <= poverty_t, FACTOR, 0),                                                  # LIHC index
+#                   ID_TPLIHC   = base::ifelse(transport_eq >= med_transp & exp_athc <= poverty_t, "Vulnerable", "No vulnerable"),                              # LIHC ID
+#                   ITPVTU      = base::ifelse(share_transport >= 2*med_stransp & transpub < med_transpub & total_eq < med_exp, FACTOR , 0),                    # VTU index
+#                   ID_TPVTU    = base::ifelse(share_transport >= 2*med_stransp & transpub < med_transpub & total_eq < med_exp, "Vulnerable", "No vulnerable")) # VTU ID
+#
+#   return(data)
+# }
+
+
 #' load_rawhbs
 #'
 #' Function to load the Spanish Household Budget Survey (HBS).
@@ -214,6 +339,15 @@ load_rawhbs <- function(year, path, path_outputs) {
   }
   epf_hg <- dplyr::left_join( epf_hg , gender , by = "NUMERO" )
 
+  # Create the variables for energy poor households
+  if (year %in% seq(2006,2015,1)) {
+    epf_hg <- id_ep2(epf_hg)
+  } else {
+    epf_hg <- id_ep1(epf_hg)
+  }
+
+  # # Create the variables for transport poor households
+  # epf_hg <- id_tp(epf_hg)
 
   # **********************************************************************
   # 4. Remove GASTOT NA
@@ -230,6 +364,14 @@ load_rawhbs <- function(year, path, path_outputs) {
 
 }
 
+2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016
+2017,2018,2019,2020,2021
+
+year <- c(2010,2015)
+for (year in year) {
+  print(year)
+  load_rawhbs(year = year, path = path, path_outputs = path_outputs)
+}
 
 #' add_coicop
 #'

@@ -168,3 +168,60 @@ ex_var_intersec <- function(){
   av_var_intersec <- get("is_categories")
   write.csv(av_var_intersec, file = "Var_Intersec.csv", row.names = F)
 }
+
+#' calc_ep
+#'
+#' Function to calculate energy poverty indices
+#' @return a csv file with the selected energy poverty indices
+#' @export
+calc_ep <- function(){
+
+  # Calculate total households
+  TOT_FACTOR <- sum(epf_hg$FACTOR)
+
+  # 10%
+  TOT_IEP10PC <- sum(epf_hg$IEP10PC)
+  EP10PC      <- TOT_IEP10PC/TOT_FACTOR
+
+  # 2M
+  TOT_IEP2M  <- sum(epf_hg$IEP2M)
+  EP2M       <- TOT_IEP2M /TOT_FACTOR
+
+  # Hidden Energy Poverty (HEP)
+  TOT_IEPHEP <- sum(epf_hg$IEPHEP)
+  EPHEP      <- TOT_IEPHEP/TOT_FACTOR
+
+  # Hidden Energy Poverty Low Income (HEP_LI)
+  TOT_IEPHEP_LI <- sum(epf_hg$IEPHEP_LI)
+  EPHEP_LI      <- TOT_IEPHEP_LI/TOT_FACTOR
+
+  # Low Income High Cost (LIHC)
+  TOT_IEPLIHC <- sum(epf_hg$IEPLIHC)
+  EPLIHC      <- TOT_IEPLIHC/TOT_FACTOR
+
+}
+
+#' calc_tp
+#'
+#' Function to calculate transport poverty indices
+#' @return a csv file with the selected transport poverty indices
+#' @export
+calc_ep <- function(){
+
+  # Calculate total households
+  TOT_FACTOR <- sum(epf_hg$FACTOR)
+
+  # 10%
+  TOT_ITP10PC <- sum(epf_hg$ITP10PC)
+  TP10PC      <- TOT_ITP10PC/TOT_FACTOR
+
+  # 2M
+  TOT_ITP2M  <- sum(epf_hg$ITP2M)
+  TP2M       <- TOT_ITP2M /TOT_FACTOR
+
+  # Low Income High Cost (LIHC)
+  TOT_ITPLIHC <- sum(epf_hg$ITPLIHC)
+  TPLIHC      <- TOT_ITPLIHC/TOT_FACTOR
+
+
+}

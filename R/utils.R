@@ -79,7 +79,7 @@ id_ep1 <- function(data){
                   total_eq = GASTOT/(FACTOR*UC2) ,              # equivalent total expenditure
                   share_endom = endom_eq/total_eq,              # share of domestic energy
                   exp_aec = total_eq - endom_eq,                # total expenditure after energy costs
-                  exp_aehc = exp_aec - EUR_04110 - EUR_04210)   # total expenditure after energy and housing costs
+                  exp_aehc = exp_aec - ((EUR_04110 + EUR_04210)/UC2))   # total expenditure after energy and housing costs
 
   # Calculate medians and thresholds
   data <- data %>%
@@ -160,8 +160,8 @@ id_tp <- function(data){
                   transpub = EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07350,                                       # public transport expenditure
                   transpub_eq = transpub/(FACTOR*UC2),                                                                                    # equivalent public transport expenditure
                   exp_atc = total_eq - transport_eq,                                                                                      # total expenditure after transport costs
-                  exp_athc = exp_atc - ((EUR_04110 - EUR_04210)/UC2),                                                            # total expenditure after energy and housing costs
-                  exp_ahc = total_eq - ((EUR_04110 - EUR_04210)/UC2))
+                  exp_athc = exp_atc - ((EUR_04110 + EUR_04210)/UC2),                                                            # total expenditure after energy and housing costs
+                  exp_ahc = total_eq - ((EUR_04110 + EUR_04210)/UC2))
 
   # Remove household without transport or public transport expenses
   data2 <- data[data$transport>0, ]

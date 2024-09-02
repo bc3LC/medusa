@@ -173,17 +173,36 @@ ex_var_intersec <- function(){
 #'
 #' Function to calculate energy poverty indices
 #' @param year year/s for energy poverty indices calculation
-#' @param index energy poverty index or indices you want to calculate. If "all"
-#' (by default) calculates all the indices for the selected year/s
+#' @param index energy poverty index or indices you want to calculate. Possible
+#' options: 10%, 2M, LIHC, HEP, HEP_LI. If "all" (by default) calculates
+#' all the indices for the selected year/s.
 #' @return a dataframe with the selected energy poverty indices
 #' @export
 calc_ep <- function(year, index = "all"){
 
+  accepted <- c("all",
+                "10%",
+                "2M",
+                "LIHC",
+                "HEP",
+                "HEP_LI")
+
+  missmatch <- setdiff(index, accepted)
+
+  warning(sprintf('ATTENTION: The indicated index %s are not available. Possible options are %s.',
+                  paste(missmatch, collapse = ", "),  paste(accepted, collapse = ", ")))
+
+  df <- data.frame("EP_index" = c("10%",
+                                  "2M",
+                                  "LIHC",
+                                  "HEP",
+                                  "HEP_LI"))
+
   # Loop to calculate the indices for diferent years
-  for (year in year) {
+  for (y in year) {
 
     # get hbs files
-    hbs <- get(paste0("epf_list_", year))
+    hbs <- get(paste0("epf_list_", y))
     epf_hg  <- hbs$epf_hg
 
     # Calculate total households
@@ -209,26 +228,52 @@ calc_ep <- function(year, index = "all"){
     TOT_IEPLIHC <- sum(epf_hg$IEPLIHC)
     EPLIHC      <- TOT_IEPLIHC/TOT_FACTOR
 
-    # Create a dataframe with the indices
+    y <- as.character(y)
 
+    # Create a dataframe with the indices
+    df[[y]] <- c(EP10PC, EP2M, EPLIHC, EPHEP, EPHEP_LI)
   }
+
+  if (index != "all") {
+    df <- df %>%
+      dplyr::filter(EP_index %in% index)
+  }
+
+  return(df)
 }
 
 #' calc_tp
 #'
 #' Function to calculate transport poverty indices
 #' @param year year/s for transport poverty indices calculation
-#' @param index transport poverty index or indices you want to calculate. If "all"
-#' (by default) calculates all the indices for the selected year/s
+#' @param index transport poverty index or indices you want to calculate. Possible
+#' options: 10%, 2M, LIHC, VTU. If "all" (by default) calculates all the indices
+#' for the selected year/s.
 #' @return a dataframe with the selected transport poverty indices
 #' @export
 calc_tp <- function(year, index = "all"){
 
+  accepted <- c("all",
+                "10%",
+                "2M",
+                "LIHC",
+                "VTU")
+
+  missmatch <- setdiff(index, accepted)
+
+  warning(sprintf('ATTENTION: The indicated index %s are not available. Possible options are %s.',
+                  paste(missmatch, collapse = ", "),  paste(accepted, collapse = ", ")))
+
+  df <- data.frame("EP_index" = c("10%",
+                                  "2M",
+                                  "LIHC",
+                                  "VTU"))
+
   # Loop to calculate the indices for diferent years
-  for (year in year) {
+  for (y in year) {
 
     # get hbs files
-    hbs <- get(paste0("epf_list_", year))
+    hbs <- get(paste0("epf_list_", y))
     epf_hg  <- hbs$epf_hg
 
     # Calculate total households
@@ -249,5 +294,17 @@ calc_tp <- function(year, index = "all"){
     # Vulnerable Transport Users (VTU)
     TOT_ITPVTU <- sum(epf_hg$ITPVTU)
     TPVTU      <- TOT_ITPVTU/TOT_FACTOR
+
+    y <- as.character(y)
+
+    # Create a dataframe with the indices
+    df[[y]] <- c(TP10PC, TP2M, TPLIHC, TPVTU)
   }
+
+  if (index != "all") {
+    df <- df %>%
+      dplyr::filter(EP_index %in% index)
+  }
+
+  return(df)
 }

@@ -172,60 +172,82 @@ ex_var_intersec <- function(){
 #' calc_ep
 #'
 #' Function to calculate energy poverty indices
-#' @return a csv file with the selected energy poverty indices
+#' @param year year/s for energy poverty indices calculation
+#' @param index energy poverty index or indices you want to calculate. If "all"
+#' (by default) calculates all the indices for the selected year/s
+#' @return a dataframe with the selected energy poverty indices
 #' @export
-calc_ep <- function(){
+calc_ep <- function(year, index = "all"){
 
-  # Calculate total households
-  TOT_FACTOR <- sum(epf_hg$FACTOR)
+  # Loop to calculate the indices for diferent years
+  for (year in year) {
 
-  # 10%
-  TOT_IEP10PC <- sum(epf_hg$IEP10PC)
-  EP10PC      <- TOT_IEP10PC/TOT_FACTOR
+    # get hbs files
+    hbs <- get(paste0("epf_list_", year))
+    epf_hg  <- hbs$epf_hg
 
-  # 2M
-  TOT_IEP2M  <- sum(epf_hg$IEP2M)
-  EP2M       <- TOT_IEP2M /TOT_FACTOR
+    # Calculate total households
+    TOT_FACTOR <- sum(epf_hg$FACTOR)
 
-  # Hidden Energy Poverty (HEP)
-  TOT_IEPHEP <- sum(epf_hg$IEPHEP)
-  EPHEP      <- TOT_IEPHEP/TOT_FACTOR
+    # 10%
+    TOT_IEP10PC <- sum(epf_hg$IEP10PC)
+    EP10PC      <- TOT_IEP10PC/TOT_FACTOR
 
-  # Hidden Energy Poverty Low Income (HEP_LI)
-  TOT_IEPHEP_LI <- sum(epf_hg$IEPHEP_LI)
-  EPHEP_LI      <- TOT_IEPHEP_LI/TOT_FACTOR
+    # 2M
+    TOT_IEP2M  <- sum(epf_hg$IEP2M)
+    EP2M       <- TOT_IEP2M /TOT_FACTOR
 
-  # Low Income High Cost (LIHC)
-  TOT_IEPLIHC <- sum(epf_hg$IEPLIHC)
-  EPLIHC      <- TOT_IEPLIHC/TOT_FACTOR
+    # Hidden Energy Poverty (HEP)
+    TOT_IEPHEP <- sum(epf_hg$IEPHEP)
+    EPHEP      <- TOT_IEPHEP/TOT_FACTOR
 
+    # Hidden Energy Poverty Low Income (HEP_LI)
+    TOT_IEPHEP_LI <- sum(epf_hg$IEPHEP_LI)
+    EPHEP_LI      <- TOT_IEPHEP_LI/TOT_FACTOR
+
+    # Low Income High Cost (LIHC)
+    TOT_IEPLIHC <- sum(epf_hg$IEPLIHC)
+    EPLIHC      <- TOT_IEPLIHC/TOT_FACTOR
+
+    # Create a dataframe with the indices
+
+  }
 }
 
 #' calc_tp
 #'
 #' Function to calculate transport poverty indices
-#' @return a csv file with the selected transport poverty indices
+#' @param year year/s for transport poverty indices calculation
+#' @param index transport poverty index or indices you want to calculate. If "all"
+#' (by default) calculates all the indices for the selected year/s
+#' @return a dataframe with the selected transport poverty indices
 #' @export
-calc_ep <- function(){
+calc_tp <- function(year, index = "all"){
 
-  # Calculate total households
-  TOT_FACTOR <- sum(epf_hg$FACTOR)
+  # Loop to calculate the indices for diferent years
+  for (year in year) {
 
-  # 10%
-  TOT_ITP10PC <- sum(epf_hg$ITP10PC)
-  TP10PC      <- TOT_ITP10PC/TOT_FACTOR
+    # get hbs files
+    hbs <- get(paste0("epf_list_", year))
+    epf_hg  <- hbs$epf_hg
 
-  # 2M
-  TOT_ITP2M  <- sum(epf_hg$ITP2M)
-  TP2M       <- TOT_ITP2M /TOT_FACTOR
+    # Calculate total households
+    TOT_FACTOR <- sum(epf_hg$FACTOR)
 
-  # Low Income High Cost (LIHC)
-  TOT_ITPLIHC <- sum(epf_hg$ITPLIHC)
-  TPLIHC      <- TOT_ITPLIHC/TOT_FACTOR
+    # 10%
+    TOT_ITP10PC <- sum(epf_hg$ITP10PC)
+    TP10PC      <- TOT_ITP10PC/TOT_FACTOR
 
-  # Vulnerable Transport Users (VTU)
-  TOT_ITPVTU <- sum(epf_hg$ITPVTU)
-  TPVTU      <- TOT_ITPVTU/TOT_FACTOR
+    # 2M
+    TOT_ITP2M  <- sum(epf_hg$ITP2M)
+    TP2M       <- TOT_ITP2M /TOT_FACTOR
 
+    # Low Income High Cost (LIHC)
+    TOT_ITPLIHC <- sum(epf_hg$ITPLIHC)
+    TPLIHC      <- TOT_ITPLIHC/TOT_FACTOR
 
+    # Vulnerable Transport Users (VTU)
+    TOT_ITPVTU <- sum(epf_hg$ITPVTU)
+    TPVTU      <- TOT_ITPVTU/TOT_FACTOR
+  }
 }

@@ -151,17 +151,36 @@ id_ep2 <- function(data){
 #' @export
 id_tp <- function(data){
 
-  # Calculate the variables needed for TP indices calculation
-  data <- data %>%
-    dplyr::mutate(transport = EUR_07221 + EUR_07222 + EUR_07223 + EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07350,  # transport expenditure
-                  transport_eq = transport/UC2,                                                                                  # equivalent transport expenditure
-                  total_eq = GASTOT/(FACTOR*UC2),                                                                                         # equivalent total expenditure
-                  share_transport = transport_eq/total_eq,                                                                                # share of transport expenditure
-                  transpub = EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07350,                                       # public transport expenditure
-                  transpub_eq = transpub/(FACTOR*UC2),                                                                                    # equivalent public transport expenditure
-                  exp_atc = total_eq - transport_eq,                                                                                      # total expenditure after transport costs
-                  exp_athc = exp_atc - ((EUR_04110 + EUR_04210)/UC2),                                                            # total expenditure after energy and housing costs
-                  exp_ahc = total_eq - ((EUR_04110 + EUR_04210)/UC2))
+  if (year == 2014) {
+    data <- data[-19710,]
+    data <- data[-20375,]
+  }
+
+  if (year %in% seq(2006,2015,1)) {
+    # Calculate the variables needed for TP indices calculation
+    data <- data %>%
+      dplyr::mutate(transport = EUR_07221 + EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07351,  # transport expenditure
+                    transport_eq = transport/UC2,                                                            # equivalent transport expenditure
+                    total_eq = GASTOT/(FACTOR*UC2),                                                          # equivalent total expenditure
+                    share_transport = transport_eq/total_eq,                                                 # share of transport expenditure
+                    transpub = EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07351,              # public transport expenditure
+                    transpub_eq = transpub/(FACTOR*UC2),                                                     # equivalent public transport expenditure
+                    exp_atc = total_eq - transport_eq,                                                       # total expenditure after transport costs
+                    exp_athc = exp_atc - ((EUR_04111 + EUR_04211)/UC2),                                        # total expenditure after energy and housing costs
+                    exp_ahc = total_eq - ((EUR_04111 + EUR_04211)/UC2))
+  } else {
+    # Calculate the variables needed for TP indices calculation
+    data <- data %>%
+      dplyr::mutate(transport = EUR_07221 + EUR_07222 + EUR_07223 + EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07350,  # transport expenditure
+                    transport_eq = transport/UC2,                                                                                  # equivalent transport expenditure
+                    total_eq = GASTOT/(FACTOR*UC2),                                                                                         # equivalent total expenditure
+                    share_transport = transport_eq/total_eq,                                                                                # share of transport expenditure
+                    transpub = EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07350,                                       # public transport expenditure
+                    transpub_eq = transpub/(FACTOR*UC2),                                                                                    # equivalent public transport expenditure
+                    exp_atc = total_eq - transport_eq,                                                                                      # total expenditure after transport costs
+                    exp_athc = exp_atc - ((EUR_04110 + EUR_04210)/UC2),                                                            # total expenditure after energy and housing costs
+                    exp_ahc = total_eq - ((EUR_04110 + EUR_04210)/UC2))
+  }
 
   # Remove household without transport or public transport expenses
   data2 <- data[data$transport>0, ]
@@ -365,14 +384,6 @@ load_rawhbs <- function(year, path, path_outputs) {
 
 }
 
-# 2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016
-# 2017,2018,2019,2020,2021
-#
-# year <- c(2010,2015)
-# for (year in year) {
-#   print(year)
-#   load_rawhbs(year = year, path = path, path_outputs = path_outputs)
-# }
 
 #' add_coicop
 #'

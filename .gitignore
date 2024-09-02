@@ -43,7 +43,7 @@ rsconnect/
 
 # Others
 *prueba*
-inst/extdata/epf_*
+inst/extdata/epf_20*
 inst/extdata/Example_*
 
 # Figures

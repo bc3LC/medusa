@@ -264,12 +264,12 @@ calc_tp <- function(year, index = "all"){
   warning(sprintf('ATTENTION: The indicated index %s are not available. Possible options are %s.',
                   paste(missmatch, collapse = ", "),  paste(accepted, collapse = ", ")))
 
-  df <- data.frame("EP_index" = c("10%",
+  df <- data.frame("TP_index" = c("10%",
                                   "2M",
                                   "LIHC",
                                   "VTU"))
 
-  # Loop to calculate the indices for diferent years
+  # Loop to calculate the indices for different years
   for (y in year) {
 
     # get hbs files
@@ -303,7 +303,7 @@ calc_tp <- function(year, index = "all"){
 
   if (index != "all") {
     df <- df %>%
-      dplyr::filter(EP_index %in% index)
+      dplyr::filter(TP_index %in% index)
   }
 
   return(df)

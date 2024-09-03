@@ -64,6 +64,76 @@ standardize <- function(data) {
 }
 
 
+#' weighted.quantile
+#'
+#' Function to calculate weighted quantile. Extracted from package spatstat.geom v3.2-5
+#' @param x Data values. A vector pf numeric values, for which the median or quantiles are required.
+#' @param w Weights. A vector of nonnegative numbers, of the same lenght as x.
+#' @param probs Probabilities for which the quantiles should be computed. A numeric vector of values between 0 and 1.
+#' @param na.rm Logical. Whether to ignore NA values.
+#' @param type Integer specifying the rule for calculating the median or quantile, corresponding to the rules available for quantile. The only valid choices are type=1, 2 or 4.
+#' @param collapse Research use only.
+#' @export
+weighted.quantile <- function(x, w, probs=seq(0,1,0.25), na.rm=TRUE, type=4, collapse=TRUE) {
+  x <- as.numeric(as.vector(x))
+  w <- as.numeric(as.vector(w))
+  if(length(x) == 0)
+    stop("No data given")
+  stopifnot(length(x) == length(w))
+  if(is.na(m <- match(type, c(1,2,4))))
+    stop("Argument 'type' must equal 1, 2 or 4", call.=FALSE)
+  type <- c(1,2,4)[m]
+  if(anyNA(x) || anyNA(w)) {
+    ok <- !(is.na(x) | is.na(w))
+    x <- x[ok]
+    w <- w[ok]
+  }
+  if(length(x) == 0)
+    stop("At least one non-NA value is required")
+  stopifnot(all(w >= 0))
+  if(all(w == 0)) stop("All weights are zero", call.=FALSE)
+  #'
+  oo <- order(x)
+  x <- x[oo]
+  w <- w[oo]
+  Fx <- cumsum(w)/sum(w)
+  #'
+  if(collapse && anyDuplicated(x)) {
+    dup <- rev(duplicated(rev(x)))
+    x <- x[!dup]
+    Fx <- Fx[!dup]
+  }
+  #'
+  if(length(x) > 1) {
+    out <- switch(as.character(type),
+                  "1" = approx(Fx, x, xout=probs, ties="ordered", rule=2,
+                               method="constant", f=1),
+                  "2" = approx(Fx, x, xout=probs, ties="ordered", rule=2,
+                               method="constant", f=1/2),
+                  "4" = approx(Fx, x, xout=probs, ties="ordered", rule=2,
+                               method="linear"))
+    result <- out$y
+  } else {
+    result <- rep.int(x, length(probs))
+  }
+  names(result) <- paste0(format(100 * probs, trim = TRUE), "%")
+  return(result)
+}
+
+
+#' weighted.median
+#'
+#' Function to calculate weighted median. Extracted from package spatstat.geom v3.2-5
+#' @param x Data values. A vector pf numeric values, for which the median or quantiles are required.
+#' @param w Weights. A vector of nonnegative numbers, of the same lenght as x.
+#' @param na.rm Logical. Whether to ignore NA values.
+#' @param type Integer specifying the rule for calculating the median or quantile, corresponding to the rules available for quantile. The only valid choices are type=1, 2 or 4.
+#' @param collapse Research use only.
+#' @export
+weighted.median <- function(x, w, na.rm=TRUE, type=2, collapse=TRUE) {
+  unname(weighted.quantile(x, probs=0.5, w=w, na.rm=na.rm, type=type, collapse=collapse))
+}
+
 #' id_ep1
 #'
 #' Function to identify energy poor households from 2016
@@ -83,9 +153,9 @@ id_ep1 <- function(data){
 
   # Calculate medians and thresholds
   data <- data %>%
-    dplyr::mutate(med_sendom = spatstat.geom::weighted.median(share_endom, w= FACTOR, na.rm = TRUE),   # median of the share of domestic energy
-                  med_endom  = spatstat.geom::weighted.median(endom_eq, w= FACTOR,  na.rm = TRUE),     # median of domestic energy expenditure
-                  med_exp    = spatstat.geom::weighted.median(total_eq, w= FACTOR, na.rm = TRUE),      # income median (using expenditure as a better proxy of permanent income)
+    dplyr::mutate(med_sendom = weighted.median(share_endom, w= FACTOR, na.rm = TRUE),   # median of the share of domestic energy
+                  med_endom  = weighted.median(endom_eq, w= FACTOR,  na.rm = TRUE),     # median of domestic energy expenditure
+                  med_exp    = weighted.median(total_eq, w= FACTOR, na.rm = TRUE),      # income median (using expenditure as a better proxy of permanent income)
                   poverty_t  = med_exp*0.6 )                                            # poverty threshold
 
   # Calculate energy poverty indices
@@ -122,9 +192,9 @@ id_ep2 <- function(data){
 
   # Calculate medians and thresholds
   data <- data %>%
-    dplyr::mutate(med_sendom = spatstat.geom::weighted.median(share_endom, w= FACTOR, na.rm = TRUE),   # median of the share of domestic energy
-                  med_endom  = spatstat.geom::weighted.median(endom_eq, w= FACTOR,  na.rm = TRUE),     # median of domestic energy expenditure
-                  med_exp    = spatstat.geom::weighted.median(total_eq, w= FACTOR, na.rm = TRUE),      # income median (using expenditure as a better proxy of permanent income)
+    dplyr::mutate(med_sendom = weighted.median(share_endom, w= FACTOR, na.rm = TRUE),   # median of the share of domestic energy
+                  med_endom  = weighted.median(endom_eq, w= FACTOR,  na.rm = TRUE),     # median of domestic energy expenditure
+                  med_exp    = weighted.median(total_eq, w= FACTOR, na.rm = TRUE),      # income median (using expenditure as a better proxy of permanent income)
                   poverty_t  = med_exp*0.6 )                                            # poverty threshold
 
   # Calculate energy poverty indices
@@ -187,11 +257,11 @@ id_tp <- function(data){
   data3 <- data[data$transpub_eq>0, ]
 
   # Calculate medians and thresholds
-  med_stransp   <- spatstat.geom::weighted.median(data2$share_transport, w= data2$FACTOR, na.rm = TRUE)
-  med_transp    <- spatstat.geom::weighted.median(data2$transport_eq, w= data2$FACTOR,  na.rm = TRUE)
-  med_transpub  <- spatstat.geom::weighted.median(data3$transpub_eq, w= data3$FACTOR,  na.rm = TRUE)
+  med_stransp   <- weighted.median(data2$share_transport, w= data2$FACTOR, na.rm = TRUE)
+  med_transp    <- weighted.median(data2$transport_eq, w= data2$FACTOR,  na.rm = TRUE)
+  med_transpub  <- weighted.median(data3$transpub_eq, w= data3$FACTOR,  na.rm = TRUE)
   data <- data %>%
-    dplyr::mutate(med_exp    = spatstat.geom::weighted.median(exp_ahc, w= FACTOR, na.rm = TRUE),        # income median (using expenditure as a better proxy of permanent income)
+    dplyr::mutate(med_exp    = weighted.median(exp_ahc, w= FACTOR, na.rm = TRUE),        # income median (using expenditure as a better proxy of permanent income)
                   poverty_t  = med_exp*0.6)                                                              # poverty threshold
 
   # Calculate energy poverty indices
@@ -349,7 +419,7 @@ load_rawhbs <- function(year, path, path_outputs) {
                                    ifelse(share_female >= 0.8                      ,"FD5", "Not provided"))))))
 
   # Create the variable: POVERTY
-  med_gastot <- spatstat.geom::weighted.median(epf_hg$GASTOT_UC2, epf_hg$FACTOR, na.rm = TRUE)
+  med_gastot <- weighted.median(epf_hg$GASTOT_UC2, epf_hg$FACTOR, na.rm = TRUE)
   u_pobreza <- 0.6*med_gastot
   epf_hg <- dplyr::mutate(epf_hg, POVERTY =ifelse(GASTOT_UC2 < u_pobreza, "At risk", "No risk"))
 

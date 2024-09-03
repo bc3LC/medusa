@@ -14,7 +14,7 @@ Authors@R: c(person("Eva", "Alonso-Epelde", email = "eva.alonso@bc3research.org"
 Description: Description of your R package medusa.
 URL: https://github.com/bc3LC/medusa
 BugReports: https://github.com/bc3LC/medusa/issues
-Depends: R (>= 4.2.0)
+Depends: R (>= 4.1.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

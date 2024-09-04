@@ -30,7 +30,6 @@ Imports:
   	tidyr,
   	ggplot2,
   	stringr,
-	restatapi,
   	here,
 	  spatstat.geom,
 	  tibble

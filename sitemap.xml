@@ -16,6 +16,8 @@
 <url><loc>/reference/available_var_intersec.html</loc></url>
 <url><loc>/reference/basic_graph.html</loc></url>
 <url><loc>/reference/calc_di.html</loc></url>
+<url><loc>/reference/calc_ep.html</loc></url>
+<url><loc>/reference/calc_tp.html</loc></url>
 <url><loc>/reference/categories.html</loc></url>
 <url><loc>/reference/coicop_2006.html</loc></url>
 <url><loc>/reference/coicop_2007.html</loc></url>
@@ -54,6 +56,9 @@
 <url><loc>/reference/ex_var_intersec.html</loc></url>
 <url><loc>/reference/gcfhogares95_22.html</loc></url>
 <url><loc>/reference/graph_labels.html</loc></url>
+<url><loc>/reference/id_ep1.html</loc></url>
+<url><loc>/reference/id_ep2.html</loc></url>
+<url><loc>/reference/id_tp.html</loc></url>
 <url><loc>/reference/impact.html</loc></url>
 <url><loc>/reference/impact_intersectional.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
@@ -68,5 +73,7 @@
 <url><loc>/reference/rename_values.html</loc></url>
 <url><loc>/reference/shocks.html</loc></url>
 <url><loc>/reference/standardize.html</loc></url>
+<url><loc>/reference/weighted.median.html</loc></url>
+<url><loc>/reference/weighted.quantile.html</loc></url>
 </urlset>
 

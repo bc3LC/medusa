@@ -217,9 +217,10 @@ id_ep2 <- function(data){
 #'
 #' Function to identify transport poor households before 2015 (included)
 #' @param data dataset with the data from the HBS.
+#' @param year year of the HBS data.
 #' @return a dataset with HBS data where transport poor households are identified.
 #' @export
-id_tp <- function(data){
+id_tp <- function(data, year){
 
   if (year == 2014) {
     data <- data[-19710,]
@@ -437,7 +438,7 @@ load_rawhbs <- function(year, path, path_outputs) {
   }
 
   # Create the variables for transport poor households
-  epf_hg <- id_tp(epf_hg)
+  epf_hg <- id_tp(epf_hg, year = year)
 
   # **********************************************************************
   # 4. Remove GASTOT NA

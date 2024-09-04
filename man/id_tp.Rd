@@ -4,10 +4,12 @@
 \alias{id_tp}
 \title{id_tp}
 \usage{
-id_tp(data)
+id_tp(data, year)
 }
 \arguments{
 \item{data}{dataset with the data from the HBS.}
+
+\item{year}{year of the HBS data.}
 }
 \value{
 a dataset with HBS data where transport poor households are identified.

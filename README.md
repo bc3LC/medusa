@@ -89,7 +89,7 @@ The `medusa` package  contains 3 main blocks of functions:
 
 2. Module 2. Functions to calculate energy poverty indices
 	- Main function: `calc_ep`
-	- Auxiliary functions: `id_ep1`, `id_ep1`, `weighted.median` and `weighted.quantile`.
+	- Auxiliary functions: `id_ep1`, `id_ep2`, `weighted.median` and `weighted.quantile`.
 
 
 3. Module 3. Functions to calculate transport poverty indices

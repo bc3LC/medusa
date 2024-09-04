@@ -189,8 +189,15 @@ calc_ep <- function(year, index = "all"){
 
   missmatch <- setdiff(index, accepted)
 
-  warning(sprintf('ATTENTION: The indicated index %s are not available. Possible options are %s.',
-                  paste(missmatch, collapse = ", "),  paste(accepted, collapse = ", ")))
+  if (length(missmatch) == 1) {
+    warning(sprintf('ATTENTION: The indicated index %s is not available. Possible options are %s.',
+                    paste(missmatch, collapse = ", "),  paste(accepted, collapse = ", ")))
+  }
+
+  if (length(missmatch) > 1) {
+    warning(sprintf('ATTENTION: The indicated indices %s are not available. Possible options are %s.',
+                    paste(missmatch, collapse = ", "),  paste(accepted, collapse = ", ")))
+  }
 
   df <- data.frame("EP_index" = c("10%",
                                   "2M",
@@ -261,8 +268,15 @@ calc_tp <- function(year, index = "all"){
 
   missmatch <- setdiff(index, accepted)
 
-  warning(sprintf('ATTENTION: The indicated index %s are not available. Possible options are %s.',
-                  paste(missmatch, collapse = ", "),  paste(accepted, collapse = ", ")))
+  if (length(missmatch) == 1) {
+    warning(sprintf('ATTENTION: The indicated index %s is not available. Possible options are %s.',
+                    paste(missmatch, collapse = ", "),  paste(accepted, collapse = ", ")))
+  }
+
+  if (length(missmatch) > 1) {
+    warning(sprintf('ATTENTION: The indicated indices %s are not available. Possible options are %s.',
+                    paste(missmatch, collapse = ", "),  paste(accepted, collapse = ", ")))
+  }
 
   df <- data.frame("TP_index" = c("10%",
                                   "2M",

@@ -82,19 +82,19 @@ Now  the package is fully loaded and you can start using its functions.
 
 The `medusa` package  contains 3 main blocks of functions:
 
-1. To calculate distributional impacts:
+1. Module 1. Functions to calculate distributional impacts
 	- Main function: `calc_di`, `ex_shocks`, `available_var_impact` , `available_var_intersec` and `ex_var_intersec`.
 	- Auxiliary functions: `load_rawhbs`, `rename_values`, `standardize`, `add_coicop`, `elevate_hbs`, `price_shock`, `impact`, `impact_intersectional`, `basic_graph`, `intersectional_graph`, `order_var`, `adjust_wh` and `adjust_wh_is`.
 
 
-2. To calculate energy poverty indicators (coming soon)
+2. Module 2. Functions to calculate energy poverty indices
 	- Main function: `calc_ep`
-	- Auxiliary functions: `...`
+	- Auxiliary functions: `id_ep1`, `id_ep1`, `weighted.median` and `weighted.quantile`.
 
 
-3. To calculate transport poverty indicators (coming soon)
+3. Module 3. Functions to calculate transport poverty indices
 	- Main function: `calc_tp`
-	- Auxiliary functions: `...`
+	- Auxiliary functions: `id_tp`, `weighted.median` and `weighted.quantile`.
 
 
 In addition, the package includes some default input files (.Rda), that are read by the different functions. 

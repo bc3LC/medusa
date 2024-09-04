@@ -319,3 +319,39 @@ test_that("Test15_Calculate distributional impacts for all years (intersectional
     testthat::expect_equal(test_result, test_expect)
   }
 })
+
+
+test_that("Test16_Calculate energy poverty indices", {
+  y <- seq(2006,2021,1)
+
+  test_result <- calc_ep(year = y, index = "all")
+
+  path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
+  test_expect <- read.csv(file = paste0(path, "/EP.csv"),
+                          # fileEncoding = "UTF-8-BOM",
+                          header = TRUE,
+                          sep = ",",
+                          dec = ".") %>%
+    dplyr::rename_with(~ sub("^X", "", .))
+
+  testthat::expect_equal(test_result, test_expect)
+
+})
+
+
+test_that("Test17_Calculate transport poverty indices", {
+  y <- seq(2006,2021,1)
+
+  test_result <- calc_tp(year = y, index = "all")
+
+  path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
+  test_expect <- read.csv(file = paste0(path, "/TP.csv"),
+                          fileEncoding = "UTF-8-BOM",
+                          header = TRUE,
+                          sep = ",",
+                          dec = ".") %>%
+    dplyr::rename_with(~ sub("^X", "", .))
+
+  testthat::expect_equal(test_result, test_expect)
+
+})

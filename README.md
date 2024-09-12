@@ -36,7 +36,7 @@
 
 ### <a name="pkg"></a>The package
 
-MEDUSA is an R package that allows the development of distributional analyses in isolation or in connection with other models (soft links). The extensive database in which the microsimulation model is based allows for highly disaggregated results, taking into account numerous socioeconomic and demographic characteristics of households, such as income level, place of residence, type of family or the  feminization degree of the household. 
+MEDUSA is an R package that allows the development of distributional analyses in isolation or in connection with other models (soft links). The extensive database in which the microsimulation model is based allows for highly disaggregated results, taking into account numerous socioeconomic and demographic characteristics of households, such as income level, place of residence, type of family or the  feminization degree of the household. Additionally, the package combines these with the calculation of energy and transport poverty indices.
 
 :exclamation::exclamation: **Note**: At the moment, `medusa` package works for Spain, but in the short term the idea is to extend it to all EU countries. Moreover, the package could be extended to all countries that are able to provide the raw data of the model.
 

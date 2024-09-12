@@ -5,9 +5,15 @@ navbar:
   left:
     - icon: fa-home
       href: index.html
-    - icon: fa-solid fa-magnifying-glass-chart
-      text: "The Model"
-      href: articles/TheModel.html
+    - text: "Modules"
+      icon: fa-solid fa-indent
+      menu:
+      -  text: Distributional impacts
+         href: articles/TheModel.html
+      -  text: Energy poverty indices
+         href: articles/EnergyPoverty.html
+      -  text: Transport poverty indices
+         href: articles/TransportPoverty.html
     - text: "Packge Data"
       icon: fa-solid fa-chart-pie
       menu:
@@ -15,9 +21,15 @@ navbar:
          href: articles/PackageData.html
       -  text: Available Variables
          href: articles/AvailableVariables.html
-    - icon: fas fa-book
-      text: "Tutorials"
-      href: articles/Tutorials.html
+    - text: "Tutorials"
+      icon: fas fa-book
+      menu:
+      -  text: Calculate distributional impacts
+         href: articles/Tutorials.html
+      -  text: Calculate energy poverty indices
+         href: articles/TutorialsEnergyPoverty.html
+      -  text: Calculate transport poverty indices
+         href: articles/TutorialsTransportPoverty.html
     - icon: fa-file-code-o
       text: "Reference"
       href: reference/index.html

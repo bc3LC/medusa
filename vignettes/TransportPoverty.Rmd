@@ -1,0 +1,24 @@
+---
+title: "Transport poverty indices"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{TransportPoverty}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Transport poverty indices
+
+`medusa` allows to calculate different transport poverty indices for a time series (2006-2021) based on the proposal by [Alonso-Epelde et al. (2023)](#R1).This indicators can be useful to assess the dimension of poverty in transport, as well as to monitor policies aimed at alleviating this problem. The first three metrics evaluate the ability of households to pay transport bills or how “affordable” transport is. These indicators have been used before for energy poverty in households. While the last one (VTU) also takes into account the level of accessibility to public transport in households:
+
+-   10% indicator. The household is vulnerable to transport if it spends more than 10% of its expenditure on meeting its mobility needs. Transport expenditure is understood as both expenditure on private transport and on short or medium distance public transport services.
+
+-   Double the national median (2M). A household is considered to be vulnerable to transport if the proportion of expenditure it allocates to transport is more than twice the national median. That is, these are households that, due to their socioeconomic situation, have to allocate a large part of their resources to maintain a level of mobility appropriate to their needs. To establish the expenditure threshold through the national median, those households that are users of transport, both private and public, have been used.
+
+-   Low-income, high-cost (LIHC) metric. A household is considered to be transportation vulnerable if it meets the following two conditions: i) its disposable income after subtracting housing and transportation costs is below the poverty line (set at 60% of the national median); and ii) its transportation expenditure is higher than the median transportation expenditure.
+
+-   Vulnerable Transportation User (VTU). A household is considered a transportation vulnerable user if: i) its transportation expenditure is more than twice the national median, ii) its income is below the median for all households, and iii) its expenditure on public transportation services is lower than the national median after eliminating households that do not report expenditure in these categories.
+
+# References
+
+<a name="R1">[R1]</a> Alonso-Epelde, E., García-Muros, X., & González-Eguino, M. (2023). Transport poverty indicators: A new framework based on the household budget survey. Energy Policy, 181, 113692.

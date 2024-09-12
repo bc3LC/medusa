@@ -1,13 +1,17 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>/404.html</loc></url>
 <url><loc>/articles/AvailableVariables.html</loc></url>
+<url><loc>/articles/EnergyPoverty.html</loc></url>
 <url><loc>/articles/index.html</loc></url>
 <url><loc>/articles/newVignetteName1.html</loc></url>
 <url><loc>/articles/newVignetteName2.html</loc></url>
 <url><loc>/articles/newVignetteName3.html</loc></url>
 <url><loc>/articles/PackageData.html</loc></url>
 <url><loc>/articles/TheModel.html</loc></url>
+<url><loc>/articles/TransportPoverty.html</loc></url>
 <url><loc>/articles/Tutorials.html</loc></url>
+<url><loc>/articles/TutorialsEnergyPoverty.html</loc></url>
+<url><loc>/articles/TutorialsTransportPoverty.html</loc></url>
 <url><loc>/authors.html</loc></url>
 <url><loc>/index.html</loc></url>
 <url><loc>/LICENSE-text.html</loc></url>

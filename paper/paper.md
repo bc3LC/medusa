@@ -65,9 +65,9 @@ Addressing critical challenges like climate change requires ambitious policies t
 
 The results derived from the model are presented as the relative impact (%) on total equivalent consumption expenditure [1]. The relative impact, Δesh , shows the additional cost that household h would assume in a proposed scenario in relative terms (%), compared to the initial household expenditure, and it is calculated as:
 
-Δesh=∑cec,h(1+Δpsc)−∑cec,h∑cec,h×100
+$$\Delta e_h^s = \frac{ \sum_c e_{c,h} (1+\Delta p_c^s) - \sum_c e_{c,h} }{ \sum_c e_{c,h} } \times 100$$
 
-here ec,h refers to the total spending on each consumption category, c , consumed by each of the household, in the baseline scenario and Δpsc is the increase in prices by consumption category and scenario obtained with the price model.
+here $e_{c,h}$ refers to the total spending on each consumption category, $c$, consumed by each of the household, in the baseline scenario and $\Delta p_c^s$ is the increase in prices by consumption category and scenario obtained with the price model.
 
 # Functionality
 

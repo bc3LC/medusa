@@ -83,7 +83,7 @@ The package includes default input files (.Rda), which are required for running 
 
 Output files are generated in both comma-separated values (CSV) and Portable Network Graphics (PNG) formats, with user control over file creation. When the save parameter is set to TRUE, the function saves a CSV file containing the selected results in the appropriate sub-directory. Additionally, if the fig parameter is set to TRUE, the function produces a barplot to visualize the corresponding output.
 
-The package is actively evolving to meet research and policy needs, with several new features planned for future releases. For instance, an upcoming update will extend simulation capabilities to all EU countries, as the initial release currently covers only Spain.
+The package is actively evolving to meet research and policy needs, with several new features planned for future releases. For instance, an upcoming update will extend simulation capabilities to all EU countries, as the initial release currently covers only Spain. Additionally, we are developing a user interface designed to enable individuals without R programming expertise to perform socioeconomic analyses effectively.
 
 # Acknowledgements
 

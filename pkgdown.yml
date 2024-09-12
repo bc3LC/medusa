@@ -3,7 +3,11 @@ pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   AvailableVariables: AvailableVariables.html
+  EnergyPoverty: EnergyPoverty.html
   PackageData: PackageData.html
   TheModel: TheModel.html
+  TransportPoverty: TransportPoverty.html
   Tutorials: Tutorials.html
-last_built: 2024-09-12T15:43Z
+  TutorialsEnergyPoverty: TutorialsEnergyPoverty.html
+  TutorialsTransportPoverty: TutorialsTransportPoverty.html
+last_built: 2024-09-12T17:11Z

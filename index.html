@@ -45,12 +45,25 @@
 
   </a>
 </li>
-<li>
-  <a href="articles/TheModel.html">
-    <span class="fa fa-solid fa-magnifying-glass-chart"></span>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-solid fa-indent"></span>
 
-    The Model
+    Modules
+
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/TheModel.html">Distributional impacts</a>
+    </li>
+    <li>
+      <a href="articles/EnergyPoverty.html">Energy poverty indices</a>
+    </li>
+    <li>
+      <a href="articles/TransportPoverty.html">Transport poverty indices</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -69,12 +82,25 @@
     </li>
   </ul>
 </li>
-<li>
-  <a href="articles/Tutorials.html">
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fas fa-book"></span>
 
     Tutorials
+
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/Tutorials.html">Calculate distributional impacts</a>
+    </li>
+    <li>
+      <a href="articles/TutorialsEnergyPoverty.html">Calculate energy poverty indices</a>
+    </li>
+    <li>
+      <a href="articles/TutorialsTransportPoverty.html">Calculate transport poverty indices</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="reference/index.html">
@@ -144,7 +170,7 @@
 <h3 id="the-package">
 <a name="pkg"></a>The package<a class="anchor" aria-label="anchor" href="#the-package"></a>
 </h3>
-<p>MEDUSA is an R package that allows the development of distributional analyses in isolation or in connection with other models (soft links). The extensive database in which the microsimulation model is based allows for highly disaggregated results, taking into account numerous socioeconomic and demographic characteristics of households, such as income level, place of residence, type of family or the feminization degree of the household.</p>
+<p>MEDUSA is an R package that allows the development of distributional analyses in isolation or in connection with other models (soft links). The extensive database in which the microsimulation model is based allows for highly disaggregated results, taking into account numerous socioeconomic and demographic characteristics of households, such as income level, place of residence, type of family or the feminization degree of the household. Additionally, the package combines these with the calculation of energy and transport poverty indices.</p>
 <p><span class="emoji" data-emoji="exclamation">❗</span><span class="emoji" data-emoji="exclamation">❗</span> <strong>Note</strong>: At the moment, <code>medusa</code> package works for Spain, but in the short term the idea is to extend it to all EU countries. Moreover, the package could be extended to all countries that are able to provide the raw data of the model.</p>
 </div>
 <div class="section level3">

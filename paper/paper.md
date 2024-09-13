@@ -17,9 +17,6 @@ authors:
 - name: "Clàudia Rodés-Bachs"
   orcid: "0000-0001-6696-7685"
   affiliation: 1
-- name: "María Moyano-Reina"
-  orcid: "0009-0000-4290-0697"
-  affiliation: 1
 bibliography: paper.bib
 ---
 
@@ -61,17 +58,17 @@ calc_di( year,                     # Base year for the simulation
 
 Addressing critical challenges like climate change requires ambitious policies that promote social justice without worsening existing inequalities, such as income or gender disparities [@alonso-epelde2024]. To ensure this, it is essential to conduct policy impact assessments that not only consider the economy, energy, land, and water systems holistically but also analyze the distributional impacts across different population groups [@bazoli2022, @walker2010]. While Integrated Assessment Models (IAMs) have been invaluable in policy evaluation [@van2020], they often lack the granularity needed to assess socio-economic disparities. Micro-simulation models for distributional analysis fill this gap by providing detailed, heterogeneous results, enabling policymakers to identify vulnerable populations and implement targeted compensatory measures [@tomas2023]. This ensures that policies are equitable and socially just.
 
-`medusa` facilitates distributional impact analyses through an overnight-effect microsimulation model, leveraging microdata from the Household Budget Survey (HBS), a standardized and comprehensive dataset available across EU countries. The HBS offers detailed insights into household consumption patterns and socioeconomic characteristics at both household and individual levels, allowing for highly granular analysis. This enables the integration of an intersectional approach [\^1], considering factors such as class, gender, and race, and provides more robust and nuanced results for assessing policy impacts on diverse population groups.
+`medusa` facilitates distributional impact analyses through an overnight-effect microsimulation model, leveraging microdata from the Household Budget Survey (HBS), a standardized and comprehensive dataset available across EU countries. The HBS offers detailed insights into household consumption patterns and socioeconomic characteristics at both household and individual levels, allowing for highly granular analysis. This enables the integration of an intersectional approach [^1], considering factors such as class, gender, and race, and provides more robust and nuanced results for assessing policy impacts on diverse population groups.
 
-The results derived from the model are presented as the relative impact (%) on total equivalent consumption expenditure [\^2]. The relative impact, $\Delta e_h^s$, shows the additional cost that household $h$ would assume in a proposed scenario in relative terms (%), compared to the initial household expenditure, and it is calculated as:
+[^1]: Intersectionality refers to the fact that the privileges or oppression of each individual depend on the multiple social categories to which he or she belongs, which are social constructs and can change over time ([@cho2013]; [@crenshaw1994, @davis1983, @djoudi2016, @kaijser2014]). Intersectionality is therefore also a tool for analysing the articulation of different socio-economic categories (e.g. class, gender, race, etc.) rather than considering them as independent forms of power relations (Colombo & Rebughini, 2016).
+
+The results derived from the model are presented as the relative impact (%) on total equivalent consumption expenditure [^2]. The relative impact, $\Delta e_h^s$, shows the additional cost that household $h$ would assume in a proposed scenario in relative terms (%), compared to the initial household expenditure, and it is calculated as:
+
+[^2]: Equivalent consumption expenditure is used instead of income as it is considered a better proxy for permanent household income since it fluctuates less in the long run [@goodman2004]. The equivalent spending is calculated based on household spending relativized by the modified OECD equivalence scale, thus considering the economies of scale generated in households based on their size. The modified OECD scale values 1 for the reference person in the household, 0.5 for other people aged 14 or over, and 0.3 for other people under 14 years of age.
 
 $$\Delta e_h^s = \frac{ \sum_c e_{c,h} (1+\Delta p_c^s) - \sum_c e_{c,h} }{ \sum_c e_{c,h} } \times 100$$
 
 here $e_{c,h}$ refers to the total spending on each consumption category, $c$, consumed by each of the household, in the baseline scenario and $\Delta p_c^s$ is the increase in prices by consumption category and scenario obtained with the price model.
-
-[\^1] Intersectionality refers to the fact that the privileges or oppression of each individual depend on the multiple social categories to which he or she belongs, which are social constructs and can change over time ([@cho2013]; [@crenshaw1994, @davis1983, @djoudi2016, @kaijser2014]). Intersectionality is therefore also a tool for analysing the articulation of different socio-economic categories (e.g. class, gender, race, etc.) rather than considering them as independent forms of power relations (Colombo & Rebughini, 2016).
-
-[\^2] Equivalent consumption expenditure is used instead of income as it is considered a better proxy for permanent household income since it fluctuates less in the long run [@goodman2004]. The equivalent spending is calculated based on household spending relativized by the modified OECD equivalence scale, thus considering the economies of scale generated in households based on their size. The modified OECD scale values 1 for the reference person in the household, 0.5 for other people aged 14 or over, and 0.3 for other people under 14 years of age.
 
 # Functionality
 

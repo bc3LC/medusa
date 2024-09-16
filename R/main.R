@@ -173,7 +173,7 @@ ex_var_intersec <- function(){
 #'
 #' Function to calculate energy poverty indices
 #' @param year year/s for energy poverty indices calculation
-#' @param index energy poverty index or indices you want to calculate. Possible
+#' @param index energy poverty index or indices to be calculated. Possible
 #' options: 10%, 2M, LIHC, HEP, HEP_LI. If "all" (by default) calculates
 #' all the indices for the selected year/s.
 #' @return a dataframe with the selected energy poverty indices
@@ -253,7 +253,7 @@ calc_ep <- function(year, index = "all"){
 #'
 #' Function to calculate transport poverty indices
 #' @param year year/s for transport poverty indices calculation
-#' @param index transport poverty index or indices you want to calculate. Possible
+#' @param index transport poverty index or indices to be calculated. Possible
 #' options: 10%, 2M, LIHC, VTU. If "all" (by default) calculates all the indices
 #' for the selected year/s.
 #' @return a dataframe with the selected transport poverty indices

@@ -12,18 +12,18 @@ options(dplyr.summarise.inform = FALSE)
 #' @return a dataset with labels renamed based in the mapping included in the package.
 #' @export
 rename_values = function(data, current_var) {
-  exchange_data = mapping %>%                                             # te junta los dos df (mapping y data)
-    dplyr::filter(VAR_EN == current_var) %>%                                 # pero solo coge la parte que nos interesa (solo cuando el valor de la variable es igual a current_var)
+  exchange_data = mapping %>%                                                # brings together the two df (mapping and data)
+    dplyr::filter(VAR_EN == current_var) %>%                                 # but only takes the part we are interested in (only when the value of the variable is equal to current_var).
     dplyr::select(value, NAME) %>%
     dplyr::distinct()
 
-  if (current_var != "NMIEMB" | (current_var == "NMIEMB" & sum(is.na(unique(exchange_data$value))) == 0) ) {                     # miramos si hay algun na en value y si es así no se aplica lo de abajo (para evitar errores con NMIEMB)
+  if (current_var != "NMIEMB" | (current_var == "NMIEMB" & sum(is.na(unique(exchange_data$value))) == 0) ) {                     # we look if there is any na in value and if so the below does not apply (to avoid errors with NMIEMB).
     data = data %>%
-      dplyr::rename(value = {{ current_var }}) %>%                             # renombra la columna (nombre de la variable) a value
-      dplyr::mutate(value = as.character(value)) %>%                           # te convierte en caracter
-      dplyr::left_join(exchange_data, by = "value") %>%                        # se queda solo con las columnas que nos interesan (value y nombre)
-      dplyr::select(-value) %>%                                                # te elimina la columna value
-      dplyr::rename_with(~current_var, 'NAME')                               # te renombra de nombre a current_var
+      dplyr::rename(value = {{ current_var }}) %>%                             # rename the column (variable name) to value
+      dplyr::mutate(value = as.character(value)) %>%                           # convert to a character
+      dplyr::left_join(exchange_data, by = "value") %>%                        # it keeps only the columns we are interested in (value and name).
+      dplyr::select(-value) %>%                                                # removes the value column
+      dplyr::rename_with(~current_var, 'NAME')                                 # rename to current_var
   }
 
 
@@ -39,15 +39,15 @@ rename_values = function(data, current_var) {
 #' @export
 standardize <- function(data) {
   # rename columns
-  old_names = colnames(data)                                                # te crea un vector con los nombres de las columnas
-  new_names = dplyr::left_join(data.frame(VAR_EPF = old_names),             # el vector de los nombres de las columnas se convierte en un df y el nombre de la columna es VAR_EPF
+  old_names = colnames(data)                                                # creates a vector with the column names
+  new_names = dplyr::left_join(data.frame(VAR_EPF = old_names),             # the vector of column names is converted to a df and the column name is VAR_EPF
                                mapping %>%
-                                 dplyr::select(VAR_EPF, VAR_EN) %>%            # dentro del mapping selecciona solo las columnas que nos interesan
-                                 dplyr::distinct(.),                        # para eliminar duplicados
-                               by = 'VAR_EPF') %>%                          # Haces el left join en funcion a var_epf
-    dplyr::mutate(VAR_EN = ifelse(is.na(VAR_EN), VAR_EPF, VAR_EN)) %>%               # cuando es na te pone var_epf y si no te pone var
-    dplyr::pull(VAR_EN)                                                        # para solo quedarte con la columna var (como vector)
-  colnames(data) = new_names                                                # asignamos a los nombres de las columnas el nuevo vector
+                                 dplyr::select(VAR_EPF, VAR_EN) %>%         # within the mapping selects only the columns we are interested in
+                                 dplyr::distinct(.),                        # duplicate remove
+                               by = 'VAR_EPF') %>%                          # left join in function to var_epf
+    dplyr::mutate(VAR_EN = ifelse(is.na(VAR_EN), VAR_EPF, VAR_EN)) %>%      # when it is na you get var_epf and if it is not you get var
+    dplyr::pull(VAR_EN)                                                     # only keep the var column (as a vector)
+  colnames(data) = new_names                                                # assign to the column names the new vector
 
   # rename values' codes to values' names for all items whose name is in the
   # renamed mapping's column and have not NA values
@@ -56,7 +56,7 @@ standardize <- function(data) {
                   !is.na(value)) %>%
     dplyr::pull(VAR_EN) %>%
     unique()
-  for (cc in ccitems) {                                                     # para todas las columnas donde se puede hacer mapping de la variables sobreescribimos el dataset standarizado (con función rename_value)
+  for (cc in ccitems) {                                                     # for all columns where variables can be mapped we overwrite the standardised dataset (with rename_value function)
     data = rename_values(data, cc)
   }
 
@@ -231,25 +231,25 @@ id_tp <- function(data, year){
     # Calculate the variables needed for TP indices calculation
     data <- data %>%
       dplyr::mutate(transport = EUR_07221 + EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07351,  # transport expenditure
-                    transport_eq = transport/UC2,                                                            # equivalent transport expenditure
-                    total_eq = GASTOT/(FACTOR*UC2),                                                          # equivalent total expenditure
-                    share_transport = transport_eq/total_eq,                                                 # share of transport expenditure
-                    transpub = EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07351,              # public transport expenditure
-                    transpub_eq = transpub/(FACTOR*UC2),                                                     # equivalent public transport expenditure
-                    exp_atc = total_eq - transport_eq,                                                       # total expenditure after transport costs
-                    exp_athc = exp_atc - ((EUR_04111 + EUR_04211)/UC2),                                        # total expenditure after energy and housing costs
+                    transport_eq = transport/UC2,                                                                   # equivalent transport expenditure
+                    total_eq = GASTOT/(FACTOR*UC2),                                                                 # equivalent total expenditure
+                    share_transport = transport_eq/total_eq,                                                        # share of transport expenditure
+                    transpub = EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07351,               # public transport expenditure
+                    transpub_eq = transpub/(FACTOR*UC2),                                                            # equivalent public transport expenditure
+                    exp_atc = total_eq - transport_eq,                                                              # total expenditure after transport costs
+                    exp_athc = exp_atc - ((EUR_04111 + EUR_04211)/UC2),                                             # total expenditure after energy and housing costs
                     exp_ahc = total_eq - ((EUR_04111 + EUR_04211)/UC2))
   } else {
     # Calculate the variables needed for TP indices calculation
     data <- data %>%
       dplyr::mutate(transport = EUR_07221 + EUR_07222 + EUR_07223 + EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07350,  # transport expenditure
-                    transport_eq = transport/UC2,                                                                                  # equivalent transport expenditure
+                    transport_eq = transport/UC2,                                                                                           # equivalent transport expenditure
                     total_eq = GASTOT/(FACTOR*UC2),                                                                                         # equivalent total expenditure
                     share_transport = transport_eq/total_eq,                                                                                # share of transport expenditure
                     transpub = EUR_07311 + EUR_07313 + EUR_07321 + EUR_07322 + EUR_07323 + EUR_07350,                                       # public transport expenditure
                     transpub_eq = transpub/(FACTOR*UC2),                                                                                    # equivalent public transport expenditure
                     exp_atc = total_eq - transport_eq,                                                                                      # total expenditure after transport costs
-                    exp_athc = exp_atc - ((EUR_04110 + EUR_04210)/UC2),                                                            # total expenditure after energy and housing costs
+                    exp_athc = exp_atc - ((EUR_04110 + EUR_04210)/UC2),                                                                     # total expenditure after energy and housing costs
                     exp_ahc = total_eq - ((EUR_04110 + EUR_04210)/UC2))
   }
 
@@ -263,7 +263,7 @@ id_tp <- function(data, year){
   med_transpub  <- weighted.median(data3$transpub_eq, w= data3$FACTOR,  na.rm = TRUE)
   data <- data %>%
     dplyr::mutate(med_exp    = weighted.median(exp_ahc, w= FACTOR, na.rm = TRUE),        # income median (using expenditure as a better proxy of permanent income)
-                  poverty_t  = med_exp*0.6)                                                              # poverty threshold
+                  poverty_t  = med_exp*0.6)                                              # poverty threshold
 
   # Calculate energy poverty indices
   data <- data %>%
@@ -335,12 +335,12 @@ load_rawhbs <- function(year, path, path_outputs) {
     dplyr::mutate(CODIGO = stringr::str_sub(CODIGO) <- paste0("CAN_", CODIGO),
            cantidad  = CANTIDAD/FACTOR)
 
-  # Pasar las tablas de formato largo a formato ancho para hacerla compatible con el fichero de hogares
+  # Change the tables from long format to wide format to make it compatible with the household file
   hh_g  <- reshape2::dcast(g, NUMERO ~ CODIGO, value.var= "gasto", fun.aggregate = sum)
   hh_gm <- reshape2::dcast(gm, NUMERO ~ CODIGO, value.var= "gastmon", fun.aggregate = sum)
   hh_c  <- reshape2::dcast(c, NUMERO ~ CODIGO, value.var= "cantidad", fun.aggregate = sum)
 
-  # Unir la tabla de hogares y con los datos de gasto
+  # Join the household data and the expenditure data
   if (year == 2019) {
     epf_hh$NUMERO <- as.character(epf_hh$NUMERO)
     hh_g$NUMERO <- as.character(hh_g$NUMERO)
@@ -352,7 +352,7 @@ load_rawhbs <- function(year, path, path_outputs) {
   epf_hc  <- dplyr::left_join( epf_hh , hh_c  , by = "NUMERO" )
 
 
-  # Asegurarse de que la suma de gastos del fichero de hogares y el de hh_g coinciden
+  # Ensure that the sum of expenditures in the household file and in the hh_g file is the same
   if (round(sum(hh_g[2:length(hh_g)], na.rm = TRUE)) != round(sum(epf_hh$GASTOT/epf_hh$FACTOR, na.rm = TRUE))) {
     stop("UNION is wrong")
   }
@@ -476,7 +476,7 @@ add_coicop <- function(data, year) {
   # Convert lists df to vectors
 
   for (r in colnames(lists)) {
-    assign(r, lists %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))      # Extrae una columna y se le asigna al nombre de la columna en un vector
+    assign(r, lists %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))      # Extracts a column and maps it to the column name in a vector
   }
 
 
@@ -551,7 +551,7 @@ elevate_hbs <- function(data, year, country = "ES") {
   # Convert lists df to vectors
 
   for (r in colnames(lists)) {
-    assign(r, lists %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))      # Extrae una columna y se le asigna al nombre de la columna en un vector
+    assign(r, lists %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))      # Extracts a column and maps it to the column name in a vector
   }
 
   # Calculate the expenditure of each category at the level of NA population
@@ -586,12 +586,12 @@ elevate_hbs <- function(data, year, country = "ES") {
   macro <- gcfhogares95_22 %>%
     dplyr::select(COICOP, as.character(year[1])) %>%
     dplyr::rename('macro_ref' = as.character({{year}}))
-  macro$macro_ref <- as.numeric(gsub(",","",macro$macro_ref))                   # Convertir en numerico para poder calcular el coeficiente, para eso hay que quitarle las comas
+  macro$macro_ref <- as.numeric(gsub(",","",macro$macro_ref))                   # Convert to numerical in order to calculate the coefficient, for that you have to remove the commas.
 
   stat <- dplyr::left_join( stat , macro , by = "COICOP" )
 
   stat <- dplyr::mutate(stat, coicop_adf = macro_ref*1000000/micro_ref) %>%
-    dplyr::mutate(coicop_adf = ifelse(COICOP %in% c("EUR_A_073_T", "EUR_A_073_A", "EUR_A_073_M"), coicop_adf[which(COICOP == "EUR_A_073")], coicop_adf))                         # To do: generalizar este proceso a cualquier desagregacion
+    dplyr::mutate(coicop_adf = ifelse(COICOP %in% c("EUR_A_073_T", "EUR_A_073_A", "EUR_A_073_M"), coicop_adf[which(COICOP == "EUR_A_073")], coicop_adf))  # To do: generalising this process to any disaggregation
 
   # Apply EUR_A_073 adf to EUR_A_073_T, EUR_A_073_A and EUR_A_073_M
 
@@ -677,7 +677,7 @@ price_shock <- function(data, shocks, year) {
   # Convert lists df to vectors
 
   for (r in colnames(shocks)) {
-    assign(r, shocks %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))      # Extrae una columna y se le asigna al nombre de la columna en un vector
+    assign(r, shocks %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))
   }
 
   scenarios <- colnames(shocks)[3:length(colnames(shocks))]
@@ -880,23 +880,23 @@ basic_graph <- function(data, var = categories$categories){
 impact <- function(data, var = categories$categories, save = T, file_name = "D_impacts", fig = T,
                    shocks_scenario_names) {
 
-  d_impacts = list()                                                                                        # Generamos una lista vacia
+  d_impacts = list()                                                                                         # empty list
   missing_vars = c()
 
   for (g in var) {
     if (g %in% colnames(data)) {
-      gastotS_cols <- intersect(paste('GASTOT',shocks_scenario_names,sep='_'), names(data))                                          # generamos un vector con todos los nombres de los escenarios de los shocks que están en el dataset
-      assign(paste0('di_',g),                                                                                # asignamos todo lo que se calcula debajo a di_ g (del loop)
+      gastotS_cols <- intersect(paste('GASTOT',shocks_scenario_names,sep='_'), names(data))                  # generate a vector with all the scenario names of the shocks that are in the dataset
+      assign(paste0('di_',g),                                                                                # assign everything calculated below to di_ g (from the loop)
              data %>%
-               dplyr::group_by(!!dplyr::sym(g)) %>%                                                          # agrupamos por g, sym es para que entienda el valor de g (sustituye el get)
-               dplyr::summarise(VARIABLE = g,                                                                # crear las columnas siguientes
+               dplyr::group_by(!!dplyr::sym(g)) %>%                                                          # group by g, sym is to understand the value of g (override the get)
+               dplyr::summarise(VARIABLE = g,                                                                # create the following columns
                          WEIGHT = sum(FACTOR),
-                         dplyr::across(dplyr::all_of(gastotS_cols),                                          # para todas las columnas que estan en gastotS_cols
-                                       list(DI_s = ~ 100*(sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),            # generamos una nueva columna con los impactos distributivos, donde sum(.) es el valor de la columna que estamos usando
-                                       .names = "DI_{.col}")) %>%                                            # cambiamos el nombre de la columna añadiendo DI al nombre de columna que esta usando
-               dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))            # cambiamos los nombres de las columnas que empiezen por DI_GASTOT a DI_ solo (gsub es para sustituir y lo segundo para que solo se fije en las que empiezan por DI_GASTOT)
+                         dplyr::across(dplyr::all_of(gastotS_cols),                                          # for all columns that are in gastotS_cols
+                                       list(DI_s = ~ 100*(sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),        # generate a new column with the distributional impacts, where sum(.) is the value of the column we are using
+                                       .names = "DI_{.col}")) %>%                                            # change the column name by adding DI to the column name you are using
+               dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))            # change the names of the columns starting with DI_GASTOT to DI_ only (gsub is to replace and the latter to only look at the columns starting with DI_GASTOT).
       )
-      d_impacts[[paste0('di_',g)]] = get(paste0('di_',g))                                                     # añadir el resultado a la lista con el nombre di_g
+      d_impacts[[paste0('di_',g)]] = get(paste0('di_',g))                                                    # add the result to the list with the name di_g
     } else {
         missing_vars <- c(missing_vars, g)
         warning(paste0(g, " is not present in the dataset"))
@@ -1030,26 +1030,26 @@ intersectional_graph <- function(data, pairs = is_categories){
 impact_intersectional <- function(data, pairs = is_categories, save = T, file_name = "DI_impact", fig = T,
                                   shocks_scenario_names) {
 
-  is_d_impacts = list()                                                                                        # Generamos una lista vacia
+  is_d_impacts = list()            # empty list
   missing_vars = c()
-   for (r in 1:nrow(pairs)) {      # para el numero de filas de pairs
-    var_a = pairs$category_a[r]   # te coge el valor de pair en la columna a en la row r
-    var_b = pairs$category_b[r]   # te coge el valor de pair en la columna a en la row r
+   for (r in 1:nrow(pairs)) {      # for the number of rows of pairs
+    var_a = pairs$category_a[r]    # takes the value of pair in column a in row r
+    var_b = pairs$category_b[r]    # takes the value of pair in column b in row r
     # ensure that var_a and var_b are in the dataset (as column names)
     if (var_a %in% colnames(data) & var_b %in% colnames(data)) {
-      gastotS_cols <- intersect(paste('GASTOT',shocks_scenario_names,sep='_'), names(data))                                          # generamos un vector con todos los nombres de los escenarios de los shocks que están en el dataset
-      assign(paste0('di_',var_a,"_",var_b),                                                                                # asignamos todo lo que se calcula debajo a di_ g (del loop)
+      gastotS_cols <- intersect(paste('GASTOT',shocks_scenario_names,sep='_'), names(data))                       # generate a vector with all the scenario names of the shocks that are in the dataset
+      assign(paste0('di_',var_a,"_",var_b),                                                                       # assign everything calculated below to di_ g (from the loop)
              data %>%
-               dplyr::group_by(!!dplyr::sym(var_a),!!dplyr::sym(var_b)) %>%                                                          # agrupamos por g, sym es para que entienda el valor de g (sustituye el get)
-               dplyr::summarise(VARIABLE_A = var_a,                                                                # crear las columnas siguientes
-                                VARIABLE_B = var_b,                                                                # crear las columnas siguientes
+               dplyr::group_by(!!dplyr::sym(var_a),!!dplyr::sym(var_b)) %>%                                       # group by g, sym is so that it understands the value of g (it replaces get)
+               dplyr::summarise(VARIABLE_A = var_a,                                                               # create the following columns
+                                VARIABLE_B = var_b,                                                               # create the following columns
                                 WEIGHT = sum(FACTOR),
-                                dplyr::across(dplyr::all_of(gastotS_cols),                                          # para todas las columnas que estan en gastotS_cols
-                                              list(DI_s = ~ (sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),            # generamos una nueva columna con los impactos distributivos, donde sum(.) es el valor de la columna que estamos usando
-                                              .names = "DI_{.col}")) %>%                                            # cambiamos el nombre de la columna añadiendo DI al nombre de columna que esta usando
-               dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))                   # cambiamos los nombres de las columnas que empiezen por DI_GASTOT a DI_ solo (gsub es para sustituir y lo segundo para que solo se fije en las que empiezan por DI_GASTOT)
+                                dplyr::across(dplyr::all_of(gastotS_cols),                                        # for all columns that are in gastotS_cols
+                                              list(DI_s = ~ (sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),          # generate a new column with the distributional impacts, where sum(.) is the value of the column we are using
+                                              .names = "DI_{.col}")) %>%                                          # change the name of the column by adding DI to the column name that is being used
+               dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))                 # change the names of the columns that start with DI GASTOR to DI_ only (gsub is for replacing and the second so that it only looks at those that start with DI_GASTOT)
       )
-      is_d_impacts[[paste0('di_',var_a,'_',var_b)]] = get(paste0('di_',var_a,'_',var_b))     # añadir el resultado a la lista con el nombre di_g
+      is_d_impacts[[paste0('di_',var_a,'_',var_b)]] = get(paste0('di_',var_a,'_',var_b))                          # add the result to the list with the name di_g
     } else {
       if (var_a %in% colnames(data) & !var_b %in% colnames(data)) {
         missing_vars <- c(missing_vars, var_b)

@@ -60,7 +60,7 @@ Addressing critical challenges like climate change requires ambitious policies t
 
 `medusa` facilitates distributional impact analyses through an overnight-effect microsimulation model, leveraging microdata from the Household Budget Survey (HBS), a standardized and comprehensive dataset available across EU countries [@eurostat2003]. The HBS offers detailed insights into household consumption patterns and socioeconomic characteristics at both household and individual levels, allowing for highly granular analysis. This enables the integration of an intersectional approach[^1] considering factors such as class, gender, and race, and provides more robust and nuanced results for assessing policy impacts on diverse population groups.
 
-[^1]: Intersectionality refers to the fact that the privileges or oppression of each individual depend on the multiple social categories to which he or she belongs, which are social constructs and can change over time ([@cho2013]; [@crenshaw1994, @davis1983, @djoudi2016, @kaijser2014]). Intersectionality is therefore also a tool for analysing the articulation of different socio-economic categories (e.g. class, gender, race, etc.) rather than considering them as independent forms of power relations (Colombo & Rebughini, 2016).
+[^1]: Intersectionality refers to the fact that the privileges or oppression of each individual depend on the multiple social categories to which he or she belongs, which are social constructs and can change over time ([@cho2013; @crenshaw1994; @davis1983; @djoudi2016; @kaijser2014]). Intersectionality is therefore also a tool for analysing the articulation of different socio-economic categories (e.g. class, gender, race, etc.) rather than considering them as independent forms of power relations [@colombo2016].
 
 The results derived from the model are presented as the relative impact ($\%$) on total equivalent consumption expenditure[^2]. The relative impact, $\Delta e_h^s$, shows the additional cost that household $h$ would assume in a proposed scenario $s$ in relative terms ($\%$), compared to the initial household expenditure. It is calculated as:
 
@@ -68,7 +68,7 @@ The results derived from the model are presented as the relative impact ($\%$) o
 
 $$\Delta e_h^s = \frac{ \sum_c e_{c,h} (1+\Delta p_c^s) - \sum_c e_{c,h} }{ \sum_c e_{c,h} } \times 100$$
 
-here $e_{c,h}$ refers to the total spending on each consumption category, $c$, consumed by each of the household, in the baseline scenario and $\Delta p_c^s$ is the increase in prices by consumption category and scenario obtained with the price model.
+here $e_{c,h}$ refers to the total spending on each consumption category, $c$, consumed by each of the household, $h$, in the baseline scenario and $\Delta p_c^s$ is the increase in prices by consumption category and scenario obtained with the price model.
 
 # Functionality
 
@@ -78,7 +78,7 @@ The `medusa` package includes several functions that have been classified in 3 m
 
 -   Module 2: Functions to calculate energy poverty indices.The main function for users, `calc_ep()`, calculates the energy poverty index for the selected year/s and the selected indicator. The indicators included in the package are the 10$\%$, 2M, LIHC, HEP and HEP_LI. These indicators have been commonly used in the literature to measure energy poverty during the last decades and are explained [here](https://bc3lc.github.io/medusa/articles/EnergyPoverty.html).
 
--   Module 3: Functions to calculate transport poverty indices.The main function for users, `calc_tp()`, calculates the transport poverty index for the selected year/s and the selected indicator. The indicators included in the package are the 10$\%$, 2M, LIHC and VTU. These indicators are based on the proposal by Alonso-Epelde et al. [alonso-epelde2023] and are explained [here](https://bc3lc.github.io/medusa/articles/TransportPoverty.html).
+-   Module 3: Functions to calculate transport poverty indices.The main function for users, `calc_tp()`, calculates the transport poverty index for the selected year/s and the selected indicator. The indicators included in the package are the 10$\%$, 2M, LIHC and VTU. These indicators are based on the proposal by Alonso-Epelde et al. [@alonso-epelde2023] and are explained [here](https://bc3lc.github.io/medusa/articles/TransportPoverty.html).
 
 The package includes default input files (.Rda), which are required for running the various functions, simplifying the process for users.
 

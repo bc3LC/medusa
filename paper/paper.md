@@ -78,7 +78,7 @@ The `medusa` package includes several functions that have been classified in 3 m
 
 -   Module 2: Functions to calculate energy poverty indices.The main function for users, `calc_ep()`, calculates the energy poverty index for the selected year/s and the selected indicator. The indicators included in the package are the 10$\%$, 2M, LIHC, HEP and HEP_LI. These indicators have been commonly used in the literature to measure energy poverty during the last decades and are explained [here](https://bc3lc.github.io/medusa/articles/EnergyPoverty.html).
 
--   Module 3: Functions to calculate transport poverty indices.The main function for users, `calc_tp()`, calculates the transport poverty index for the selected year/s and the selected indicator. The indicators included in the package are the 10$\%$, 2M, LIHC and VTU. These indicators are based on the proposal by Alonso-Epelde et al. (2023) and are explained [here](https://bc3lc.github.io/medusa/articles/TransportPoverty.html). <span style="color:white;">[@alonso-epelde2023]</span>
+-   Module 3: Functions to calculate transport poverty indices.The main function for users, `calc_tp()`, calculates the transport poverty index for the selected year/s and the selected indicator. The indicators included in the package are the 10$\%$, 2M, LIHC and VTU. These indicators are based on the proposal by @alonso-epelde2023 and are explained [here](https://bc3lc.github.io/medusa/articles/TransportPoverty.html). 
 
 The package includes default input files (.Rda), which are required for running the various functions, simplifying the process for users.
 

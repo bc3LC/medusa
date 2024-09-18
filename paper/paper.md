@@ -22,18 +22,18 @@ bibliography: paper.bib
 
 # Summary
 
-Addressing 21$^{st}$-century challenges, such as climate change, demands policies that not only advance social justice but also prevent the exacerbation of existing inequalities. While Integrated Assessment Models (IAMs) have been a fundamental tool to carry out impact analyses of policies from a holistic perspective, micro-simulation models are crucial for identifying heterogeneous socioeconomic impacts and ensuring fairer and more targeted policies.
+Addressing 21$^{st}$-century challenges, such as climate change, demands policies that not only advance social justice but also prevent the exacerbation of existing inequalities. While Integrated Assessment Models (IAMs) are a fundamental tool to carry out impact analyses of policies from a holistic perspective, micro-simulation models are crucial for identifying heterogeneous socioeconomic impacts and ensuring fairer and more targeted policies.
 
 `medusa` is an R package designed for conducting distributional analyses, either independently or in conjunction with other models, including IAMs. The extensive database in which the microsimulation model is based allows highly disaggregated results by considering a wide range of socioeconomic and demographic characteristics of households, such as income level, place of residence, type of family, and feminization degree. The package combines this detailed household data with the calculation of energy and transport poverty indices. The structure of the `medusa` package is summarized in Figure 1.
 
 ![Structure of the `medusa` package](figure1.png)
 
-The `medusa` package is available online through the public domain at <https://github.com/bc3LC/medusa>. Below is a simplified code example demonstrating how to execute the package. For a comprehensive introduction to `medusa`, a detailed step-by-step tutorial is provided in the form of an R vignette, accessible [here](https://bc3lc.github.io/medusa/).
+The `medusa` package is available online through the public domain <https://github.com/bc3LC/medusa>. Below is a simplified code example demonstrating how to execute the package. For a comprehensive introduction to `medusa`, a detailed step-by-step tutorial is provided in the form of an R vignette, accessible [here](https://bc3lc.github.io/medusa/).
 
 ``` r
 install.packages("remotes")
 library(remotes)
-remotes::install_github("bc3LC/medusa")
+install_github("bc3LC/medusa")
 library(medusa)
 
 # Download the example file to enter price shocks
@@ -41,22 +41,22 @@ ex_shocks()
 
 # After introducing the price shocks in the csv file, upload the edited file
 file_name <- read.csv(file,        # File name or full file path
-             header = TRUE,        # Read the header (TRUE)
-             sep = ",",            # Value separator
-             dec = ".",            # Decimal point
-             ...)                  # Additional arguments
+             header = TRUE,        # Header indicator (set to TRUE)
+             sep = ",",            # Value separator used in the file
+             dec = ".",            # Decimal point format used
+             ...)                  # Additional arguments to be passed
 
 # Calculate distributional impacts
 calc_di( year,                     # Base year for the simulation
-         elevate = F,              # Do not elevate the raw data
-         shocks = file_name,       # Indicate the name of the uploaded file
-         var_impact = "DECILE",    # Indicate the socioeconomic variable
-         ...)                      # Additional arguments
+         elevate = F,              # Elevation of raw data (set to FALSE)
+         shocks = file_name,       # Name of the uploaded file with shocks
+         var_impact = "DECILE",    # Socioeconomic variable to be used
+         ...)                      # Additional arguments to be passed
 ```
 
 # Statement of need
 
-Addressing critical challenges like climate change requires ambitious policies that promote social justice without worsening existing inequalities, such as income or gender disparities [@alonso-epelde2024]. To ensure this, it is essential to conduct policy impact assessments that not only consider the economy, energy, land, and water systems holistically but also analyze the distributional impacts across different population groups [@bazoli2022; @walker2010]. While Integrated Assessment Models (IAMs) have been invaluable in policy evaluation [@van2020], they often lack the granularity needed to assess socio-economic disparities. Micro-simulation models for distributional analysis fill this gap by providing detailed, heterogeneous results, enabling policymakers to identify vulnerable populations and implement targeted compensatory measures [@tomas2023]. This ensures that policies are equitable and socially just.
+Addressing critical challenges like climate change requires ambitious policies that promote social justice without worsening existing inequalities, such as income or gender disparities [@alonso-epelde2024]. To ensure this, it is essential to conduct policy impact assessments that not only consider the economy, energy, land, and water systems holistically but also analyze the distributional impacts across different population groups [@bazoli2022; @walker2010]. While Integrated Assessment Models (IAMs) are invaluable in policy evaluation [@van2020], they often lack the granularity needed to assess socio-economic disparities. Micro-simulation models for distributional analysis fill this gap by providing detailed, heterogeneous results, enabling policymakers to identify vulnerable populations and implement targeted compensatory measures [@tomas2023]. This ensures that policies are equitable and socially just.
 
 `medusa` facilitates distributional impact analyses through an overnight-effect microsimulation model, leveraging microdata from the Household Budget Survey (HBS), a standardized and comprehensive dataset available across EU countries [@eurostat2003]. The HBS offers detailed insights into household consumption patterns and socioeconomic characteristics at both household and individual levels, allowing for highly granular analysis. This enables the integration of an intersectional approach[^1] considering factors such as class, gender, and race, and provides more robust and nuanced results for assessing policy impacts on diverse population groups.
 
@@ -68,7 +68,7 @@ The results derived from the model are presented as the relative impact ($\%$) o
 
 $$\Delta e_h^s = \frac{ \sum_c e_{c,h} (1+\Delta p_c^s) - \sum_c e_{c,h} }{ \sum_c e_{c,h} } \times 100$$
 
-here $e_{c,h}$ refers to the total spending on each consumption category, $c$, consumed by each of the household, $h$, in the baseline scenario and $\Delta p_c^s$ is the increase in prices by consumption category and scenario obtained with the price model.
+here $e_{c,h}$ refers to the total spending on each consumption category $c$ consumed by each household $h$ in the baseline scenario and $\Delta p_c^s$ is the increase in prices by consumption category and scenario obtained with the price model.
 
 # Functionality
 
@@ -82,7 +82,7 @@ The `medusa` package includes several functions that have been classified in 3 m
 
 The package includes default input files (.Rda), which are required for running the various functions, simplifying the process for users.
 
-Output files are generated in both comma-separated values (CSV) and Portable Network Graphics (PNG) formats, with user control over file creation. When the `save` parameter is set to TRUE, the function saves a CSV file containing the selected results in the defined directory. Additionally, if the `fig` parameter is set to TRUE, the function produces and saves a bar plot to visualize the corresponding output.
+Output files are generated in both comma-separated values (CSV) and portable network graphics (PNG) formats, with user control over file creation. When the `save` parameter is set to TRUE, the function saves a CSV file containing the selected results in the defined directory. Additionally, if the `fig` parameter is set to TRUE, the function produces and saves a bar plot to visualize the corresponding output.
 
 The package is actively evolving to meet research and policy needs, with several new features planned for future releases. For instance, an upcoming update will extend simulation capabilities to all EU countries, as the initial release currently covers only Spain. Additionally, we are developing a user interface designed to enable individuals without R programming expertise to perform socioeconomic analyses effectively.
 

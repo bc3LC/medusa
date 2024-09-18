@@ -9,6 +9,7 @@ options(dplyr.summarise.inform = FALSE)
 #' values detailed in the mapping included in the package.
 #' @param data dataset to be standardized.
 #' @param current_var column name to be standardized.
+#' @importFrom dplyr %>%
 #' @return a dataset with labels renamed based in the mapping included in the package.
 #' @export
 rename_values = function(data, current_var) {
@@ -35,6 +36,7 @@ rename_values = function(data, current_var) {
 #'
 #' Function to standarize data names.
 #' @param data dataset to be standardized.
+#' @importFrom dplyr %>%
 #' @return a dataset with the variables and labels renamed based in the mapping included in the package.
 #' @export
 standardize <- function(data) {
@@ -138,6 +140,7 @@ weighted.median <- function(x, w, na.rm=TRUE, type=2, collapse=TRUE) {
 #'
 #' Function to identify energy poor households from 2016
 #' @param data dataset with the data from the HBS.
+#' @importFrom dplyr %>%
 #' @return a dataset with HBS data where energy poor households are identified.
 #' @export
 id_ep1 <- function(data){
@@ -178,6 +181,7 @@ id_ep1 <- function(data){
 #'
 #' Function to identify energy poor households before 2016 (included)
 #' @param data dataset with the data from the HBS.
+#' @importFrom dplyr %>%
 #' @return a dataset with HBS data where energy poor households are identified.
 #' @export
 id_ep2 <- function(data){
@@ -218,6 +222,7 @@ id_ep2 <- function(data){
 #' Function to identify transport poor households before 2015 (included)
 #' @param data dataset with the data from the HBS.
 #' @param year year of the HBS data.
+#' @importFrom dplyr %>%
 #' @return a dataset with HBS data where transport poor households are identified.
 #' @export
 id_tp <- function(data, year){
@@ -286,6 +291,7 @@ id_tp <- function(data, year){
 #' @param year year of the HBS you want to load.
 #' @param path Local path to the folder where the HBS's are stored. Not included in the package.
 #' @param path_outputs path to save the results (RData)
+#' @importFrom dplyr %>%
 #' @return a list with the 3 files of the HBS.
 #' @export
 load_rawhbs <- function(year, path, path_outputs) {
@@ -462,6 +468,7 @@ load_rawhbs <- function(year, path, path_outputs) {
 #' (HBS) according to the aggregation (coicop_year) specified in the package.
 #' @param data dataset with the data from the HBS.
 #' @param year year of the HBS to be modified according to the aggregation specified in the package.
+#' @importFrom dplyr %>%
 #' @return a dataset with HBS data where COICOP categories are aggregated according to the classification specified in the package.
 #' @export
 add_coicop <- function(data, year) {
@@ -508,6 +515,7 @@ add_coicop <- function(data, year) {
 #' @param year year of the HBS you want to elevate to national accounting.
 #' @param country country of the HBS you want to elevate. By default "ES"
 #' (for the moment it only works for Spain, so DO NOT TOUCH).
+#' @importFrom dplyr %>%
 #' @return a dataset with the HBS data where expenses are elevated to national accounting.
 #' @export
 elevate_hbs <- function(data, year, country = "ES") {
@@ -661,6 +669,7 @@ elevate_hbs <- function(data, year, country = "ES") {
 #' the package, if you are not going to aggregate the COICOP variables you have to
 #' replace the column labels by the COICOP variables that appear in your dataset.
 #' @param year base year for the simulation. It must be the same as the year of the HBS.
+#' @importFrom dplyr %>%
 #' @return a dataset with the HBS data and the new expenses for COICOP categories
 #' after the application of the price shock.
 #' @export
@@ -778,6 +787,7 @@ adjust_wh_is <- function(data, var_w, var_h) {
 #' Function to order the labels of the socioeconomic and demographic variables
 #' @param data dataset in which we want to order the labels of the socioeconomic and demographic variables
 #' @param g variable for which we want to sort the labels
+#' @importFrom dplyr %>%
 #' @return a dataset in which the labels are ordered for the selected socioeconomic or demographic variable
 #' @export
 order_var <- function(data, g){
@@ -813,6 +823,7 @@ order_var <- function(data, g){
 #' impacts for each of the variables specified in the package. If not, you can
 #' indicate a variable or a vector of variables to crate the graph.If you want to
 #' see the variables for which the function is available run `available_var_impact()`.
+#' @importFrom dplyr %>%
 #' @return a graph per selected variable/s summarizing distributional impacts.
 #' @export
 basic_graph <- function(data, var = categories$categories){
@@ -874,6 +885,7 @@ basic_graph <- function(data, var = categories$categories){
 #' @param fig generates and saves a graph that summarises the distributional impacts.
 #' By default it is TRUE, for the graph/s not to be generated and saved indicate FALSE.
 #' @param shocks_scenario_names vector of the names of the considered scenario shocks
+#' @importFrom dplyr %>%
 #' @return a list containing the generated datasets (.RData) summarising the
 #' distributional impacts per selected variable.
 #' @export
@@ -935,6 +947,7 @@ impact <- function(data, var = categories$categories, save = T, file_name = "D_i
 #' variables for the calculation, it must follow the same format as the output of
 #' `available_var_intersec()`, i.e. a table whose columns have category_a and
 #' category_b as their titles.
+#' @importFrom dplyr %>%
 #' @return a graph per selected set of variables summarizing the distributional impacts.
 #' @export
 intersectional_graph <- function(data, pairs = is_categories){
@@ -1024,6 +1037,7 @@ intersectional_graph <- function(data, pairs = is_categories){
 #' @param fig generates and saves a graph that summarises the intersectional distributional
 #' impacts. By default it is TRUE, for the graph/s not to be generated and saved indicate FALSE.
 #' @param shocks_scenario_names vector of the names of the considered scenario shocks
+#' @importFrom dplyr %>%
 #' @return a list containing the generated datasets (.RData) summarising the intersectional
 #' distributional impacts per selected set of variables.
 #' @export

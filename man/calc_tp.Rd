@@ -9,7 +9,7 @@ calc_tp(year, index = "all")
 \arguments{
 \item{year}{year/s for transport poverty indices calculation}
 
-\item{index}{transport poverty index or indices you want to calculate. Possible
+\item{index}{transport poverty index or indices to be calculated. Possible
 options: 10%, 2M, LIHC, VTU. If "all" (by default) calculates all the indices
 for the selected year/s.}
 }

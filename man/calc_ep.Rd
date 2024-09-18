@@ -9,7 +9,7 @@ calc_ep(year, index = "all")
 \arguments{
 \item{year}{year/s for energy poverty indices calculation}
 
-\item{index}{energy poverty index or indices you want to calculate. Possible
+\item{index}{energy poverty index or indices to be calculated. Possible
 options: 10%, 2M, LIHC, HEP, HEP_LI. If "all" (by default) calculates
 all the indices for the selected year/s.}
 }

@@ -50,6 +50,7 @@ ex_shocks <- function(){
 #' distributional impacts, if save TRUE. By default "DI_impacts".
 #' @param fig if TRUE (by default) create and save the figures of the distributional
 #' impacts calculated by the function. If FALSE do not create neither save.
+#' @importFrom dplyr %>%
 #' @return a list containing the generated datasets summarising the basic or/and the
 #' intersectional distributional impacts per selected variable or set of variables.
 #' @export
@@ -176,6 +177,7 @@ ex_var_intersec <- function(){
 #' @param index energy poverty index or indices to be calculated. Possible
 #' options: 10%, 2M, LIHC, HEP, HEP_LI. If "all" (by default) calculates
 #' all the indices for the selected year/s.
+#' @importFrom dplyr %>%
 #' @return a dataframe with the selected energy poverty indices
 #' @export
 calc_ep <- function(year, index = "all"){
@@ -256,6 +258,7 @@ calc_ep <- function(year, index = "all"){
 #' @param index transport poverty index or indices to be calculated. Possible
 #' options: 10%, 2M, LIHC, VTU. If "all" (by default) calculates all the indices
 #' for the selected year/s.
+#' @importFrom dplyr %>%
 #' @return a dataframe with the selected transport poverty indices
 #' @export
 calc_tp <- function(year, index = "all"){

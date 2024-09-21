@@ -1092,3 +1092,28 @@ impact_intersectional <- function(data, pairs = is_categories, save = T, file_na
 
   return(is_d_impacts)
 }
+
+#' check_year
+#'
+#' Check if the parameter year is valid
+#' @param year year introduce by the user
+#' @return stop if year is wrongly introduced
+#' @export
+
+check_year <- function(year) {
+
+  if (length(year) != 1) {
+    stop(sprintf('You introduced a vector of years, only a single year is allowed. Possible options are %s.',
+                 paste(seq(2006,2021,1), collapse = ", ")))
+  }
+
+  if(is.character(year)) {
+    year <- as.numeric(year)
+  }
+
+  if (!year %in% seq(2006,2021,1)) {
+    stop(sprintf('You introduced year %s which is not available. Possible options are %s.',
+                 year, paste(seq(2006,2021,1), collapse = ", ")))
+  }
+
+}

@@ -57,6 +57,9 @@ ex_shocks <- function(){
 calc_di <-function(year, elevate=F, shocks, var_impact = "all", var_intersec = NULL, save=T,
                    file_name_impact = "D_impact", file_name_intersec = "DI_impact", fig=T) {
 
+  # Check year parameter
+  check_year(year)
+
   # get hbs files
   hbs <- get(paste0("epf_list_", year))
 
@@ -111,8 +114,12 @@ calc_di <-function(year, elevate=F, shocks, var_impact = "all", var_intersec = N
   }
 
    if(!is.null(var_intersec)){
-     if(var_intersec == "all"){
-       var_intersec = is_categories
+     if(length(var_intersec) == 1 & is.character(var_intersec)){
+       if(var_intersec == "all"){
+
+         var_intersec = is_categories
+
+       }
      }
      dii <- impact_intersectional(epf, pairs = var_intersec, save = save,
                                   file_name = file_name_intersec, fig = fig,
@@ -181,6 +188,15 @@ ex_var_intersec <- function(){
 #' @return a dataframe with the selected energy poverty indices
 #' @export
 calc_ep <- function(year, index = "all"){
+
+  if(is.character(year)) {
+    year <- as.numeric(year)
+  }
+
+  if (!year %in% seq(2006,2021,1)) {
+    stop(sprintf('You introduced year %s which is not available. Possible options are %s.',
+                 year, paste(seq(2006,2021,1), collapse = ", ")))
+  }
 
   accepted <- c("all",
                 "10%",
@@ -262,6 +278,15 @@ calc_ep <- function(year, index = "all"){
 #' @return a dataframe with the selected transport poverty indices
 #' @export
 calc_tp <- function(year, index = "all"){
+
+  if(is.character(year)) {
+    year <- as.numeric(year)
+  }
+
+  if (!year %in% seq(2006,2021,1)) {
+    stop(sprintf('You introduced year %s which is not available. Possible options are %s.',
+                 year, paste(seq(2006,2021,1), collapse = ", ")))
+  }
 
   accepted <- c("all",
                 "10%",

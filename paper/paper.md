@@ -40,7 +40,7 @@ library(medusa)
 ex_shocks() 
 
 # After introducing the price shocks in the csv file, upload the edited file
-file_name <- read.csv(file,        # File name or full file path
+exampledf <- read.csv(file_name,   # File name or full file path
              header = TRUE,        # Header indicator (set to TRUE)
              sep = ",",            # Value separator used in the file
              dec = ".",            # Decimal point format used
@@ -49,7 +49,7 @@ file_name <- read.csv(file,        # File name or full file path
 # Calculate distributional impacts
 calc_di( year,                     # Base year for the simulation
          elevate = F,              # Elevation of raw data (set to FALSE)
-         shocks = file_name,       # Name of the uploaded file with shocks
+         shocks = exampledf,       # Name of the uploaded file with shocks
          var_impact = "DECILE",    # Socioeconomic variable to be used
          ...)                      # Additional arguments to be passed
 ```

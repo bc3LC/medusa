@@ -11,13 +11,13 @@ vignette: >
 
 ## Example 1. How to enter price shocks in `calc_di`
 
-1. Download the example file into your 	directory by running the following function in the terminal:
+1. Download the example file into your 	directory by running the following function in the R terminal:
 
 ``` r
 ex_shocks() 
 ``` 
 
-2. Go to the defined folder in your directory and open the csv "Example_shocks". 
+2. Go to your working directory and open the csv "Example_shocks". 
 
 3. Define the scenarios: Each column Scenario__ is a scenario. To run `calc_di` for a single scenario delete column Scenario2. To add another scenario, copy column Scenario2 to the right and change the heading to Scenario3. You can also rename the scenarios by changing the heading of each column (e.g. renaming "Scenario1" to "Shock1"). It is recommended to keep the names short, as additional variables with this name will be created later and inserted into the graphs.
 
@@ -27,19 +27,19 @@ ex_shocks()
 
 6. Upload the edited file to R by running the following function in the terminal:
 ``` r
-file_name <- read.csv(file,        # File name or full file path
-	         header = TRUE,        # Read the header (TRUE)
-	         sep = ",",            # Value separator
-	         dec = ".",            # Decimal point
-	         ...)                  # Additional arguments
+exampledf <- read.csv(file_name,            # File name or full file path
+                      header = TRUE,        # Header indicator (set to TRUE)
+                      sep = ",",            # Value separator used in the file
+                      dec = ".",            # Decimal point format used
+                      ...)                  # Additional arguments to be passed
 ``` 
 
 7.  Indicate to `calc_di` that this is the file from which to take the price shocks to be applied.
 ``` r
-calc_di( year,                 
-		 elevate = F,
-		 shocks = file_name,   # Indicate here your file name
-		 ...)
+calc_di( year,                     # Base year for the simulation (available 2006-2021)
+         elevate = F,              # Elevation of raw data (set to FALSE)
+         shocks = exampledf,       # Indicate here the name of the uploaded file with shocks
+	     ...)                      # Additional arguments to be passed
 ``` 
 
 <small><i>  <a  name="1">[1]</a> The COICOP variables of the file correspond to the aggregate variables of the package, if you are not going to aggregate the COICOP variables you have to replace the column labels by the COICOP variables that appear in your dataset.
@@ -56,11 +56,11 @@ available_var_impact()
 
 3. Enter that variable in the `var_impact` argument of `calc_di`. By default, `var_impact = "all"` , i.e. it calculates the distributional impacts for all variables returned by `available_var_impact()`. For more information on variables click [here](https://bc3lc.github.io/medusa/articles/AvailableVariables.html). 
  ``` r
-calc_di( year,                 
-		 elevate = F,
-		 shocks ,   
-		 var_impact = "ZONA",       # Indicate here the selected variable
-		 ...)
+calc_di(year,                     # Base year for the simulation
+         elevate = F,              # Elevation of raw data (set to FALSE)
+         shocks = exampledf,       # Name of the uploaded file with shocks
+         var_impact = "DECILE",    # Indicate here the socioeconomic variable to be used
+	     ...)                      # Additional arguments to be passed
 ```
 
 4. In case you want to calculate distributional impacts for several variables, e.g. for "ZONE" and "TAMAMU", create a vector with these variables and enter it in the `var_impact` argument of `calc_di`.
@@ -69,11 +69,11 @@ calc_di( year,
 vars <- c("ZONA", "TAMAMU")
 
 #Introduce the vector in var_impact argument
-calc_di( year,                 
-		 elevate = F,
-		 shocks ,   
-		 var_impact = vars,       # Indicate here the name of the vector with the selected variables
-		 ...)
+calc_di(year,                     # Base year for the simulation
+         elevate = F,              # Elevation of raw data (set to FALSE)
+         shocks = exampledf,       # Name of the uploaded file with shocks
+	     var_impact = vars,        # Indicate here the name of the vector with the selected variables
+	     ...)                      # Additional arguments to be passed
 ```
 
 ### Introduce a set of variables (var_intersec)
@@ -88,15 +88,17 @@ ex_var_intersec()
 ```
 3. Upload the edited file to R by running the following function in the terminal:
 ``` r
-file_name <- read.csv(file,        # File name or full file path
-	         header = TRUE,
-	         ...)                  # Additional arguments
+example_vars <- read.csv(file_name,            # File name or full file path
+	                     header = TRUE,        # Header indicator (set to TRUE)
+                         sep = ",",            # Value separator used in the file
+                         dec = ".",            # Decimal point format used
+                         ...)                  # Additional arguments to be passed
 ``` 
 4. Enter the file in the `var_intersec` argument in `calc_di`. By default, `var_intersec = NULL` , i.e. iif no data is entered in this argument it will not calculate any intersectional impacts, it will only calculate distributional impacts for individual variables. For more information on variables click [here](https://bc3lc.github.io/medusa/articles/AvailableVariables.html).
  ``` r
-calc_di( year,                 
-		 elevate = F,
-		 shocks ,   
-		 var_intersec = file_name,       # Indicate here the file name of the selected set of variables
-		 ...)
+calc_di(year,                          # Base year for the simulation
+         elevate = F,                   # Elevation of raw data (set to FALSE)
+         shocks = exampledf,            # Name of the uploaded file with shocks 
+	     var_intersec = example_vars,   # Indicate here the file name of the selected set of variables
+	     ...)                           # Additional arguments
 ```

@@ -193,9 +193,16 @@ calc_ep <- function(year, index = "all"){
     year <- as.numeric(year)
   }
 
-  if (!year %in% seq(2006,2021,1)) {
-    stop(sprintf('You introduced year %s which is not available. Possible options are %s.',
-                 year, paste(seq(2006,2021,1), collapse = ", ")))
+  wrong_years <- year[!year %in% seq(2006,2021,1)]
+
+  if (length(wrong_years) != 0) {
+    if(length(wrong_years) == 1){
+      stop(sprintf('You introduced year %s which is not available. Possible options are %s.',
+                   paste0(wrong_years, collapse = ", "), paste(seq(2006,2021,1), collapse = ", ")))
+    }else{
+      stop(sprintf('You introduced years %s which are not available. Possible options are %s.',
+                   paste0(wrong_years, collapse = ", "), paste(seq(2006,2021,1), collapse = ", ")))
+    }
   }
 
   accepted <- c("all",
@@ -283,9 +290,16 @@ calc_tp <- function(year, index = "all"){
     year <- as.numeric(year)
   }
 
-  if (!year %in% seq(2006,2021,1)) {
-    stop(sprintf('You introduced year %s which is not available. Possible options are %s.',
-                 year, paste(seq(2006,2021,1), collapse = ", ")))
+  wrong_years <- year[!year %in% seq(2006,2021,1)]
+
+  if (length(wrong_years) != 0) {
+    if(length(wrong_years) == 1){
+      stop(sprintf('You introduced year %s which is not available. Possible options are %s.',
+                   paste0(wrong_years, collapse = ", "), paste(seq(2006,2021,1), collapse = ", ")))
+    }else{
+      stop(sprintf('You introduced years %s which are not available. Possible options are %s.',
+                   paste0(wrong_years, collapse = ", "), paste(seq(2006,2021,1), collapse = ", ")))
+    }
   }
 
   accepted <- c("all",

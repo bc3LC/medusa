@@ -154,12 +154,12 @@
 </h3>
 <ol style="list-style-type: decimal">
 <li>Download the example file into your directory by running the
-following function in the terminal:</li>
+following function in the R terminal:</li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ex_shocks.html">ex_shocks</a></span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
-<li><p>Go to the defined folder in your directory and open the csv
+<li><p>Go to your working directory and open the csv
 “Example_shocks”.</p></li>
 <li><p>Define the scenarios: Each column Scenario__ is a scenario. To
 run <code>calc_di</code> for a single scenario delete column Scenario2.
@@ -178,20 +178,20 @@ If there is no shock in that category, keep 1.</p></li>
 the terminal:</p></li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">file_name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">file</span>,        <span class="co"># File name or full file path</span></span>
-<span>             header <span class="op">=</span> <span class="cn">TRUE</span>,        <span class="co"># Read the header (TRUE)</span></span>
-<span>             sep <span class="op">=</span> <span class="st">","</span>,            <span class="co"># Value separator</span></span>
-<span>             dec <span class="op">=</span> <span class="st">"."</span>,            <span class="co"># Decimal point</span></span>
-<span>             <span class="va">...</span><span class="op">)</span>                  <span class="co"># Additional arguments</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">exampledf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">file_name</span>,            <span class="co"># File name or full file path</span></span>
+<span>                      header <span class="op">=</span> <span class="cn">TRUE</span>,        <span class="co"># Header indicator (set to TRUE)</span></span>
+<span>                      sep <span class="op">=</span> <span class="st">","</span>,            <span class="co"># Value separator used in the file</span></span>
+<span>                      dec <span class="op">=</span> <span class="st">"."</span>,            <span class="co"># Decimal point format used</span></span>
+<span>                      <span class="va">...</span><span class="op">)</span>                  <span class="co"># Additional arguments to be passed</span></span></code></pre></div>
 <ol start="7" style="list-style-type: decimal">
 <li>Indicate to <code>calc_di</code> that this is the file from which to
 take the price shocks to be applied.</li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/calc_di.html">calc_di</a></span><span class="op">(</span> <span class="va">year</span>,                 </span>
-<span>         elevate <span class="op">=</span> <span class="cn">F</span>,</span>
-<span>         shocks <span class="op">=</span> <span class="va">file_name</span>,   <span class="co"># Indicate here your file name</span></span>
-<span>         <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/calc_di.html">calc_di</a></span><span class="op">(</span> <span class="va">year</span>,                     <span class="co"># Base year for the simulation (available 2006-2021)</span></span>
+<span>         elevate <span class="op">=</span> <span class="cn">F</span>,              <span class="co"># Elevation of raw data (set to FALSE)</span></span>
+<span>         shocks <span class="op">=</span> <span class="va">exampledf</span>,       <span class="co"># Indicate here the name of the uploaded file with shocks</span></span>
+<span>         <span class="va">...</span><span class="op">)</span>                      <span class="co"># Additional arguments to be passed</span></span></code></pre></div>
 <p><small><i> <a name="1">[1]</a> The COICOP variables of the file
 correspond to the aggregate variables of the package, if you are not
 going to aggregate the COICOP variables you have to replace the column
@@ -221,11 +221,11 @@ by <code><a href="../reference/available_var_impact.html">available_var_impact()
 variables click <a href="https://bc3lc.github.io/medusa/articles/AvailableVariables.html" class="external-link">here</a>.</p></li>
 </ol>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/calc_di.html">calc_di</a></span><span class="op">(</span> <span class="va">year</span>,                 </span>
-<span>        elevate <span class="op">=</span> <span class="cn">F</span>,</span>
-<span>        <span class="va">shocks</span> ,   </span>
-<span>        var_impact <span class="op">=</span> <span class="st">"ZONA"</span>,       <span class="co"># Indicate here the selected variable</span></span>
-<span>        <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/calc_di.html">calc_di</a></span><span class="op">(</span><span class="va">year</span>,                     <span class="co"># Base year for the simulation</span></span>
+<span>        elevate <span class="op">=</span> <span class="cn">F</span>,              <span class="co"># Elevation of raw data (set to FALSE)</span></span>
+<span>        shocks <span class="op">=</span> <span class="va">exampledf</span>,       <span class="co"># Name of the uploaded file with shocks</span></span>
+<span>        var_impact <span class="op">=</span> <span class="st">"DECILE"</span>,    <span class="co"># Indicate here the socioeconomic variable to be used</span></span>
+<span>        <span class="va">...</span><span class="op">)</span>                      <span class="co"># Additional arguments to be passed</span></span></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>In case you want to calculate distributional impacts for several
 variables, e.g. for “ZONE” and “TAMAMU”, create a vector with these
@@ -237,11 +237,11 @@ variables and enter it in the <code>var_impact</code> argument of
 <span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ZONA"</span>, <span class="st">"TAMAMU"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#Introduce the vector in var_impact argument</span></span>
-<span><span class="fu"><a href="../reference/calc_di.html">calc_di</a></span><span class="op">(</span> <span class="va">year</span>,                 </span>
-<span>        elevate <span class="op">=</span> <span class="cn">F</span>,</span>
-<span>        <span class="va">shocks</span> ,   </span>
-<span>        var_impact <span class="op">=</span> <span class="va">vars</span>,       <span class="co"># Indicate here the name of the vector with the selected variables</span></span>
-<span>        <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/calc_di.html">calc_di</a></span><span class="op">(</span><span class="va">year</span>,                     <span class="co"># Base year for the simulation</span></span>
+<span>        elevate <span class="op">=</span> <span class="cn">F</span>,              <span class="co"># Elevation of raw data (set to FALSE)</span></span>
+<span>        shocks <span class="op">=</span> <span class="va">exampledf</span>,       <span class="co"># Name of the uploaded file with shocks</span></span>
+<span>        var_impact <span class="op">=</span> <span class="va">vars</span>,        <span class="co"># Indicate here the name of the vector with the selected variables</span></span>
+<span>        <span class="va">...</span><span class="op">)</span>                      <span class="co"># Additional arguments to be passed</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="introduce-a-set-of-variables-var_intersec">Introduce a set of variables (var_intersec)<a class="anchor" aria-label="anchor" href="#introduce-a-set-of-variables-var_intersec"></a>
@@ -270,9 +270,11 @@ variables you are interested in, save it.</li>
 terminal:</li>
 </ol>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">file_name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">file</span>,        <span class="co"># File name or full file path</span></span>
-<span>             header <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>             <span class="va">...</span><span class="op">)</span>                  <span class="co"># Additional arguments</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">example_vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">file_name</span>,            <span class="co"># File name or full file path</span></span>
+<span>                         header <span class="op">=</span> <span class="cn">TRUE</span>,        <span class="co"># Header indicator (set to TRUE)</span></span>
+<span>                         sep <span class="op">=</span> <span class="st">","</span>,            <span class="co"># Value separator used in the file</span></span>
+<span>                         dec <span class="op">=</span> <span class="st">"."</span>,            <span class="co"># Decimal point format used</span></span>
+<span>                         <span class="va">...</span><span class="op">)</span>                  <span class="co"># Additional arguments to be passed</span></span></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Enter the file in the <code>var_intersec</code> argument in
 <code>calc_di</code>. By default, <code>var_intersec = NULL</code> ,
@@ -281,11 +283,11 @@ intersectional impacts, it will only calculate distributional impacts
 for individual variables. For more information on variables click <a href="https://bc3lc.github.io/medusa/articles/AvailableVariables.html" class="external-link">here</a>.</li>
 </ol>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/calc_di.html">calc_di</a></span><span class="op">(</span> <span class="va">year</span>,                 </span>
-<span>        elevate <span class="op">=</span> <span class="cn">F</span>,</span>
-<span>        <span class="va">shocks</span> ,   </span>
-<span>        var_intersec <span class="op">=</span> <span class="va">file_name</span>,       <span class="co"># Indicate here the file name of the selected set of variables</span></span>
-<span>        <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/calc_di.html">calc_di</a></span><span class="op">(</span><span class="va">year</span>,                          <span class="co"># Base year for the simulation</span></span>
+<span>        elevate <span class="op">=</span> <span class="cn">F</span>,                   <span class="co"># Elevation of raw data (set to FALSE)</span></span>
+<span>        shocks <span class="op">=</span> <span class="va">exampledf</span>,            <span class="co"># Name of the uploaded file with shocks </span></span>
+<span>        var_intersec <span class="op">=</span> <span class="va">example_vars</span>,   <span class="co"># Indicate here the file name of the selected set of variables</span></span>
+<span>        <span class="va">...</span><span class="op">)</span>                           <span class="co"># Additional arguments</span></span></code></pre></div>
 </div>
 </div>
 </div>

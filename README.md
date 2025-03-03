@@ -21,6 +21,8 @@ editor_options:
 
 -   [Introduction](#introduction)
 
+    -   [State of the field](#state)
+
     -   [The package](#pkg)
 
     -   [The microsimulation model](#ms-model)
@@ -28,6 +30,8 @@ editor_options:
 -   [Installation Guide](#installation-guide)
 
 -   [Getting Started](#get-started)
+
+-   [Contributing](#contributing)
 
 <!-- ------------------------>
 
@@ -40,6 +44,29 @@ editor_options:
 <!-- ------------------------>
 
 [Back to Contents](#contents)
+
+### <a name="state"></a>State of the field
+
+Addressing critical challenges, such as climate change, requires ambitious policies 
+that promote social justice while avoiding the deepening of existing inequalities, 
+such as income or gender disparities. To achieve this, policy impact assessments must 
+not only take a holistic view of the economy, energy, land, and water systems but 
+also analyze the distributional effects on different population groups.
+
+While Integrated Assessment Models (IAMs) play a key role in policy evaluation, 
+they often lack the granularity needed to capture socio-economic disparities. 
+Micro-simulation models help bridge this gap by providing detailed, heterogeneous 
+results that allow policymakers to identify vulnerable populations and design 
+targeted compensatory measures. However, despite the growing emphasis on distributional 
+analysis in the academic literature, these approaches have not yet been widely 
+integrated into policymaking. A key barrier is the lack of accessible tools that 
+facilitate this type of analysis for practitioners and policymakers.
+
+MEDUSA is the first R package specifically designed to fill this gap. MEDUSA 
+provides a user-friendly framework for conducting distributional analysis. 
+By simplifying complex modeling processes, it enables a broader audience —including 
+researchers, policymakers, and analysts— to incorporate equity considerations 
+into policy design, ensuring that policies are both effective and socially just.
 
 ### <a name="pkg"></a>The package
 
@@ -75,7 +102,7 @@ from the Household Budget Survey. For more details on the model in which
 
 To use `medusa` package first you need to follow this steps:
 
-1.  Install R and Rstudio (only if not already installed)
+1.  Install R (required) and optionally an interface to facilitate usage, such as RStudio (only if not already installed):
 
     -   To download R click [here](https://www.r-project.org/)
 
@@ -125,3 +152,15 @@ The `medusa` package contains 3 main blocks of functions:
 
 In addition, the package includes some default input files (.Rda), that
 are read by the different functions.
+
+## <a name="contributing"></a>Contributing
+
+<!-- ------------------------>
+
+<!-- ------------------------>
+
+[Back to Contents](#contributing)
+
+We welcome contributions! You can provide feedback, report issues, or suggest improvements by opening an issue on GitHub [here](https://github.com/bc3LC/medusa/issues). If you would like to make changes to the code, we recommend first opening an issue to outline your proposed modifications before submitting a pull request.
+
+If you have any questions about the package, feel free to post them as issues on GitHub as well.

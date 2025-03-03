@@ -13,7 +13,7 @@ editor_options:
 [![build](https://github.com/bc3LC/medusa/actions/workflows/build.yaml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/build.yaml)
 [![draft-pdf](https://github.com/bc3LC/medusa/actions/workflows/draft-pdf.yml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/draft-pdf.yml)
 
-## <a name="contents"></a>Contents {#contents}
+## <a name="contents"></a>Contents
 
 <!-- ------------------------>
 
@@ -37,7 +37,7 @@ editor_options:
 
 <!-- ------------------------>
 
-## <a name="introduction"></a>Introduction {#introduction}
+## <a name="introduction"></a>Introduction
 
 <!-- ------------------------>
 
@@ -92,7 +92,7 @@ from the Household Budget Survey. For more details on the model in which
 `medusa` is based click
 [here](https://bc3lc.github.io/medusa/articles/TheModel.html).
 
-## <a name="installation-guide"></a>Installation Guide {#installation-guide}
+## <a name="installation-guide"></a>Installation Guide
 
 <!-- ------------------------>
 

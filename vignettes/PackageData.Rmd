@@ -1,5 +1,5 @@
 ---
-title: "PackageData"
+title: "Package Data"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{PackageData}
@@ -14,17 +14,23 @@ vignette: >
 
 The microsimulation model in which `medusa` is based  is built up with the microdata from the Household Budget Survey (HBS), a common statistic in all EU countries which is increasingly standardized and which has relevant potential due the large amount of socioeconomic information that it collects. The HBS provides information about household final consumption expenditure on goods and services and information on some socioeconomic and demographic characteristics of each household. The HBS provides information at two levels: one for households and their expenditures and the other for household members. For more information about the HBS click [here](https://ec.europa.eu/eurostat/web/household-budget-surveys).
 
-Specifically, `medusa` contains the Spanish HBS micro-data for the time series 2006-2021 (to be updated soon for 2022). However, the annual databases have been slightly modified to include a larger number of socioeconomic variables and for a better understanding by the user.  Firstly, some socioeconomic variables have been renamed to make variable names more intuitive for the user. Secondly, new variables have been created based on the information collected in the survey. For example, new income variables are created: quintile (QUINTIL) , decile (DECIL), ventil (VENTIL) and percentile (PERCENTIL) . Also, and since `medusa` aims to facilitate gender-sensitive analyses, the model includes two variables that allow capturing gender implications: the gender of the reference person of the household and the degree of feminization of the household. Although the HBS already includes the gender of the reference person among its variables, the second variable is calculated using the information on the gender of the household members file. Thus, we calculate the percentage of household members who are women over 14 years (this age is used because it is considered the age at which individuals begin to have decision-making capacity) and then we divide the households into 5 groups based on the share of women:
+### Data included in medusa
 
-- FD1: 0-20% (lowest feminization degree)
-- FD2: 20%-40%
-- FD3: 40%-60% 
-- FD4: 60%-80% 
-- FD5: 80%-100% (highest feminization degree)
+Currently, medusa includes Spanish HBS microdata for the period 2006-2021 (soon to be updated for 2022). The original survey data has been minimally processed to enhance usability and incorporate additional socioeconomic variables. These modifications include:
+1. Renaming some variables to make them more intuitive for users.
+2. Creating new socioeconomic indicators, such as income quintiles (QUINTIL), deciles (DECIL), ventiles (VENTIL), and percentiles (PERCENTIL).
+3. Adding gender-sensitive variables, aligned with medusa’s goal of facilitating gender-disaggregated analysis:
+	- Gender of the household reference person (already included in the HBS).
+	- Degree of household feminization, calculated based on the proportion of women over 14 years old (the age at which individuals are considered to have decision-making capacity) within the household:
+		- FD1: 0-20% (lowest feminization)
+		- FD2: 20%-40%
+		- FD3: 40%-60%
+		- FD4: 60%-80%
+		- FD5: 80%-100% (highest feminization)
+For a full list of socioeconomic and demographic variables available for distributional analysis, click  [here](https://bc3lc.github.io/medusa/articles/AvailableVariables.html).
 
-For more details on the socioeconomic or demographic variables for which the calculation of distributional impacts is available click [here](https://bc3lc.github.io/medusa/articles/AvailableVariables.html).
-
-For expenditure variables, the HBS data are reported using the Classification of Individual Consumption by Purpose (COICOP). The COICOP is the international reference classification of household expenditure developed by the United Nations Statistics Division to provide a framework of homogeneous categories of goods and services according to households purpose. It includes categories such as food, clothing, housing, water, electricity, gas or other fuels. For more information about the COICOP classification click [here](https://unstats.un.org/unsd/classifications/unsdclassifications/COICOP_2018_-_pre-edited_white_cover_version_-_2018-12-26.pdf).
+### Expenditure variables
+HBS expenditure data follows the Classification of Individual Consumption by Purpose (COICOP), an internationally recognized classification developed by the United Nations Statistics Division. This system categorizes household expenditures into groups such as food, clothing, housing, water, electricity, gas, and other fuels. For more details on the COICOP classification click [here](https://unstats.un.org/unsd/classifications/unsdclassifications/COICOP_2018_-_pre-edited_white_cover_version_-_2018-12-26.pdf).
 
 ## Population census 
 
@@ -34,3 +40,14 @@ Although the HBS covers a representative sample of the population, the total pop
 
 Despite the fact that the HBS provides a very detailed image of the annual consumption of households, the aggregate costs of the survey are not aligned with the principles and data of the National Accounts, which builds its macroeconomic aggregates based on more complete sources of information. Therefore, sometimes (e.g. when price shocks come from a macro model), before the simulation the HBS data should be adjusted to make them consistent with the macroeconomic dimension. In these cases,  `medusa` takes the National Accounts consumption data and calculates an adjustment factor at the highest possible level of disaggregation. To download the latest data click [here](https://github.com/bc3LC/medusa/blob/main/inst/extdata/gcfhogares95_22.csv).
 
+## Data processing in `medusa`
+
+While `medusa` includes **pre-processed versions of the HBS data**, users who wish to work directly with the raw data can do so. The **main modifications** made to the survey data are:
+-   Merging household and expenditure datasets.
+-   Adding the new socioeconomic and gender-sensitive variables mentioned above.
+
+However, `medusa` does not apply further adjustments **unless explicitly requested by the user**. For example:
+-   Aligning expenditures with National Accounts is optional*and is only performed when users select this adjustment within the `calc_di()` function.
+-   The adjustment process is handled by the function `load_rawhbs()`, which is included in the package.
+
+Initially, we considered including the raw HBS microdata in `medusa`, but given the large file sizes, running the function would be too slow for users. Instead, we processed the data externally and included the modified version in the package. However, users can download the raw microdata from [here](https://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736176806&menu=resultados&idp=1254735976608#_tabs-1254736195147) and process it themselves using `load_rawhbs()`.

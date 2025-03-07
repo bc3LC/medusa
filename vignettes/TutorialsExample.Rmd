@@ -39,7 +39,7 @@ ex_shocks()
    - `0.5` in **"Electricity, gas and other fuels"** in **Scenario 2** to indicate that, due to the government policy, domestic energy prices decrease by 50%.
    - Mantain `1` in all other categories to indicate that prices in these categories remain unaffected.
 
-<img src="https://github.com/bc3LC/medusa/blob/main/vignettes/figs/ex_shocks2.PNG" title="Example shocks csv" alt="ex_shocks2" width="80%" height="80%"/>
+<img src="https://github.com/bc3LC/medusa/blob/main/vignettes/figs/ex_shocks22.png" title="Example shocks csv" alt="ex_shocks2" width="80%" height="80%"/>
 
 5. Save the edited CSV file.
 

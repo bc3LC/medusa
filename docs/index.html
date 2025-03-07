@@ -100,6 +100,9 @@
     <li>
       <a href="articles/TutorialsTransportPoverty.html">Calculate transport poverty indices</a>
     </li>
+    <li>
+      <a href="articles/TutorialsExample.html">Step-by-step example</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -150,12 +153,14 @@
 <li>
 <p><a href="#introduction">Introduction</a></p>
 <ul>
+<li><p><a href="#state">State of the field</a></p></li>
 <li><p><a href="#pkg">The package</a></p></li>
 <li><p><a href="#ms-model">The microsimulation model</a></p></li>
 </ul>
 </li>
 <li><p><a href="#installation-guide">Installation Guide</a></p></li>
 <li><p><a href="#get-started">Getting Started</a></p></li>
+<li><p><a href="#contributing">Contributing</a></p></li>
 </ul>
 <!-- ------------------------><!-- ------------------------>
 </div>
@@ -166,6 +171,14 @@
 <!-- ------------------------>
 <!-- ------------------------>
 <p><a href="#contents">Back to Contents</a></p>
+<div class="section level3">
+<h3 id="state-of-the-field">
+<a name="state"></a>State of the field<a class="anchor" aria-label="anchor" href="#state-of-the-field"></a>
+</h3>
+<p>Addressing critical challenges, such as climate change, requires ambitious policies that promote social justice while avoiding the deepening of existing inequalities, such as income or gender disparities. To achieve this, policy impact assessments must not only take a holistic view of the economy, energy, land, and water systems but also analyze the distributional effects on different population groups.</p>
+<p>While Integrated Assessment Models (IAMs) play a key role in policy evaluation, they often lack the granularity needed to capture socio-economic disparities. Micro-simulation models help bridge this gap by providing detailed, heterogeneous results that allow policymakers to identify vulnerable populations and design targeted compensatory measures. However, despite the growing emphasis on distributional analysis in the academic literature, these approaches have not yet been widely integrated into policymaking. A key barrier is the lack of accessible tools that facilitate this type of analysis for practitioners and policymakers.</p>
+<p>MEDUSA is the first R package specifically designed to fill this gap. MEDUSA provides a user-friendly framework for conducting distributional analysis. By simplifying complex modeling processes, it enables a broader audience —including researchers, policymakers, and analysts— to incorporate equity considerations into policy design, ensuring that policies are both effective and socially just.</p>
+</div>
 <div class="section level3">
 <h3 id="the-package">
 <a name="pkg"></a>The package<a class="anchor" aria-label="anchor" href="#the-package"></a>
@@ -190,7 +203,7 @@
 <p>To use <code>medusa</code> package first you need to follow this steps:</p>
 <ol style="list-style-type: decimal">
 <li>
-<p>Install R and Rstudio (only if not already installed)</p>
+<p>Install R (required) and optionally an interface to facilitate usage, such as RStudio (only if not already installed):</p>
 <ul>
 <li><p>To download R click <a href="https://www.r-project.org/" class="external-link">here</a></p></li>
 <li><p>To download Rstudio click <a href="https://www.rstudio.com/" class="external-link">here</a></p></li>
@@ -239,6 +252,16 @@
 </li>
 </ol>
 <p>In addition, the package includes some default input files (.Rda), that are read by the different functions.</p>
+</div>
+<div class="section level2">
+<h2 id="contributing">
+<a name="contributing"></a>Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
+</h2>
+<!-- ------------------------>
+<!-- ------------------------>
+<p><a href="#contributing">Back to Contents</a></p>
+<p>We welcome contributions! You can provide feedback, report issues, or suggest improvements by opening an issue on GitHub <a href="https://github.com/bc3LC/medusa/issues" class="external-link">here</a>. If you would like to make changes to the code, we recommend first opening an issue to outline your proposed modifications before submitting a pull request.</p>
+<p>If you have any questions about the package, feel free to post them as issues on GitHub as well.</p>
 </div>
 </div>
   </div>

@@ -30,6 +30,8 @@ navbar:
          href: articles/TutorialsEnergyPoverty.html
       -  text: Calculate transport poverty indices
          href: articles/TutorialsTransportPoverty.html
+      -  text: Step-by-step example
+         href: articles/TutorialsExample.html
     - icon: fa-file-code-o
       text: "Reference"
       href: reference/index.html

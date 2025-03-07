@@ -11,6 +11,7 @@
 ex_shocks <- function(){
   exshock <- get("shocks")
   write.csv(exshock, file = "Example_shocks.csv", row.names = F)
+  print(paste0("The example file has been saved in`", getwd(),"/Example_shocks.csv´" ))
 }
 
 #' calc_di
@@ -175,6 +176,7 @@ available_var_intersec <- function(){
 ex_var_intersec <- function(){
   av_var_intersec <- get("is_categories")
   write.csv(av_var_intersec, file = "Var_Intersec.csv", row.names = F)
+  print(paste0("The example file has been saved in`", getwd(),"/Var_Intersec.csv´" ))
 }
 
 #' calc_ep

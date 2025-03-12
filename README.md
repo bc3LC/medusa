@@ -1,8 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
 
 # MEDUSA - Modelling Equity and DistribUtional impacts for Socioeconomic Analysis
 

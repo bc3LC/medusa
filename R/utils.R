@@ -1117,3 +1117,27 @@ check_year <- function(year) {
   }
 
 }
+
+
+#' check_var_impact
+#'
+#' Check if the parameter var_impact is valid
+#' @param var_impact var_impact introduce by the user
+#' @return stop if year is wrongly introduced
+#' @export
+
+check_var_impact <- function(var_impact) {
+
+  if (length(var_impact) == 1) {
+    if (!var_impact %in% categories$categories) {
+      stop(sprintf('You introduced a variable which is not available. Possible options are: %s.',
+                   paste(categories$categories, collapse = ", ")))
+    }
+  } else {
+    if (!all(var_impact %in% categories$categories)) {
+      stop(sprintf('You introduced variables which are not available. Possible options are: %s.',
+                   paste(categories$categories, collapse = ", ")))
+    }
+  }
+}
+

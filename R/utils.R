@@ -1128,16 +1128,15 @@ check_year <- function(year) {
 
 check_var_impact <- function(var_impact) {
 
-  if (length(var_impact) == 1) {
-    if (!var_impact %in% categories$categories) {
-      stop(sprintf('You introduced a variable which is not available. Possible options are: %s.',
-                   paste(categories$categories, collapse = ", ")))
-    }
-  } else {
-    if (!all(var_impact %in% categories$categories)) {
-      stop(sprintf('You introduced variables which are not available. Possible options are: %s.',
-                   paste(categories$categories, collapse = ", ")))
+  wrong_vars <- var_impact[!var_impact %in% categories$categories]
+
+  if (length(wrong_vars) == 1) {
+    stop(sprintf('You introduced the variable %s which is not available. Possible options are: %s.',
+                   wrong_vars, paste(categories$categories, collapse = ", ")))
+  } else if (length(wrong_vars) > 1) {
+    stop(sprintf('You introduced the variables %s which are not available. Possible options are: %s.',
+                 paste(wrong_vars, collapse = ", "), paste(categories$categories, collapse = ", ")))
     }
   }
-}
+
 

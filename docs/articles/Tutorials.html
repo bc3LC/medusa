@@ -216,7 +216,7 @@ distributional impacts is available run the following function.<br>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/available_var_impact.html">available_var_impact</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li><p>Select one of the variables that the function returns in the
-console. For example, “ZONA”.</p></li>
+console. For example, “DECILE”.</p></li>
 <li><p>Enter that variable in the <code>var_impact</code> argument of
 <code>calc_di</code>. By default, <code>var_impact = "all"</code> ,
 i.e. it calculates the distributional impacts for all variables returned
@@ -231,13 +231,13 @@ variables click <a href="https://bc3lc.github.io/medusa/articles/AvailableVariab
 <span>        <span class="va">...</span><span class="op">)</span>                      <span class="co"># Additional arguments to be passed</span></span></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>In case you want to calculate distributional impacts for several
-variables, e.g. for “ZONE” and “TAMAMU”, create a vector with these
+variables, e.g. for “ZONE” and “QUINTILE”, create a vector with these
 variables and enter it in the <code>var_impact</code> argument of
 <code>calc_di</code>.</li>
 </ol>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#Create a vector</span></span>
-<span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ZONA"</span>, <span class="st">"TAMAMU"</span><span class="op">)</span></span>
+<span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ZONE"</span>, <span class="st">"QUINTILE"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#Introduce the vector in var_impact argument</span></span>
 <span><span class="fu"><a href="../reference/calc_di.html">calc_di</a></span><span class="op">(</span><span class="va">year</span>,                     <span class="co"># Base year for the simulation</span></span>

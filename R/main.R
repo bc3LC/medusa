@@ -61,8 +61,11 @@ calc_di <-function(year, elevate=F, shocks, var_impact = "all", var_intersec = N
   # Check year parameter
   check_year(year)
 
-  # Check var_impact
-  check_var_impact(var_impact)
+  if (var_impact != "all") {
+    # Check var_impact
+    check_var_impact(var_impact)
+  }
+
 
   # get hbs files
   hbs <- get(paste0("epf_list_", year))

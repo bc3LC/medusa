@@ -7,7 +7,7 @@ options(dplyr.summarise.inform = FALSE)
 #'
 #' Function to process raw data from the Household Budget Survey (HBS) for each year and country.
 #' @param year year/s of the HBS to process. Available options: 2010, 2015, 2020.
-#' @param country code of the country or countries of the HBS to process.
+#' @param country code of the country or countries of the HBS to process. By default, it processes all available data in the working directory To see the available countries and codes, run country_code().
 #' @param path Local path to the folder where the HBS's are stored. Not included in the package.
 #' @importFrom dplyr %>%
 #' @return RData file with the HBS microdata for each selected country and year.
@@ -30,16 +30,15 @@ rawhbs_eu <- function(year, country = "all", path) {
                  paste(invalid_years, collapse = ", "), paste(available_years, collapse = ", ")))
   }
 
-  # Check year
+  # Check country
   available_country <- country$code
 
   # Extract the years that are not available
   invalid_country <- country[!country %in% available_country]
 
-  # Define countries + check countries
+  # Check countries
   if (country == "all") {
-    country <- read.csv(paste0(path,"/calculation/countries.csv"), header = T)
-    country <- country$code
+    country <- "all"
   } else {
     # If there is one invalid country, show a singular message
     if (length(invalid_country) == 1) {
@@ -51,57 +50,57 @@ rawhbs_eu <- function(year, country = "all", path) {
                    paste(invalid_country, collapse = ", "), paste(available_country, collapse = ", ")))
   }
 
-
-  # Loop to process raw data for each year (and country)
+  # Loop to process raw data for each year
   for (y in year) {
 
-    # Get the path of the year folder
-    year_path <- file.path(path, y)
+    if (country == "all") {
+      # Get the path of the year folder
+      year_path <- file.path(path, y)
 
-    # List xlsx files in the folder
-    xlsx_files <- list.files(year_path, pattern = "\\.xlsx$", full.names = FALSE)
+      # List xlsx files in the folder
+      xlsx_files <- list.files(year_path, pattern = "\\.xlsx$", full.names = FALSE)
 
-    # Extract country codes (first two characters of the file names)
-    if (y == 2020) {
-      countries <- unique(substr(xlsx_files, nchar(xlsx_files) - 6, nchar(xlsx_files) - 5))
+      # Extract country codes (first two characters of the file names)
+      if (y == 2020) {
+        countries <- unique(substr(xlsx_files, nchar(xlsx_files) - 6, nchar(xlsx_files) - 5))
+      } else {
+        countries <- unique(substr(xlsx_files, 1, 2))
+      }
     } else {
-      countries <- unique(substr(xlsx_files, 1, 2))
+      countries <- country
     }
 
-
+    # Loop to process raw data for each country
     for (c in countries){
-      print(c)
-      # Set working directory
-      setwd( paste0(path, "/calculation/rawdata/", y,"/") )
 
       if (y == 2010) {
 
         # Households file
-        hbs_h <- read.xlsx(  paste0(c, "_HBS_hh",".xlsx") ,
+        hbs_h <- read.xlsx(  paste0(path, "/calculation/rawdata/", y,"/", c, "_HBS_hh",".xlsx") ,
                              colNames = TRUE)
 
         # Members file
-        hbs_m <- read.xlsx(  paste0(c, "_HBS_hm",".xlsx") ,
+        hbs_m <- read.xlsx(  paste0(path, "/calculation/rawdata/", y,"/", c, "_HBS_hm",".xlsx") ,
                              colNames = TRUE)
 
       } else if (y == 2015) {
 
         # Households file
-        hbs_h <- read.xlsx(  paste0(c, "_MFR_hh",".xlsx") ,
+        hbs_h <- read.xlsx(  paste0(path, "/calculation/rawdata/", y,"/", c, "_MFR_hh",".xlsx") ,
                              colNames = TRUE)
 
         # Members file
-        hbs_m <- read.xlsx(  paste0(c, "_MFR_hm",".xlsx") ,
+        hbs_m <- read.xlsx(  paste0(path, "/calculation/rawdata/", y,"/", c, "_MFR_hm",".xlsx") ,
                              colNames = TRUE)
 
       } else {
 
         # Households file
-        hbs_h <- read.xlsx(  paste0("HBS_HH_", c, ".xlsx") ,
+        hbs_h <- read.xlsx(  paste0(path, "/calculation/rawdata/", y,"/HBS_HH_", c, ".xlsx") ,
                              colNames = TRUE)
 
         # Members file
-        hbs_m <- read.xlsx(  paste0("HBS_HM_", c, ".xlsx") ,
+        hbs_m <- read.xlsx(  paste0(path, "/calculation/rawdata/", y,"/HBS_HM_", c, ".xlsx") ,
                              colNames = TRUE)
       }
 

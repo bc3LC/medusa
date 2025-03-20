@@ -162,3 +162,14 @@ use_data(is_categories, overwrite=T)
 # graph_labels
 graph_labels = read.csv(paste0(rawDataFolder,"graph_labels.csv"),header=T)
 use_data(graph_labels, overwrite=T)
+
+
+
+#################################################################################
+# Data medusa EU
+
+rawDataFolder = paste0(here::here(),"/inst/extdata/eu/")
+
+# country
+country = read.csv(paste0(rawDataFolder,"country.csv"),header=T)
+use_data(country, overwrite=T)

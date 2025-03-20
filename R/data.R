@@ -202,7 +202,6 @@
 #' @format .csv
 "coicop_2021"
 
-
 #' File containing household expenditure by COICOP category from the national accounts
 #'
 #' @source medusa
@@ -232,3 +231,12 @@
 #' @source medusa
 #' @format .csv
 "graph_labels"
+
+
+
+
+#' File containing available countries and country codes
+#'
+#' @source medusa
+#' @format .csv
+"country"

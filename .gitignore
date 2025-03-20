@@ -55,3 +55,6 @@ outputs_dii/
 # Tests
 tests/testthat/test_inputs/csv/*
 tests/testthat/test_outputs/*
+
+# Raw_data
+raw_data

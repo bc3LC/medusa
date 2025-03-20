@@ -239,4 +239,4 @@
 #'
 #' @source medusa
 #' @format .csv
-"country"
+"av_country"

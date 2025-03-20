@@ -4,8 +4,8 @@
 #' @return available countries of the package and their codes
 #' @export
 country_code <- function(){
-  av_country <- country
-  print(av_country)
+  a_country <- av_country
+  print(a_country)
 }
 
 

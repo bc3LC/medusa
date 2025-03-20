@@ -30,12 +30,21 @@ rawhbs_eu <- function(year, country = "all", path) {
                  paste(invalid_years, collapse = ", "), paste(available_years, collapse = ", ")))
   }
 
+  # Check if the folder for the selected year exists in the given path
+  missing_folders <- year[!dir.exists(file.path(path, as.character(year)))]
+
+  # If there are missing folders, show an error message
+  if (length(missing_folders) > 0) {
+    stop(sprintf("The folder(s) for the year(s) %s do not exist in the specified path: %s. Please check your data directory.",
+                 paste(missing_folders, collapse = ", "), path))
+  }
+
   # Check countries
   if (country == "all") {
     country <- "all"
   } else {
     # Check country
-    available_country <- country$code
+    available_country <- av_country$code
 
     # Extract the years that are not available
     invalid_country <- country[!country %in% available_country]
@@ -68,6 +77,19 @@ rawhbs_eu <- function(year, country = "all", path) {
         countries <- unique(substr(xlsx_files, 1, 2))
       }
     } else {
+
+      if (y == 2020) {
+        countries <- unique(substr(xlsx_files, nchar(xlsx_files) - 6, nchar(xlsx_files) - 5))
+      } else {
+        countries <- unique(substr(xlsx_files, 1, 2))
+      }
+      # Verify that the selected country exists in the extracted country codes
+      invalid_selected <- country[!country %in% countries]
+
+      if (length(invalid_selected) > 0) {
+        stop(sprintf("The selected country code(s) %s do not exist in your data for the year %s. Available countries: %s.",
+                     paste(invalid_selected, collapse = ", "), y, paste(countries, collapse = ", ")))
+      }
       countries <- country
     }
 
@@ -126,4 +148,5 @@ rawhbs_eu <- function(year, country = "all", path) {
     }
   }
 }
+
 

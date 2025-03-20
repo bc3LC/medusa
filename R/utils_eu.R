@@ -55,16 +55,19 @@ rawhbs_eu <- function(year, country = "all", path) {
   # Loop to process raw data for each year (and country)
   for (y in year) {
 
-    # Select the countries available for each year
-    countries <- read.csv(paste0(path,"/calculation/year_country.csv"), header = T)
+    # Get the path of the year folder
+    year_path <- file.path(path, y)
 
-    # Assign each column to a vector
-    for (r in colnames(countries)) {
-      assign(r, countries %>% dplyr::filter(nchar(get(r))>0) %>% dplyr::pull(r))
+    # List xlsx files in the folder
+    xlsx_files <- list.files(year_path, pattern = "\\.xlsx$", full.names = FALSE)
+
+    # Extract country codes (first two characters of the file names)
+    if (y == 2020) {
+      countries <- unique(substr(xlsx_files, nchar(xlsx_files) - 6, nchar(xlsx_files) - 5))
+    } else {
+      countries <- unique(substr(xlsx_files, 1, 2))
     }
 
-    # Select the countries
-    countries <- get(paste0("X",y))
 
     for (c in countries){
       print(c)

@@ -30,16 +30,16 @@ rawhbs_eu <- function(year, country = "all", path) {
                  paste(invalid_years, collapse = ", "), paste(available_years, collapse = ", ")))
   }
 
-  # Check country
-  available_country <- country$code
-
-  # Extract the years that are not available
-  invalid_country <- country[!country %in% available_country]
-
   # Check countries
   if (country == "all") {
     country <- "all"
   } else {
+    # Check country
+    available_country <- country$code
+
+    # Extract the years that are not available
+    invalid_country <- country[!country %in% available_country]
+
     # If there is one invalid country, show a singular message
     if (length(invalid_country) == 1) {
       stop(sprintf("You introduced the country code %s which is not available. Possible options are: %s.",
@@ -48,6 +48,7 @@ rawhbs_eu <- function(year, country = "all", path) {
       # If there are multiple invalid countries, show a plural message
       stop(sprintf("You introduced the countries %s which are not available. Possible options are: %s.",
                    paste(invalid_country, collapse = ", "), paste(available_country, collapse = ", ")))
+    }
   }
 
   # Loop to process raw data for each year
@@ -76,42 +77,53 @@ rawhbs_eu <- function(year, country = "all", path) {
       if (y == 2010) {
 
         # Households file
-        hbs_h <- read.xlsx(  paste0(path, "/calculation/rawdata/", y,"/", c, "_HBS_hh",".xlsx") ,
-                             colNames = TRUE)
+        hbs_h <- openxlsx::read.xlsx(  paste0(path, y, "/", c, "_HBS_hh",".xlsx") ,
+                                       colNames = TRUE)
 
         # Members file
-        hbs_m <- read.xlsx(  paste0(path, "/calculation/rawdata/", y,"/", c, "_HBS_hm",".xlsx") ,
-                             colNames = TRUE)
+        hbs_m <- openxlsx::read.xlsx(  paste0(path, y, "/", c, "_HBS_hm",".xlsx") ,
+                                       colNames = TRUE)
 
       } else if (y == 2015) {
 
         # Households file
-        hbs_h <- read.xlsx(  paste0(path, "/calculation/rawdata/", y,"/", c, "_MFR_hh",".xlsx") ,
-                             colNames = TRUE)
+        hbs_h <- openxlsx::read.xlsx(  paste0(path, y, "/", c, "_MFR_hh",".xlsx") ,
+                                       colNames = TRUE)
 
         # Members file
-        hbs_m <- read.xlsx(  paste0(path, "/calculation/rawdata/", y,"/", c, "_MFR_hm",".xlsx") ,
-                             colNames = TRUE)
+        hbs_m <- openxlsx::read.xlsx(  paste0(path, y, "/", c, "_MFR_hm",".xlsx") ,
+                                       colNames = TRUE)
 
       } else {
 
         # Households file
-        hbs_h <- read.xlsx(  paste0(path, "/calculation/rawdata/", y,"/HBS_HH_", c, ".xlsx") ,
-                             colNames = TRUE)
+        hbs_h <- openxlsx::read.xlsx(  paste0(path, y, "/HBS_HH_", c, ".xlsx") ,
+                                       colNames = TRUE)
 
         # Members file
-        hbs_m <- read.xlsx(  paste0(path, "/calculation/rawdata/", y,"/HBS_HM_", c, ".xlsx") ,
-                             colNames = TRUE)
+        hbs_m <- openxlsx::read.xlsx(  paste0(path, y, "/HBS_HM_", c, ".xlsx") ,
+                                       colNames = TRUE)
       }
 
-      # Set working directory
-      setwd( paste0(path, "/calculation/inputs/", c,"/") )
+      # Set working directory and create necessary folders
+      inputs_path <- file.path(path, "inputs")
 
-      # Save data
-      save( list = c( "hbs_h"  ,
-                      "hbs_m"  ), file = paste0("hbs_", y, "_", c, ".RData") )
+      # Create "inputs" folder if it does not exist
+      if (!dir.exists(inputs_path)) {
+        dir.create(inputs_path)
+      }
+
+      # Create a subfolder for each country inside "inputs"
+      country_path <- file.path(inputs_path, c)
+
+      if (!dir.exists(country_path)) {
+        dir.create(country_path)
+      }
+
+      # Save data inside the correct folder
+      save(list = c("hbs_h", "hbs_m"), file = file.path(country_path, paste0("hbs_", y, "_", c, ".RData")))
 
     }
   }
-  }
 }
+

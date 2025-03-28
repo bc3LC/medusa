@@ -1,0 +1,53 @@
+VAR_EPF,VAR_EN,value,NAME,description,file
+HA04,number,,,hh identification number,h
+COUNTRY,country,AT,Austria,hbs country,h
+COUNTRY,country,BE,Belgium,hbs country,h
+COUNTRY,country,BG,Bulgaria,hbs country,h
+COUNTRY,country,CY,Cyprus,hbs country,h
+COUNTRY,country,CZ,Czech Republic,hbs country,h
+COUNTRY,country,DE,Germany,hbs country,h
+COUNTRY,country,DK,Denmark,hbs country,h
+COUNTRY,country,EE,Estonia,hbs country,h
+COUNTRY,country,EL,Greece,hbs country,h
+COUNTRY,country,ES,Spain,hbs country,h
+COUNTRY,country,FI,Finland,hbs country,h
+COUNTRY,country,FR,France,hbs country,h
+COUNTRY,country,HR,Croatia,hbs country,h
+COUNTRY,country,HU,Hungary,hbs country,h
+COUNTRY,country,IE,Ireland,hbs country,h
+COUNTRY,country,IT,Italy,hbs country,h
+COUNTRY,country,LT,Lithuania,hbs country,h
+COUNTRY,country,LU,Luxembourg,hbs country,h
+COUNTRY,country,LV,Latvia,hbs country,h
+COUNTRY,country,MT,Malta,hbs country,h
+COUNTRY,country,NL,Netherlands,hbs country,h
+COUNTRY,country,PL,Poland,hbs country,h
+COUNTRY,country,PT,Portugal,hbs country,h
+COUNTRY,country,RO,Romania,hbs country,h
+COUNTRY,country,SE,Sweden,hbs country,h
+COUNTRY,country,SI,Slovenia,hbs country,h
+COUNTRY,country,SK,Slovakia,hbs country,h
+YEAR,year,,,hbs wave reference year,h
+NUTS1,nuts1,,,region nuts1,h
+HA09,zone,1,Densely populated,degree of urbanisation: >500inh/km2,h
+HA09,zone,2,Intemediate,degree of urbanisation: 100-499inh/km3,h
+HA09,zone,3,Sparsely populated,degree of urbanisation: <100inh/km4,h
+HA09,zone,9,Not provided,degree of urbanisation: <100inh/km5,h
+HA10,weight,,,sample weight,h
+HB05,household_size,,,household size,h
+HB062,eq_size,,,Equivalent size (modified OECD scale),h
+HB074,household_type,1,Adult alone,Type of Household 1 - Age limit for children set at 16 years of age ),
+HB074,household_type,2,Couple,Type of Household 1 - Age limit for children set at 16 years of age ),
+HB074,household_type,3,More than 2 adults,Type of Household 1 - Age limit for children set at 16 years of age ),
+HB074,household_type,4,Single parent,Type of Household 1 - Age limit for children set at 16 years of age ),
+HB074,household_type,5,Couple with children,Type of Household 1 - Age limit for children set at 16 years of age ),
+HB074,household_type,6,More than 2 adults with children,Type of Household 1 - Age limit for children set at 16 years of age ),
+HB074,household_type,9,Other,Type of Household 1 - Age limit for children set at 16 years of age ),
+HI11,income_source,1,Wages,Main source of income,h
+HI11,income_source,2,Self-employment,Main source of income,h
+HI11,income_source,3,Property,Main source of income,h
+HI11,income_source,4,Pensions,Main source of income,h
+HI11,income_source,5,Unemployment,Main source of income,h
+HI11,income_source,6,Other,Main source of income,h
+HI11,income_source,9,Not provided,Main source of income,h
+HD20,active_member,,,number of members economnically active,h

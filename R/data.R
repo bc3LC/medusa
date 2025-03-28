@@ -240,3 +240,15 @@
 #' @source medusa
 #' @format .csv
 "av_country"
+
+#' Mapping for 2015 member file
+#'
+#' @source medusa
+#' @format .csv
+"variables_m_2015"
+
+#' Mapping for 2020 member file
+#'
+#' @source medusa
+#' @format .csv
+"variables_m_2020"

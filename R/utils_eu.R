@@ -2,24 +2,6 @@ library(usethis)
 library(magrittr)
 options(dplyr.summarise.inform = FALSE)
 
-#' rename_values_eu
-#'
-#' Function to rename the codified values of the dataset to the meaningful
-#' values detailed in the mapping included in the package.
-#' @param data dataset to be standardized.
-#' @param current_var column name to be standardized.
-#' @importFrom dplyr %>%
-#' @return a dataset with labels renamed based in the mapping included in the package.
-#' @export
-rename_values = function(data, current_var) {
-  exchange_data = mapping %>%                                                # brings together the two df (mapping and data)
-    dplyr::filter(VAR_EN == current_var) %>%                                 # but only takes the part we are interested in (only when the value of the variable is equal to current_var).
-    dplyr::select(value, NAME) %>%
-    dplyr::distinct()
-
-  return(data)
-}
-
 
 #' standardize_eu
 #'
@@ -29,7 +11,7 @@ rename_values = function(data, current_var) {
 #' @importFrom dplyr %>%
 #' @return a dataset with the variables and labels renamed based in the mapping included in the package.
 #' @export
-standardize <- function(data, mapping) {
+standardize_eu <- function(data, mapping) {
   # rename columns
   old_names = colnames(data)                                                # creates a vector with the column names
   new_names = dplyr::left_join(data.frame(VAR_EPF = old_names),             # the vector of column names is converted to a df and the column name is VAR_EPF
@@ -278,7 +260,7 @@ database_hbs <- function(year, country = "all", inputs_path) {
   # Create an empty list to store the data frames by year
   hbs_yearly_data <- list()
 
-  # Load the data for each country and rename
+  # Load the data for each country, rename  and create a joint database for h file
   for (y in year) {
 
     # List to store data for each country in that year
@@ -365,6 +347,9 @@ database_hbs <- function(year, country = "all", inputs_path) {
       # Add fem_degree to hbs_h
       hbs_h <- dplyr::left_join( hbs_h , fem_degree , by = c("HA04", "COUNTRY") )
 
+      # Standardize household dataset variables
+      hbs_h <- standardize_eu(hbs_h, variables_h)
+
       # Rename datasets
       eval(parse(text = paste0(c, "_hbs_h <- hbs_h")))
       eval(parse(text = paste0(c, "_hbs_m <- hbs_m")))
@@ -380,6 +365,132 @@ database_hbs <- function(year, country = "all", inputs_path) {
 
   # Remove duplicated data
   rm(hbs_h, hbs_m)
+
+  # Define mapping for h file
+  mapping <- variables_h
+
+  # Standardize household dataset variables
+  hbs_h <- standardize_eu(hbs_h, mapping)
+
+  # Code to create a joint database for 2020 and m file
+  if (year == 2020) {
+
+    # Define mapping file
+    mapping <- variables_m_2020
+
+    # List to store the datasets for each country
+    member_files <- list()
+
+    # Standardize members files variables for 2020
+    for (c in country){
+
+      # Get data for each country
+      data <- get(paste0(c,"_hbs_m"))
+
+      # Rename values of education in SI to fix propblems with rename_values
+      if (c == "SI") {
+
+        SI_hbs_m <- dplyr::mutate(SI_hbs_m, MC02B_agg = base::ifelse(MC02B_Recoded_3Categ ==  2, "A2",
+                                                        base::ifelse(MC02B_Recoded_3Categ ==  3, "A3",
+                                                        base::ifelse(MC02B_Recoded_3Categ ==  5, "A5",
+                                                        base::ifelse(MC02B_Recoded_3Categ == 88, "A88", NA)))))
+      }
+
+      # Standardize each country dataset
+      hbs_m <- standardize_eu(data, mapping)
+
+      # Create relationship reference person based in the income variable for BE
+      if (c == "BE") {
+        hbs_m <- hbs_m %>%
+          dplyr::group_by(number) %>%
+          dplyr::mutate(max_income   = max(EUR_MF099)) %>%
+          dplyr::mutate(relationship = base::ifelse(EUR_MF099 == max_income, "Reference person", "Other")) %>%
+          dplyr::ungroup()
+      }
+
+      # Keep just the selected variables
+      new <- c("number","country", "year", "birth_country", "gender", "relationship", "education", "activity", "workday", "contract_type", "employment_sector", "age")
+      hbs_m <- hbs_m[,new]
+
+      # Number as character to avoid problems with bind_rows
+      hbs_m$number <- as.character(hbs_m$number)
+
+      # Save the dataset in the list
+      member_files[[c]] <- hbs_m
+
+      # Rename the dataset with the country
+      eval(parse(text = paste0("hbs_m_", c, "<- hbs_m")))
+
+      # For checking purpose: Check row number
+      if (nrow(get(paste0(c,"_hbs_m"))) != nrow(get(paste0("hbs_m_",c)))) {
+        warning(paste0(c, " nrows do not match"))
+      }
+    }
+
+    # Combine all country data into a single dataframe
+    EU_hbs_m_2020 <- dplyr::bind_rows(member_files)
+
+  }
+
+  # Code to create a joint database for 2015 and m file
+  if (year == 2015) {
+
+    # Define mapping file
+    mapping <- variables_m_2015
+
+    # List to store the datasets for each country
+    member_files2 <- list()
+
+    # Standardize members files variables for 2015
+    for (c in country){
+
+      # Get data for each country
+      data <- get(paste0(c,"_hbs_m"))
+
+      # Rename values of education in SI to fix propblems with rename_values
+      if (c == "SI") {
+
+        SI_hbs_m <- dplyr::mutate(SI_hbs_m, MC02B_agg = base::ifelse(MC02B_Recoded_3Categ == 2, "A2",
+                                                        base::ifelse(MC02B_Recoded_3Categ == 3, "A3",
+                                                        base::ifelse(MC02B_Recoded_3Categ == 5, "A5",
+                                                        base::ifelse(MC02B_Recoded_3Categ == 9, "A9", NA)))))
+      }
+
+      # Standardize each country dataset
+      hbs_m <- standardize(data)
+
+      # Create relationship reference person based in the income variable for SE
+      if (c == "SE") {
+        hbs_m <- hbs_m %>%
+          dplyr::group_by(number) %>%
+          dplyr::mutate(max_income   = max(EUR_MF099)) %>%
+          dplyr::mutate(relationship = base::ifelse(EUR_MF099 == max_income, "Reference person", "Other")) %>%
+          dplyr::ungroup()
+      }
+
+      # Keep just the selected variables
+      new <- c("number","country", "year", "birth_country", "gender", "relationship", "education", "activity", "workday", "contract_type", "employment_sector", "age")
+      hbs_m <- hbs_m[,new]
+
+      # Rename the dataset with the country
+      eval(parse(text = paste0("hbs_m_", c, "<- hbs_m")))
+
+      # Number as character to avoid problems with bind_rows
+      hbs_m$number <- as.character(hbs_m$number)
+
+      # Save the dataset in the list
+      member_files2[[c]] <- hbs_m
+
+      # For checking purpose: Check row number
+      if (nrow(get(paste0(c,"_hbs_m"))) != nrow(get(paste0("hbs_m_",c)))) {
+        warning(paste0(c, " nrows do not match"))
+      }
+    }
+
+    # Combine all country data into a single dataframe
+    EU_hbs_m_2015 <- dplyr::bind_rows(member_files2)
+
+  }
 
 
 

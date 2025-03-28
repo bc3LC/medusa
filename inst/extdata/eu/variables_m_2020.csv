@@ -1,0 +1,130 @@
+VAR_EPF,VAR_EN,value,NAME,description,file
+MA04,number,,,hh identification number,m
+COUNTRY,country,AT,Austria,hbs country,m
+COUNTRY,country,BE,Belgium,hbs country,m
+COUNTRY,country,BG,Bulgaria,hbs country,m
+COUNTRY,country,CY,Cyprus,hbs country,m
+COUNTRY,country,CZ,Czech Republic,hbs country,m
+COUNTRY,country,DE,Germany,hbs country,m
+COUNTRY,country,DK,Denmark,hbs country,m
+COUNTRY,country,EE,Estonia,hbs country,m
+COUNTRY,country,EL,Greece,hbs country,m
+COUNTRY,country,ES,Spain,hbs country,m
+COUNTRY,country,FR,France,hbs country,m
+COUNTRY,country,HR,Croatia,hbs country,m
+COUNTRY,country,HU,Hungary,hbs country,m
+COUNTRY,country,IT,Italy,hbs country,m
+COUNTRY,country,LT,Lithuania,hbs country,m
+COUNTRY,country,LU,Luxembourg,hbs country,m
+COUNTRY,country,LV,Latvia,hbs country,m
+COUNTRY,country,MT,Malta,hbs country,m
+COUNTRY,country,NL,Netherlands,hbs country,m
+COUNTRY,country,RO,Romania,hbs country,m
+COUNTRY,country,SI,Slovenia,hbs country,m
+COUNTRY,country,SK,Slovakia,hbs country,m
+YEAR,year,2020,2020,hbs wave reference year,m
+MB01A,birth_country,10,National,country of birth,m
+MB01A,birth_country,21,EU,country of birth,m
+MB01A,birth_country,22,Non-EU,country of birth,m
+MB01A,birth_country,77,Foreign-born,country of birth,m
+MB01A,birth_country,99,Not provided,country of birth,m
+MB01A,birth_country,88,Not provided,country of birth,m
+MB01,birth_country,10,National,country of birth,m
+MB01,birth_country,21,EU,country of birth,m
+MB01,birth_country,22,Non-EU,country of birth,m
+MB01,birth_country,99,Not provided,country of birth,m
+MB01,birth_country,21_22,EU or non-EU,country of birth: aggregated data,m
+MB02,gender,1,Man,gender,m
+MB02,gender,2,Woman,gender,m
+MB02,gender,9,Not provided,gender,m
+MB05,relationship,1,Reference person,Reference Person is the person aged 16 or more who most contributes to the household income.,m
+MB05,relationship,2,Partner,relationship,m
+MB05,relationship,3,Child,relationship,m
+MB05,relationship,4,Parent,relationship,m
+MB05,relationship,5,Other,relationship,m
+MB05,relationship,6,Other,relationship,m
+MB05,relationship,7,Other,relationship: there is no 6 in AT we asume that 7 is 6,m
+MB05,relationship,9,Not provided,relationship,m
+MB05,relationship,NA,Not provided,relationship,m
+MC01A,education,10,No education,education,m
+MC01A,education,Z1,Primary education,education,m
+MC01A,education,Z2,Secondary education,education,m
+MC01A,education,Z3,Secondary education,education,m
+MC01A,education,Z4,Port-secondary education,education: non tertiary,m
+MC01A,education,Z5,Tertiary education,education: short cycle,m
+MC01A,education,Z6,Higher education,education: bachelor,m
+MC01A,education,Z7,Higher education,education: master,m
+MC01A,education,Z8,Higher education,education: doctorate,m
+MC01A,education,99,Not provided,education,m
+MC01A,education,88,Not applicable,education,m
+MC01,education,0,Early childhood education,education,m
+MC01,education,1,Primary education,education,m
+MC01,education,2,Secondary education,education,m
+MC01,education,3,Secondary education,education,m
+MC01,education,4,Port-secondary education,education: non tertiary,m
+MC01,education,5,Tertiary education,education: short cycle,m
+MC01,education,6,Higher education,education: bachelor,m
+MC01,education,7,Higher education,education: master,m
+MC01,education,8,Higher education,education: doctorate,m
+MC01,education,9,Not provided,education,m
+MC02B_agg,education,A2,Primary education,"ONLY FOR SI --> *agregated data: 10, Z1, Z2",m
+MC02B_agg,education,A3,Secondary education,"ONLY FOR SI --> *agregated data:  Z4, Z3",m
+MC02B_agg,education,A5,Tertiary education,"ONLY FOR SI --> *agregated data: Z5, Z6, Z7, Z8",m
+MC02B_agg,education,A88,Not applicable,ONLY FOR SI --> *agregated data,m
+MC02B_agg,education,NA,Not provided,ONLY FOR SI --> *agregated data,m
+ME01A,activity,Z1,Employed,main activity status,m
+ME01A,activity,Z2,Unemployed,main activity status,m
+ME01A,activity,Z3,Retired,main activity status,m
+ME01A,activity,Z4,Disabled,main activity status: unable to work due to long standing health problems,m
+ME01A,activity,Z5,Student,main activity status,m
+ME01A,activity,Z6,Domestic tasks,main activity status,m
+ME01A,activity,Z7,Military service,main activity status,m
+ME01A,activity,10,Other,main activity status,m
+ME01A,activity,Z9,Not provided,main activity status,m
+ME01A,activity,Z8,Not applicable,main activity status,m
+ME01,activity,1,Employed,main activity status,m
+ME01,activity,2,Unemployed,main activity status,m
+ME01,activity,3,Retired,main activity status,m
+ME01,activity,4,Student,main activity status,m
+ME01,activity,5,Domestic tasks,main activity status,m
+ME01,activity,6,Disabled,main activity status,m
+ME01,activity,7,Military service,main activity status,m
+ME01,activity,8,Not applicable,main activity status,m
+ME01,activity,9,Not provided,main activity status,m
+ME01,activity,3_7,RSDDM,"main activity status: agregatted data for MT: retired, student, domestic tasks, disabled military services",m
+ME01,activity,Z1,Employed,main activity status for LU,m
+ME01,activity,Z2,Unemployed,main activity status for LU,m
+ME01,activity,Z3,Retired,main activity status for LU,m
+ME01,activity,Z4,Disabled,main activity status for LU: unable to work due to long standing health problems,m
+ME01,activity,Z5,Student,main activity status for LU,m
+ME01,activity,Z6,Domestic tasks,main activity status for LU,m
+ME01,activity,Z7,Military service,main activity status for LU,m
+ME01,activity,10,Other,main activity status for LU,m
+ME01,activity,09,Not provided,main activity status for LU,m
+ME02,workday,1,Full time,main job: full or part time,m
+ME02,workday,2,Part time,main job: full or part time,m
+ME02,workday,8,Not applicable,main job: full or part time,m
+ME02,workday,9,Not provided,main job: full or part time,m
+ME03A,contract_type,10,Permanent contract,permanency of main job,m
+ME03A,contract_type,1A,Permanent contract,permanency of main job,m
+ME03A,contract_type,1B,Permanent contract,permanency of main job,m
+ME03A,contract_type,20,Fixed-term contract,permanency of main job,m
+ME03A,contract_type,2A,Fixed-term contract,permanency of main job,m
+ME03A,contract_type,2B,Fixed-term contract,permanency of main job,m
+ME03A,contract_type,99,Not provided,permanency of main job,m
+ME03A,contract_type,88,Not applicable,permanency of main job,m
+ME03,contract_type,1,Permanent contract,permanency of main job,m
+ME03,contract_type,2,Fixed-term contract,permanency of main job,m
+ME03,contract_type,8,Not applicable,permanency of main job,m
+ME03,contract_type,9,Not provided,permanency of main job,m
+ME13,employment_sector,1,Public sector,employment sector,m
+ME13,employment_sector,2,Private sector,employment sector,m
+ME13,employment_sector,8,Not applicable,employment sector,m
+ME13,employment_sector,9,Not provided,employment sector,m
+ME13,employment_sector,NA,Not provided,employment sector not provided for IT,m
+MB03_Recoded_5Classes,age,0_14,Young,age,m
+MB03_Recoded_5Classes,age,15_29,Young,age,m
+MB03_Recoded_5Classes,age,30_44,Adult,age,m
+MB03_Recoded_5Classes,age,45_59,Adult,age,m
+MB03_Recoded_5Classes,age,60_Inf,Elder,age,m
+MB03_Recoded_5Classes,age,60_inf,Elder,age,m

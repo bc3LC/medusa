@@ -173,3 +173,15 @@ rawDataFolder = paste0(here::here(),"/inst/extdata/eu/")
 # av_country
 av_country = read.csv(paste0(rawDataFolder,"av_country.csv"),header=T)
 use_data(av_country, overwrite=T)
+
+# variables_h
+variables_h = read.csv(paste0(rawDataFolder,"variables_h.csv"),header=T)
+use_data(variables_h, overwrite=T)
+
+# variables_m_2015
+variables_m_2015 = read.csv(paste0(rawDataFolder,"variables_m_2015.csv"),header=T)
+use_data(variables_m_2015, overwrite=T)
+
+# variables_m_2020
+variables_m_2020 = read.csv(paste0(rawDataFolder,"variables_m_2020.csv"),header=T)
+use_data(variables_m_2020, overwrite=T)

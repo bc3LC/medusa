@@ -31,6 +31,7 @@ Imports:
   	ggplot2,
   	stringr,
 	openxlsx,
+	gtools,
   	here,
 	  spatstat.geom,
 	  tibble

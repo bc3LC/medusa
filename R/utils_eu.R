@@ -2,6 +2,59 @@ library(usethis)
 library(magrittr)
 options(dplyr.summarise.inform = FALSE)
 
+#' rename_values_eu
+#'
+#' Function to rename the codified values of the dataset to the meaningful
+#' values detailed in the mapping included in the package.
+#' @param data dataset to be standardized.
+#' @param current_var column name to be standardized.
+#' @importFrom dplyr %>%
+#' @return a dataset with labels renamed based in the mapping included in the package.
+#' @export
+rename_values = function(data, current_var) {
+  exchange_data = mapping %>%                                                # brings together the two df (mapping and data)
+    dplyr::filter(VAR_EN == current_var) %>%                                 # but only takes the part we are interested in (only when the value of the variable is equal to current_var).
+    dplyr::select(value, NAME) %>%
+    dplyr::distinct()
+
+  return(data)
+}
+
+
+#' standardize_eu
+#'
+#' Function to standarize data names.
+#' @param data dataset to be standardized.
+#' @param mapping mapping file to be used (included in medusa)
+#' @importFrom dplyr %>%
+#' @return a dataset with the variables and labels renamed based in the mapping included in the package.
+#' @export
+standardize <- function(data, mapping) {
+  # rename columns
+  old_names = colnames(data)                                                # creates a vector with the column names
+  new_names = dplyr::left_join(data.frame(VAR_EPF = old_names),             # the vector of column names is converted to a df and the column name is VAR_EPF
+                               mapping %>%
+                                 dplyr::select(VAR_EPF, VAR_EN) %>%         # within the mapping selects only the columns we are interested in
+                                 dplyr::distinct(.),                        # duplicate remove
+                               by = 'VAR_EPF') %>%                          # left join in function to var_epf
+    dplyr::mutate(VAR_EN = ifelse(is.na(VAR_EN), VAR_EPF, VAR_EN)) %>%      # when it is na you get var_epf and if it is not you get var
+    dplyr::pull(VAR_EN)                                                     # only keep the var column (as a vector)
+  colnames(data) = new_names                                                # assign to the column names the new vector
+
+  # rename values' codes to values' names for all items whose name is in the
+  # renamed mapping's column and have not NA values
+  ccitems = mapping %>%
+    dplyr::filter(VAR_EN %in% intersect(unique(mapping$VAR_EN), new_names),
+                  !is.na(value)) %>%
+    dplyr::pull(VAR_EN) %>%
+    unique()
+  for (cc in ccitems) {                                                     # for all columns where variables can be mapped we overwrite the standardised dataset (with rename_value function)
+    data = rename_values(data, cc)
+  }
+
+  return(data)
+}
+
 
 #' rawhbs_eu
 #'
@@ -150,3 +203,185 @@ rawhbs_eu <- function(year, country = "all", path) {
 }
 
 
+#' database_hbs
+#'
+#' Function to load each country HBS and create a joint database for household and member files
+#' @param year year/s of the HBS to process. Available options: 2010, 2015, 2020.
+#' @param country code of the country or countries of the HBS to process. By default, it processes all available data in the working directory To see the available countries and codes, run country_code().
+#' @param path Local path to the folder where the HBS's are stored. Not included in the package.
+#' @importFrom dplyr %>%
+#' @return RData file with the HBS microdata for each selected country and year.
+#' @export
+database_hbs <- function(year, country = "all", inputs_path) {
+
+  # Check year
+  available_years <- c(2010, 2015, 2020)
+
+  # Extract the years that are not available
+  invalid_years <- year[!year %in% available_years]
+
+  # If there is one invalid year, show a singular message
+  if (length(invalid_years) == 1) {
+    stop(sprintf("You introduced the year %s which is not available. Possible options are: %s.",
+                 invalid_years, paste(available_years, collapse = ", ")))
+  } else if (length(invalid_years) > 1) {
+    # If there are multiple invalid years, show a plural message
+    stop(sprintf("You introduced the years %s which are not available. Possible options are: %s.",
+                 paste(invalid_years, collapse = ", "), paste(available_years, collapse = ", ")))
+  }
+
+  # Check country
+  if (!("all" %in% country)) {
+
+    available_country <- av_country$code
+
+    # Extract the years that are not available
+    invalid_country <- country[!country %in% available_country]
+
+    # If there is one invalid country, show a singular message
+    if (length(invalid_country) == 1) {
+      stop(sprintf("You introduced the country code %s which is not available. Possible options are: %s.",
+                   invalid_years, paste(available_country, collapse = ", ")))
+    } else if (length(invalid_country) > 1) {
+      # If there are multiple invalid countries, show a plural message
+      stop(sprintf("You introduced the countries %s which are not available. Possible options are: %s.",
+                   paste(invalid_country, collapse = ", "), paste(available_country, collapse = ", ")))
+    }
+  }
+
+  # Check if the folder for the selected country exists in the given path
+  if (!("all" %in% country)) {
+
+    missing_folders <- country[!dir.exists(file.path(inputs_path, as.character(country)))]
+
+    # If there are missing folders, show an error message
+    if (length(missing_folders) > 0) {
+      stop(sprintf("The folder(s) for the country(ies) %s do not exist in the specified path: %s. Please check your data directory.",
+                   paste(missing_folders, collapse = ", "), inputs_path))
+    }
+  }
+
+  # Define country if "all"
+  if ("all" %in% country) {
+    # List all folders in inputs_path
+    available_folders <- list.dirs(inputs_path, recursive = FALSE, full.names = FALSE)
+
+    # Keep only those that match the available country codes
+    country <- available_folders[available_folders %in% av_country$code]
+
+    # If no valid country folders are found, show an error
+    if (length(country) == 0) {
+      stop(sprintf("No valid country folders were found in the specified path: %s. Please check your data directory.", inputs_path))
+    }
+  }
+
+  # Create an empty list to store the data frames by year
+  hbs_yearly_data <- list()
+
+  # Load the data for each country and rename
+  for (y in year) {
+
+    # List to store data for each country in that year
+    country_data_list <- list()
+
+    for (c in country) {
+
+      # Define the file path
+      file_path <- paste0(inputs_path, c, "/hbs_", y, "_", c, ".RData")
+
+      # Check if the file exists before loading
+      if (file.exists(file_path)) {
+
+        load(file_path)
+
+        # Add the data to the list
+        country_data_list[[c]] <- hbs_h
+
+      } else {
+        warning(sprintf("No raw data found for year %s and country %s in the specified path.", y, c))
+      }
+
+      # Create income variable
+      Nquantiles <- function(x, w = NULL, s, t = NULL) {
+        if (is.null(t)) {
+          if (is.null(w)) w <- rep(1,length(x))
+
+          # In the case of weights with missing values: critical error
+
+          if (sum(is.na(w)) > 0) stop("Error.")
+
+          n <- length(x)
+          nn <- 1:n
+          nn <- nn[order(x)]
+
+          ww <- ceiling((cumsum(w[order(x, na.last = NA)])/sum(w[!is.na(x)]))*s)
+
+          ww[n] <- s
+
+          y <-  c(ww,rep(NA,sum(is.na(x))))[order(nn)]
+
+        } else {
+
+          if (sum(t != t[order(t)]) > 0)
+
+            stop("Error.")
+
+          yy <- rep(1,length(x))
+
+          for (i in 1:length(t)) {
+
+            yy <- cbind(yy, as.numeric(x >= t[i]))
+
+          }
+          y <- apply(yy, 1, sum)
+        }
+        return(y)
+      }
+
+      hbs_h             <- dplyr::mutate(hbs_h, total_exp_eq = EUR_HE00/HB062)
+      hbs_h$decile      <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$HA10 , 10)
+      hbs_h$quintile    <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$HA10 , 5)
+      hbs_h$ventile     <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$HA10 , 20)
+      hbs_h$percentile  <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$HA10 , 100)
+
+      # Create feminization degree
+      fem_degree <- hbs_m %>%
+        dplyr::group_by ( MA04, COUNTRY ) %>%
+        dplyr::summarise( number_male   = sum( MB02 == 1 & MB03_Recoded_5Classes != "0_14"),
+                          number_female = sum( MB02 == 2 & MB03_Recoded_5Classes != "0_14")) %>%
+        dplyr::mutate   ( share_female  = number_female/(number_male + number_female) ) %>%
+        dplyr::mutate   ( feminization_degree = ifelse(share_female <  0.2              , "FD1",
+                                         ifelse(share_female >= 0.2 & share_female < 0.4, "FD2",
+                                         ifelse(share_female >= 0.4 & share_female < 0.6, "FD3",
+                                         ifelse(share_female >= 0.6 & share_female < 0.8, "FD4",
+                                         ifelse(share_female >= 0.8                     , "FD5", "Not provided")))))) %>%
+        dplyr::mutate( HA04 = MA04)
+
+      # Keep just variables to merge
+      fem_degree <- fem_degree[,c("HA04",
+                                  "COUNTRY",
+                                  "feminization_degree")]
+
+      # Add fem_degree to hbs_h
+      hbs_h <- dplyr::left_join( hbs_h , fem_degree , by = c("HA04", "COUNTRY") )
+
+      # Rename datasets
+      eval(parse(text = paste0(c, "_hbs_h <- hbs_h")))
+      eval(parse(text = paste0(c, "_hbs_m <- hbs_m")))
+
+    }
+
+    # Combine all country data into a single dataframe by year
+    if (length(country_data_list) > 0) {
+      hbs_yearly_data[[paste0("hbs_h_", y)]] <- do.call(gtools::smartbind, country_data_list)
+    }
+
+  }
+
+  # Remove duplicated data
+  rm(hbs_h, hbs_m)
+
+
+
+
+}

@@ -170,6 +170,6 @@ use_data(graph_labels, overwrite=T)
 
 rawDataFolder = paste0(here::here(),"/inst/extdata/eu/")
 
-# country
-country = read.csv(paste0(rawDataFolder,"av_country.csv"),header=T)
+# av_country
+av_country = read.csv(paste0(rawDataFolder,"av_country.csv"),header=T)
 use_data(av_country, overwrite=T)

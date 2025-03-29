@@ -1,27 +1,32 @@
 VAR_EPF,VAR_EN,value,NAME,description,file
 MA04,number,,,hh identification number,m
-COUNTRY,country,AT,Austria,hbs country,m
-COUNTRY,country,BE,Belgium,hbs country,m
-COUNTRY,country,BG,Bulgaria,hbs country,m
-COUNTRY,country,CY,Cyprus,hbs country,m
-COUNTRY,country,CZ,Czech Republic,hbs country,m
-COUNTRY,country,DE,Germany,hbs country,m
-COUNTRY,country,DK,Denmark,hbs country,m
-COUNTRY,country,EE,Estonia,hbs country,m
-COUNTRY,country,EL,Greece,hbs country,m
-COUNTRY,country,ES,Spain,hbs country,m
-COUNTRY,country,FR,France,hbs country,m
-COUNTRY,country,HR,Croatia,hbs country,m
-COUNTRY,country,HU,Hungary,hbs country,m
-COUNTRY,country,IT,Italy,hbs country,m
-COUNTRY,country,LT,Lithuania,hbs country,m
-COUNTRY,country,LU,Luxembourg,hbs country,m
-COUNTRY,country,LV,Latvia,hbs country,m
-COUNTRY,country,MT,Malta,hbs country,m
-COUNTRY,country,NL,Netherlands,hbs country,m
-COUNTRY,country,RO,Romania,hbs country,m
-COUNTRY,country,SI,Slovenia,hbs country,m
-COUNTRY,country,SK,Slovakia,hbs country,m
+COUNTRY,country,AT,AT,hbs country,m
+COUNTRY,country,BE,BE,hbs country,m
+COUNTRY,country,BG,BG,hbs country,m
+COUNTRY,country,CY,CY,hbs country,m
+COUNTRY,country,CZ,CZ,hbs country,m
+COUNTRY,country,DE,DE,hbs country,m
+COUNTRY,country,DK,DK,hbs country,m
+COUNTRY,country,EE,EE,hbs country,m
+COUNTRY,country,EL,EL,hbs country,m
+COUNTRY,country,ES,ES,hbs country,m
+COUNTRY,country,FI,FI,hbs country,m
+COUNTRY,country,FR,FR,hbs country,m
+COUNTRY,country,HR,HR,hbs country,m
+COUNTRY,country,HU,HU,hbs country,m
+COUNTRY,country,IE,IE,hbs country,m
+COUNTRY,country,IT,IT,hbs country,m
+COUNTRY,country,LT,LT,hbs country,m
+COUNTRY,country,LU,LU,hbs country,m
+COUNTRY,country,LV,LV,hbs country,m
+COUNTRY,country,MT,MT,hbs country,m
+COUNTRY,country,NL,NL,hbs country,m
+COUNTRY,country,PL,PL,hbs country,m
+COUNTRY,country,PT,PT,hbs country,m
+COUNTRY,country,RO,RO,hbs country,m
+COUNTRY,country,SE,SE,hbs country,m
+COUNTRY,country,SI,SI,hbs country,m
+COUNTRY,country,SK,SK,hbs country,m
 YEAR,year,2020,2020,hbs wave reference year,m
 MB01A,birth_country,10,National,country of birth,m
 MB01A,birth_country,21,EU,country of birth,m
@@ -100,7 +105,7 @@ ME01,activity,Z5,Student,main activity status for LU,m
 ME01,activity,Z6,Domestic tasks,main activity status for LU,m
 ME01,activity,Z7,Military service,main activity status for LU,m
 ME01,activity,10,Other,main activity status for LU,m
-ME01,activity,09,Not provided,main activity status for LU,m
+ME01,activity,9,Not provided,main activity status for LU,m
 ME02,workday,1,Full time,main job: full or part time,m
 ME02,workday,2,Part time,main job: full or part time,m
 ME02,workday,8,Not applicable,main job: full or part time,m

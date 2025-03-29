@@ -3,6 +3,34 @@ library(magrittr)
 options(dplyr.summarise.inform = FALSE)
 
 
+#' rename_values_eu
+#'
+#' Function to rename the codified values of the dataset to the meaningful
+#' values detailed in the mapping included in the package.
+#' @param data dataset to be standardized.
+#' @param current_var column name to be standardized.
+#' @importFrom dplyr %>%
+#' @return a dataset with labels renamed based in the mapping included in the package.
+#' @export
+rename_values_eu = function(data, current_var) {
+  exchange_data = mapping %>%                                                # brings together the two df (mapping and data)
+    dplyr::filter(VAR_EN == current_var) %>%                                 # but only takes the part we are interested in (only when the value of the variable is equal to current_var).
+    dplyr::select(value, NAME) %>%
+    dplyr::distinct()
+
+  if (current_var != "NMIEMB" | (current_var == "NMIEMB" & sum(is.na(unique(exchange_data$value))) == 0) ) {                     # we look if there is any na in value and if so the below does not apply (to avoid errors with NMIEMB).
+    data = data %>%
+      dplyr::rename(value = {{ current_var }}) %>%                             # rename the column (variable name) to value
+      dplyr::mutate(value = as.character(value)) %>%                           # convert to a character
+      dplyr::left_join(exchange_data, by = "value") %>%                        # it keeps only the columns we are interested in (value and name).
+      dplyr::select(-value) %>%                                                # removes the value column
+      dplyr::rename_with(~current_var, 'NAME')                                 # rename to current_var
+  }
+
+
+  return(data)
+}
+
 #' standardize_eu
 #'
 #' Function to standarize data names.
@@ -31,7 +59,7 @@ standardize_eu <- function(data, mapping) {
     dplyr::pull(VAR_EN) %>%
     unique()
   for (cc in ccitems) {                                                     # for all columns where variables can be mapped we overwrite the standardised dataset (with rename_value function)
-    data = rename_values(data, cc)
+    data = rename_values_eu(data, cc)
   }
 
   return(data)
@@ -188,11 +216,11 @@ rawhbs_eu <- function(year, country = "all", path) {
 #' database_hbs
 #'
 #' Function to load each country HBS and create a joint database for household and member files
-#' @param year year/s of the HBS to process. Available options: 2010, 2015, 2020.
+#' @param year year of the HBS to process. Available options: 2015, 2020.
 #' @param country code of the country or countries of the HBS to process. By default, it processes all available data in the working directory To see the available countries and codes, run country_code().
-#' @param path Local path to the folder where the HBS's are stored. Not included in the package.
+#' @param inputs_path Local path to the folder where the HBS's are stored. Not included in the package.
 #' @importFrom dplyr %>%
-#' @return RData file with the HBS microdata for each selected country and year.
+#' @return RData file with the joint database with the HBS microdata.
 #' @export
 database_hbs <- function(year, country = "all", inputs_path) {
 
@@ -276,84 +304,80 @@ database_hbs <- function(year, country = "all", inputs_path) {
 
         load(file_path)
 
+        # Create income variable
+        Nquantiles <- function(x, w = NULL, s, t = NULL) {
+          if (is.null(t)) {
+            if (is.null(w)) w <- rep(1,length(x))
+
+            # In the case of weights with missing values: critical error
+
+            if (sum(is.na(w)) > 0) stop("Error.")
+
+            n <- length(x)
+            nn <- 1:n
+            nn <- nn[order(x)]
+
+            ww <- ceiling((cumsum(w[order(x, na.last = NA)])/sum(w[!is.na(x)]))*s)
+
+            ww[n] <- s
+
+            y <-  c(ww,rep(NA,sum(is.na(x))))[order(nn)]
+
+          } else {
+
+            if (sum(t != t[order(t)]) > 0)
+
+              stop("Error.")
+
+            yy <- rep(1,length(x))
+
+            for (i in 1:length(t)) {
+
+              yy <- cbind(yy, as.numeric(x >= t[i]))
+
+            }
+            y <- apply(yy, 1, sum)
+          }
+          return(y)
+        }
+
+        hbs_h             <- dplyr::mutate(hbs_h, total_exp_eq = EUR_HE00/HB062)
+        hbs_h$decile      <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$HA10 , 10)
+        hbs_h$quintile    <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$HA10 , 5)
+        hbs_h$ventile     <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$HA10 , 20)
+        hbs_h$percentile  <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$HA10 , 100)
+
+        # Create feminization degree
+        fem_degree <- hbs_m %>%
+          dplyr::group_by ( MA04, COUNTRY ) %>%
+          dplyr::summarise( number_male   = sum( MB02 == 1 & MB03_Recoded_5Classes != "0_14"),
+                            number_female = sum( MB02 == 2 & MB03_Recoded_5Classes != "0_14")) %>%
+          dplyr::mutate   ( share_female  = number_female/(number_male + number_female) ) %>%
+          dplyr::mutate   ( feminization_degree = base::ifelse(share_female <  0.2              , "FD1",
+                                                  base::ifelse(share_female >= 0.2 & share_female < 0.4, "FD2",
+                                                  base::ifelse(share_female >= 0.4 & share_female < 0.6, "FD3",
+                                                  base::ifelse(share_female >= 0.6 & share_female < 0.8, "FD4",
+                                                  base::ifelse(share_female >= 0.8                     , "FD5", "Not provided")))))) %>%
+          dplyr::mutate( HA04 = MA04)
+
+        # Keep just variables to merge
+        fem_degree <- fem_degree[,c("HA04",
+                                    "COUNTRY",
+                                    "feminization_degree")]
+
+        # Add fem_degree to hbs_h
+        hbs_h <- dplyr::left_join( hbs_h , fem_degree , by = c("HA04", "COUNTRY") )
+
         # Add the data to the list
         country_data_list[[c]] <- hbs_h
+
+        # Rename datasets
+        eval(parse(text = paste0(c, "_hbs_h <- hbs_h")))
+        eval(parse(text = paste0(c, "_hbs_m <- hbs_m")))
 
       } else {
         warning(sprintf("No raw data found for year %s and country %s in the specified path.", y, c))
       }
-
-      # Create income variable
-      Nquantiles <- function(x, w = NULL, s, t = NULL) {
-        if (is.null(t)) {
-          if (is.null(w)) w <- rep(1,length(x))
-
-          # In the case of weights with missing values: critical error
-
-          if (sum(is.na(w)) > 0) stop("Error.")
-
-          n <- length(x)
-          nn <- 1:n
-          nn <- nn[order(x)]
-
-          ww <- ceiling((cumsum(w[order(x, na.last = NA)])/sum(w[!is.na(x)]))*s)
-
-          ww[n] <- s
-
-          y <-  c(ww,rep(NA,sum(is.na(x))))[order(nn)]
-
-        } else {
-
-          if (sum(t != t[order(t)]) > 0)
-
-            stop("Error.")
-
-          yy <- rep(1,length(x))
-
-          for (i in 1:length(t)) {
-
-            yy <- cbind(yy, as.numeric(x >= t[i]))
-
-          }
-          y <- apply(yy, 1, sum)
-        }
-        return(y)
-      }
-
-      hbs_h             <- dplyr::mutate(hbs_h, total_exp_eq = EUR_HE00/HB062)
-      hbs_h$decile      <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$HA10 , 10)
-      hbs_h$quintile    <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$HA10 , 5)
-      hbs_h$ventile     <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$HA10 , 20)
-      hbs_h$percentile  <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$HA10 , 100)
-
-      # Create feminization degree
-      fem_degree <- hbs_m %>%
-        dplyr::group_by ( MA04, COUNTRY ) %>%
-        dplyr::summarise( number_male   = sum( MB02 == 1 & MB03_Recoded_5Classes != "0_14"),
-                          number_female = sum( MB02 == 2 & MB03_Recoded_5Classes != "0_14")) %>%
-        dplyr::mutate   ( share_female  = number_female/(number_male + number_female) ) %>%
-        dplyr::mutate   ( feminization_degree = ifelse(share_female <  0.2              , "FD1",
-                                         ifelse(share_female >= 0.2 & share_female < 0.4, "FD2",
-                                         ifelse(share_female >= 0.4 & share_female < 0.6, "FD3",
-                                         ifelse(share_female >= 0.6 & share_female < 0.8, "FD4",
-                                         ifelse(share_female >= 0.8                     , "FD5", "Not provided")))))) %>%
-        dplyr::mutate( HA04 = MA04)
-
-      # Keep just variables to merge
-      fem_degree <- fem_degree[,c("HA04",
-                                  "COUNTRY",
-                                  "feminization_degree")]
-
-      # Add fem_degree to hbs_h
-      hbs_h <- dplyr::left_join( hbs_h , fem_degree , by = c("HA04", "COUNTRY") )
-
-      # Standardize household dataset variables
-      hbs_h <- standardize_eu(hbs_h, variables_h)
-
-      # Rename datasets
-      eval(parse(text = paste0(c, "_hbs_h <- hbs_h")))
-      eval(parse(text = paste0(c, "_hbs_m <- hbs_m")))
-
     }
 
     # Combine all country data into a single dataframe by year
@@ -366,11 +390,60 @@ database_hbs <- function(year, country = "all", inputs_path) {
   # Remove duplicated data
   rm(hbs_h, hbs_m)
 
-  # Define mapping for h file
-  mapping <- variables_h
+  # Additional adjustments to all h files
+  for (name in names(hbs_yearly_data)) {
 
-  # Standardize household dataset variables
-  hbs_h <- standardize_eu(hbs_h, mapping)
+    # Check if the name follows the pattern "hbs_h_YYYY"
+    if (grepl("^hbs_h_\\d{4}$", name)) {
+
+      # Extract the dataframe
+      hbs_h <- hbs_yearly_data[[name]]
+
+      # Add income variables at EU level
+      hbs_h$decile_eu     <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$weight , 10 )
+      hbs_h$quintile_eu   <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$weight , 5  )
+      hbs_h$ventile_eu    <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$weight , 20 )
+      hbs_h$percentile_eu <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$weight , 100)
+
+      # Create country2
+      hbs_h <- hbs_h %>%
+        dplyr::mutate(country2 = dplyr::recode(country, "AT" =  "Austria"     ,
+                                                        "BE" =  "Belgium"     ,
+                                                        "BG" =  "Bulgaria"    ,
+                                                        "CY" =  "Cyprus"      ,
+                                                        "CZ" =  "Czechia"     ,
+                                                        "DE" =  "Germany"     ,
+                                                        "DK" =  "Denmark"     ,
+                                                        "EE" =  "Estonia"     ,
+                                                        "EL" =  "Greece"      ,
+                                                        "ES" =  "Spain"       ,
+                                                        "FI" =  "Finland"     ,
+                                                        "FR" =  "France"      ,
+                                                        "HR" =  "Croatia"     ,
+                                                        "HU" =  "Hungary"     ,
+                                                        "IE" =  "Ireland"     ,
+                                                        "IT" =  "Italy"       ,
+                                                        "LT" =  "Lithuania"   ,
+                                                        "LU" =  "Luxembourg"  ,
+                                                        "LV" =  "Latvia"      ,
+                                                        "MT" =  "Malta"       ,
+                                                        "NL" =  "Netherlands" ,
+                                                        "PL" =  "Poland"      ,
+                                                        "PT" =  "Portugal"    ,
+                                                        "RO" =  "Romania"     ,
+                                                        "SE" =  "Sweden"      ,
+                                                        "SI" =  "Slovenia"    ,
+                                                        "SK" =  "Slovakia"    ))
+
+      # Standardize household dataset variables --> fix rename values
+      hbs_h <- standardize_eu(hbs_h, variables_h)
+
+      # Save the modified data frame back to the list
+      hbs_yearly_data[[name]] <- hbs_h
+    }
+  }
+
+
 
   # Code to create a joint database for 2020 and m file
   if (year == 2020) {
@@ -384,51 +457,61 @@ database_hbs <- function(year, country = "all", inputs_path) {
     # Standardize members files variables for 2020
     for (c in country){
 
-      # Get data for each country
-      data <- get(paste0(c,"_hbs_m"))
+      # Define the file path
+      file_path <- paste0(inputs_path, c, "/hbs_", y, "_", c, ".RData")
 
-      # Rename values of education in SI to fix propblems with rename_values
-      if (c == "SI") {
+      # Check if the file exists before loading
+      if (file.exists(file_path)) {
 
-        SI_hbs_m <- dplyr::mutate(SI_hbs_m, MC02B_agg = base::ifelse(MC02B_Recoded_3Categ ==  2, "A2",
-                                                        base::ifelse(MC02B_Recoded_3Categ ==  3, "A3",
-                                                        base::ifelse(MC02B_Recoded_3Categ ==  5, "A5",
-                                                        base::ifelse(MC02B_Recoded_3Categ == 88, "A88", NA)))))
-      }
+        # Get data for each country
+        data <- get(paste0(c,"_hbs_m"))
 
-      # Standardize each country dataset
-      hbs_m <- standardize_eu(data, mapping)
+        # Rename values of education in SI to fix propblems with rename_values
+        if (c == "SI") {
 
-      # Create relationship reference person based in the income variable for BE
-      if (c == "BE") {
-        hbs_m <- hbs_m %>%
-          dplyr::group_by(number) %>%
-          dplyr::mutate(max_income   = max(EUR_MF099)) %>%
-          dplyr::mutate(relationship = base::ifelse(EUR_MF099 == max_income, "Reference person", "Other")) %>%
-          dplyr::ungroup()
-      }
+          SI_hbs_m <- dplyr::mutate(SI_hbs_m, MC02B_agg = base::ifelse(MC02B_Recoded_3Categ ==  2, "A2",
+                                                          base::ifelse(MC02B_Recoded_3Categ ==  3, "A3",
+                                                          base::ifelse(MC02B_Recoded_3Categ ==  5, "A5",
+                                                          base::ifelse(MC02B_Recoded_3Categ == 88, "A88", NA)))))
+        }
 
-      # Keep just the selected variables
-      new <- c("number","country", "year", "birth_country", "gender", "relationship", "education", "activity", "workday", "contract_type", "employment_sector", "age")
-      hbs_m <- hbs_m[,new]
+        # Standardize each country dataset
+        hbs_m <- standardize_eu(data, mapping)
 
-      # Number as character to avoid problems with bind_rows
-      hbs_m$number <- as.character(hbs_m$number)
+        # Create relationship reference person based in the income variable for BE
+        if (c == "BE") {
+          hbs_m <- hbs_m %>%
+            dplyr::group_by(number) %>%
+            dplyr::mutate(max_income   = max(EUR_MF099)) %>%
+            dplyr::mutate(relationship = base::ifelse(EUR_MF099 == max_income, "Reference person", "Other")) %>%
+            dplyr::ungroup()
+        }
 
-      # Save the dataset in the list
-      member_files[[c]] <- hbs_m
+        # Keep just the selected variables
+        new <- c("number","country", "year", "birth_country", "gender", "relationship", "education", "activity", "workday", "contract_type", "employment_sector", "age")
+        hbs_m <- hbs_m[,new]
 
-      # Rename the dataset with the country
-      eval(parse(text = paste0("hbs_m_", c, "<- hbs_m")))
+        # Number as character to avoid problems with bind_rows
+        hbs_m$number <- as.character(hbs_m$number)
 
-      # For checking purpose: Check row number
-      if (nrow(get(paste0(c,"_hbs_m"))) != nrow(get(paste0("hbs_m_",c)))) {
-        warning(paste0(c, " nrows do not match"))
+        # Save the dataset in the list
+        member_files[[c]] <- hbs_m
+
+        # Rename the dataset with the country
+        eval(parse(text = paste0("hbs_m_", c, "<- hbs_m")))
+
+        # For checking purpose: Check row number
+        if (nrow(get(paste0(c,"_hbs_m"))) != nrow(get(paste0("hbs_m_",c)))) {
+          warning(paste0(c, " nrows do not match"))
+        }
       }
     }
 
     # Combine all country data into a single dataframe
-    EU_hbs_m_2020 <- dplyr::bind_rows(member_files)
+    hbs_m_2020 <- dplyr::bind_rows(member_files)
+
+    # Add the dataframe to hbs_yearly_data
+    hbs_yearly_data[["hbs_m_2020"]] <- hbs_m_2020
 
   }
 
@@ -444,55 +527,65 @@ database_hbs <- function(year, country = "all", inputs_path) {
     # Standardize members files variables for 2015
     for (c in country){
 
-      # Get data for each country
-      data <- get(paste0(c,"_hbs_m"))
+      # Define the file path
+      file_path <- paste0(inputs_path, c, "/hbs_", y, "_", c, ".RData")
 
-      # Rename values of education in SI to fix propblems with rename_values
-      if (c == "SI") {
+      # Check if the file exists before loading
+      if (file.exists(file_path)) {
 
-        SI_hbs_m <- dplyr::mutate(SI_hbs_m, MC02B_agg = base::ifelse(MC02B_Recoded_3Categ == 2, "A2",
-                                                        base::ifelse(MC02B_Recoded_3Categ == 3, "A3",
-                                                        base::ifelse(MC02B_Recoded_3Categ == 5, "A5",
-                                                        base::ifelse(MC02B_Recoded_3Categ == 9, "A9", NA)))))
-      }
+        print(c)
 
-      # Standardize each country dataset
-      hbs_m <- standardize(data)
+        # Get data for each country
+        data <- get(paste0(c,"_hbs_m"))
 
-      # Create relationship reference person based in the income variable for SE
-      if (c == "SE") {
-        hbs_m <- hbs_m %>%
-          dplyr::group_by(number) %>%
-          dplyr::mutate(max_income   = max(EUR_MF099)) %>%
-          dplyr::mutate(relationship = base::ifelse(EUR_MF099 == max_income, "Reference person", "Other")) %>%
-          dplyr::ungroup()
-      }
+        # Rename values of education in SI to fix propblems with rename_values
+        if (c == "SI") {
 
-      # Keep just the selected variables
-      new <- c("number","country", "year", "birth_country", "gender", "relationship", "education", "activity", "workday", "contract_type", "employment_sector", "age")
-      hbs_m <- hbs_m[,new]
+          data <- dplyr::mutate(data, MC01= base::ifelse(MC01_Recoded_4Classes == 2, "A2",
+                                            base::ifelse(MC01_Recoded_4Classes == 3, "A3",
+                                            base::ifelse(MC01_Recoded_4Classes == 5, "A5",
+                                            base::ifelse(MC01_Recoded_4Classes == 9, "A9", NA)))))
+        }
 
-      # Rename the dataset with the country
-      eval(parse(text = paste0("hbs_m_", c, "<- hbs_m")))
+        # Standardize each country dataset
+        hbs_m <- standardize(data)
 
-      # Number as character to avoid problems with bind_rows
-      hbs_m$number <- as.character(hbs_m$number)
+        # Create relationship reference person based in the income variable for SE
+        if (c == "SE") {
+          hbs_m <- hbs_m %>%
+            dplyr::group_by(number) %>%
+            dplyr::mutate(max_income   = max(EUR_MF099)) %>%
+            dplyr::mutate(relationship = base::ifelse(EUR_MF099 == max_income, "Reference person", "Other")) %>%
+            dplyr::ungroup()
 
-      # Save the dataset in the list
-      member_files2[[c]] <- hbs_m
+        }
 
-      # For checking purpose: Check row number
-      if (nrow(get(paste0(c,"_hbs_m"))) != nrow(get(paste0("hbs_m_",c)))) {
-        warning(paste0(c, " nrows do not match"))
+        # Keep just the selected variables
+        new <- c("number","country", "year", "birth_country", "gender", "relationship", "education", "activity", "workday", "contract_type", "employment_sector", "age")
+        hbs_m <- hbs_m[,new]
+
+        # Rename the dataset with the country
+        eval(parse(text = paste0("hbs_m_", c, "<- hbs_m")))
+
+        # Number as character to avoid problems with bind_rows
+        hbs_m$number <- as.character(hbs_m$number)
+
+        # Save the dataset in the list
+        member_files2[[c]] <- hbs_m
+
+        # For checking purpose: Check row number
+        if (nrow(get(paste0(c,"_hbs_m"))) != nrow(get(paste0("hbs_m_",c)))) {
+          warning(paste0(c, " nrows do not match"))
+        }
       }
     }
 
     # Combine all country data into a single dataframe
-    EU_hbs_m_2015 <- dplyr::bind_rows(member_files2)
+    hbs_m_2015 <- dplyr::bind_rows(member_files2)
+
+    # Add the dataframe to hbs_yearly_data
+    hbs_yearly_data[["hbs_m_2015"]] <- hbs_m_2015
 
   }
-
-
-
 
 }

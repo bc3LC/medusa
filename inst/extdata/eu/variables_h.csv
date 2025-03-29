@@ -1,32 +1,32 @@
 VAR_EPF,VAR_EN,value,NAME,description,file
 HA04,number,,,hh identification number,h
-COUNTRY,country,AT,Austria,hbs country,h
-COUNTRY,country,BE,Belgium,hbs country,h
-COUNTRY,country,BG,Bulgaria,hbs country,h
-COUNTRY,country,CY,Cyprus,hbs country,h
-COUNTRY,country,CZ,Czech Republic,hbs country,h
-COUNTRY,country,DE,Germany,hbs country,h
-COUNTRY,country,DK,Denmark,hbs country,h
-COUNTRY,country,EE,Estonia,hbs country,h
-COUNTRY,country,EL,Greece,hbs country,h
-COUNTRY,country,ES,Spain,hbs country,h
-COUNTRY,country,FI,Finland,hbs country,h
-COUNTRY,country,FR,France,hbs country,h
-COUNTRY,country,HR,Croatia,hbs country,h
-COUNTRY,country,HU,Hungary,hbs country,h
-COUNTRY,country,IE,Ireland,hbs country,h
-COUNTRY,country,IT,Italy,hbs country,h
-COUNTRY,country,LT,Lithuania,hbs country,h
-COUNTRY,country,LU,Luxembourg,hbs country,h
-COUNTRY,country,LV,Latvia,hbs country,h
-COUNTRY,country,MT,Malta,hbs country,h
-COUNTRY,country,NL,Netherlands,hbs country,h
-COUNTRY,country,PL,Poland,hbs country,h
-COUNTRY,country,PT,Portugal,hbs country,h
-COUNTRY,country,RO,Romania,hbs country,h
-COUNTRY,country,SE,Sweden,hbs country,h
-COUNTRY,country,SI,Slovenia,hbs country,h
-COUNTRY,country,SK,Slovakia,hbs country,h
+COUNTRY,country,AT,AT,hbs country,h
+COUNTRY,country,BE,BE,hbs country,h
+COUNTRY,country,BG,BG,hbs country,h
+COUNTRY,country,CY,CY,hbs country,h
+COUNTRY,country,CZ,CZ,hbs country,h
+COUNTRY,country,DE,DE,hbs country,h
+COUNTRY,country,DK,DK,hbs country,h
+COUNTRY,country,EE,EE,hbs country,h
+COUNTRY,country,EL,EL,hbs country,h
+COUNTRY,country,ES,ES,hbs country,h
+COUNTRY,country,FI,FI,hbs country,h
+COUNTRY,country,FR,FR,hbs country,h
+COUNTRY,country,HR,HR,hbs country,h
+COUNTRY,country,HU,HU,hbs country,h
+COUNTRY,country,IE,IE,hbs country,h
+COUNTRY,country,IT,IT,hbs country,h
+COUNTRY,country,LT,LT,hbs country,h
+COUNTRY,country,LU,LU,hbs country,h
+COUNTRY,country,LV,LV,hbs country,h
+COUNTRY,country,MT,MT,hbs country,h
+COUNTRY,country,NL,NL,hbs country,h
+COUNTRY,country,PL,PL,hbs country,h
+COUNTRY,country,PT,PT,hbs country,h
+COUNTRY,country,RO,RO,hbs country,h
+COUNTRY,country,SE,SE,hbs country,h
+COUNTRY,country,SI,SI,hbs country,h
+COUNTRY,country,SK,SK,hbs country,h
 YEAR,year,,,hbs wave reference year,h
 NUTS1,nuts1,,,region nuts1,h
 HA09,zone,1,Densely populated,degree of urbanisation: >500inh/km2,h

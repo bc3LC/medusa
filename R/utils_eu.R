@@ -407,7 +407,7 @@ database_hbs <- function(year, country = "all", inputs_path) {
 
       # Create country2
       hbs_h <- hbs_h %>%
-        dplyr::mutate(country2 = dplyr::recode(country, "AT" =  "Austria"     ,
+        dplyr::mutate(country2 = dplyr::recode(COUNTRY, "AT" =  "Austria"     ,
                                                         "BE" =  "Belgium"     ,
                                                         "BG" =  "Bulgaria"    ,
                                                         "CY" =  "Cyprus"      ,
@@ -436,14 +436,12 @@ database_hbs <- function(year, country = "all", inputs_path) {
                                                         "SK" =  "Slovakia"    ))
 
       # Standardize household dataset variables --> fix rename values
-      hbs_h <- standardize_eu(hbs_h, variables_h)
+      #hbs_h <- standardize_eu(hbs_h, variables_h)
 
       # Save the modified data frame back to the list
       hbs_yearly_data[[name]] <- hbs_h
     }
   }
-
-
 
   # Code to create a joint database for 2020 and m file
   if (year == 2020) {
@@ -469,7 +467,7 @@ database_hbs <- function(year, country = "all", inputs_path) {
         # Rename values of education in SI to fix propblems with rename_values
         if (c == "SI") {
 
-          SI_hbs_m <- dplyr::mutate(SI_hbs_m, MC02B_agg = base::ifelse(MC02B_Recoded_3Categ ==  2, "A2",
+          data <- dplyr::mutate(data, MC02B_agg = base::ifelse(MC02B_Recoded_3Categ ==  2, "A2",
                                                           base::ifelse(MC02B_Recoded_3Categ ==  3, "A3",
                                                           base::ifelse(MC02B_Recoded_3Categ ==  5, "A5",
                                                           base::ifelse(MC02B_Recoded_3Categ == 88, "A88", NA)))))
@@ -515,6 +513,94 @@ database_hbs <- function(year, country = "all", inputs_path) {
 
   }
 
+  # Include reference person data from m file to h file --> FIX
+  if (year == 2020) {
+
+    # Extract hbs_h and hbs_m
+    hbs_h <- hbs_yearly_data$hbs_h_2020
+    hbs_m <- hbs_yearly_data$hbs_m_2020
+
+    # Subset m dataset: keep just data for the household reference person
+    hbs_m <- subset(hbs_m, relationship == "Reference person")
+
+    # CAUTION: nrows in hbs_m is higher than nrows in EU_hbs_h -> fix before merging
+    # Check duplicates
+    # for (c in country) {
+    #   h <- hbs_h %>% subset(country == c)
+    #   m <- hbs_m %>% subset(country == c)
+    #
+    #   nrows_m <- as.numeric(dplyr::count(h))
+    #
+    #   n_h <- length(unique(h$number))
+    #   n_m <- length(unique(m$number))
+    #   nurows_m <- as.numeric(n_m)
+    #
+    #   if (n_h != n_m) {
+    #     print(paste0("n_h & n_m don´t match in ", c))
+    #   }
+    #
+    #   if (nrows_m != nurows_m) {
+    #     print(paste0("unique values don´t match nrows in ", c))
+    #   }
+    #
+    #   h_n <- h[,c("number", "country")]
+    #   m_n <- m[,c("number", "country")]
+    #
+    #   dup_h <- sum(duplicated(h_n))
+    #   dup_m <- as.numeric(sum(duplicated(m_n)))
+    #
+    #   if (dup_m > 0) {
+    #     print(paste0("duplicates in m in ", c))
+    #   }
+    #
+    #   dupp <- subset(hbs_m, country == c & relationship == "Reference person")
+    #
+    #   dupp <- dupp[dupp$number %in% dupp$number[duplicated(dupp$number)],]
+    #
+    # }
+
+    # In BE and SE there are several members with the same income, so they have
+    # several reference persons. We need to keep just one
+
+    # Load duplicated data for SE and BE and create a vector with duplicated ids
+    dup_SE <- read.csv(paste0(path,"/calculation/outputs/duplicate_SE.csv"), header = T)
+    dupp_SE <- as.character(unique(dup_SE$number))
+    dup_BE <- read.csv(paste0(path,"/calculation/outputs/duplicate_BE.csv"), header = T)
+    dupp_BE <- as.character(unique(dup_BE$number))
+
+    # Fix SE
+    # Keep duplicated data and revalue relationship to keep just 1 reference person per household
+    hbs_m2 <- hbs_m %>%
+      subset(country == "Sweden" & number %in% dupp_SE ) %>%
+      mutate(relationship = if_else(age == "Adult" & gender == "Woman", "Reference person", "Other"))
+
+    # Remove duplicated data from hbs_m
+    hbs_m <- hbs_m[-(which(hbs_m$country== "Sweden" & hbs_m$number %in% dupp_SE)),]
+
+    # Add corrected data to hbs_m
+    hbs_m <- rbind(hbs_m,hbs_m2)
+
+    # Keep Reference person only for SE
+    hbs_m <- subset(b, relationship == "Reference person")
+
+    # Fix BE
+    # Keep duplicated data and revalue relationship to keep just 1 reference person per household
+    hbs_m2 <- read.csv(paste0(path,"/calculation/outputs/clean_dup_BE.csv"), header = T)
+
+    # Remove duplicated data from hbs_m
+    hbs_m <- hbs_m[-(which(hbs_m$country== "Belgium" & hbs_m$number %in% dupp_BE)),]
+
+    # Add corrected data to hbs_m
+    hbs_m <- rbind(hbs_m,hbs_m2)
+
+    # Merge reference person data with household data
+    hbs_h$year <- as.character(hbs_h$year)
+    hbs <- merge(hbs_h, hbs_m, by = c("number", "country"), all.x = TRUE)
+
+    # Save joint data frame in the list
+    hbs_yearly_data[["hbs_2020"]] <- hbs
+  }
+
   # Code to create a joint database for 2015 and m file
   if (year == 2015) {
 
@@ -532,8 +618,6 @@ database_hbs <- function(year, country = "all", inputs_path) {
 
       # Check if the file exists before loading
       if (file.exists(file_path)) {
-
-        print(c)
 
         # Get data for each country
         data <- get(paste0(c,"_hbs_m"))
@@ -588,4 +672,94 @@ database_hbs <- function(year, country = "all", inputs_path) {
 
   }
 
+  # Include reference person data from m file to h file --> FIX
+  if (year == 2015) {
+
+    # Extract hbs_h and hbs_m
+    hbs_h <- hbs_yearly_data$hbs_h_2015
+    hbs_m <- hbs_yearly_data$hbs_m_2015
+
+    # Subset m dataset: keep just data for the household reference person
+    hbs_m <- subset(hbs_m, relationship == "Reference person")
+
+    # CAUTION: nrows in hbs_m is higher than nrows in EU_hbs_h -> fix before merging
+    # Check duplicates
+    # for (c in country) {
+    #   h <- hbs_h %>% subset(country == c)
+    #   m <- hbs_m %>% subset(country == c)
+    #
+    #   nrows_m <- as.numeric(dplyr::count(h))
+    #
+    #   n_h <- length(unique(h$number))
+    #   n_m <- length(unique(m$number))
+    #   nurows_m <- as.numeric(n_m)
+    #
+    #   if (n_h != n_m) {
+    #     print(paste0("n_h & n_m don´t match in ", c))
+    #   }
+    #
+    #   if (nrows_m != nurows_m) {
+    #     print(paste0("unique values don´t match nrows in ", c))
+    #   }
+    #
+    #   h_n <- h[,c("number", "country")]
+    #   m_n <- m[,c("number", "country")]
+    #
+    #   dup_h <- sum(duplicated(h_n))
+    #   dup_m <- as.numeric(sum(duplicated(m_n)))
+    #
+    #   if (dup_m > 0) {
+    #     print(paste0("duplicates in m in ", c))
+    #   }
+    #
+    #   dupp <- subset(hbs_m, country == c & relationship == "Reference person")
+    #
+    #   dupp <- dupp[dupp$number %in% dupp$number[duplicated(dupp$number)],]
+    #
+    # }
+
+    # In Sweden there are several members with the same income, so they have
+    # several reference persons. We need to keep just one
+
+    # FIX SWEDEN
+    # View Sweden data
+    h <- hbs_h %>% subset(country == "Sweden")
+    m <- hbs_m %>% subset(country == "Sweden")
+
+    # Calculate the share of women in Sweden in members file
+    # Include weight in m
+    m2 <- m %>%
+      left_join(h %>% select(number, weight), by = "number")
+    # Calculate the share of women
+    sps_swoman <- m2 %>%
+      group_by(country) %>%
+      summarise(women = sum(case_when(gender == "Woman" ~ weight, TRUE ~ 0)),
+                total = sum(weight),
+                s_woman = women / total)
+
+    # View duplicated rows
+    dupp <- subset(hbs_m, country == "Sweden" & relationship == "Reference person")
+    dupp <- dupp[dupp$number %in% dupp$number[duplicated(dupp$number)],]
+
+    # Remove duplicated data from hbs_m
+    hbs_m <- anti_join(hbs_m, dupp)
+
+    # Number 7998 and 21202 the reference person is duplicated --> Keep first observation
+    # keep 1st row -> but man is automaticaly 1st
+    # dup <- dupp %>%
+    #   distinct(number, relationship, .keep_all = TRUE)
+    # keep 1 woman and 1 man
+    dup <- dupp[c(2, 3), ]
+    # Add corrected data to hbs_m
+    hbs_m <- rbind(hbs_m, dup)
+
+    # Merge reference person data with household data
+    hbs_h$year <- as.character(hbs_h$year)
+    hbs <- merge(hbs_h, hbs_m, by = c("number", "country"), all.x = TRUE)
+
+    # Save joint data frame in the list
+    hbs_yearly_data[["hbs_2015"]] <- hbs
+  }
+
+  return(hbs_yearly_data)
 }

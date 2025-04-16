@@ -832,8 +832,15 @@ basic_graph <- function(data, var = categories$categories){
     datapl <- data[[paste0("di_",g)]] %>%
       tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
       dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", "")) %>%
-      dplyr::filter(! get(g) %in% c("Not provided", "NA", "Others")) %>%
-      order_var(., g)
+      dplyr::filter(! LABELS %in% c("Not provided", "NA", "Others")) %>%
+      order_var(., "LABELS")
+    
+    # Convert LABELS to character if not DECILE
+    if (g == "DECILE") {
+      datapl <- datapl %>% dplyr::mutate(LABELS = as.numeric(LABELS))
+    } else {
+      datapl <- datapl %>% dplyr::mutate(LABELS = as.character(LABELS))
+    }
 
     # Para definir el nombre largo de la variable que va a ir en el título del eje
     clean_g <- graph_labels %>%
@@ -841,7 +848,7 @@ basic_graph <- function(data, var = categories$categories){
       dplyr::pull(VAR_CLEAN)
 
     pl <- ggplot2::ggplot(datapl,
-                          ggplot2::aes(x = !!dplyr::sym(g), y = Impact, fill = Scenario)) +
+                          ggplot2::aes(x = LABELS, y = Impact, fill = Scenario)) +
       ggplot2::geom_col(position = ggplot2::position_dodge(width = 1)) +
       ggplot2::facet_grid(.~Scenario) +
       ggplot2::scale_fill_manual(values=c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7" )) +
@@ -853,7 +860,6 @@ basic_graph <- function(data, var = categories$categories){
     if (g %in% c("DECILE")) {
       pl = pl + ggplot2::scale_x_continuous(breaks = 1:10, labels = 1:10)
     }
-
     if (g %in% c("REGION", "HHTYPE", "CHILDREN", "AGERP", "COUNTRYRP", "PROFESSIONALSRP", "STUDIESRP")) {
       pl <- pl +
         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.25))
@@ -906,9 +912,12 @@ impact <- function(data, var = categories$categories, save = T, file_name = "D_i
                          dplyr::across(dplyr::all_of(gastotS_cols),                                          # for all columns that are in gastotS_cols
                                        list(DI_s = ~ 100*(sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),        # generate a new column with the distributional impacts, where sum(.) is the value of the column we are using
                                        .names = "DI_{.col}")) %>%                                            # change the column name by adding DI to the column name you are using
-               dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))            # change the names of the columns starting with DI_GASTOT to DI_ only (gsub is to replace and the latter to only look at the columns starting with DI_GASTOT).
+               dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))  %>%       # change the names of the columns starting with DI_GASTOT to DI_ only (gsub is to replace and the latter to only look at the columns starting with DI_GASTOT).
+               dplyr::rename(LABELS = 1) %>% 
+               dplyr::mutate(LABELS = as.character(LABELS))
       )
       d_impacts[[paste0('di_',g)]] = get(paste0('di_',g))                                                    # add the result to the list with the name di_g
+      
     } else {
         missing_vars <- c(missing_vars, g)
         warning(paste0(g, " is not present in the dataset"))
@@ -926,8 +935,13 @@ impact <- function(data, var = categories$categories, save = T, file_name = "D_i
     basic_graph(data = d_impacts, var)
 
   }
-
-  return(d_impacts)
+  
+  if (length(d_impacts) == 1) {
+    return(d_impacts[[1]])
+  } else {
+    combined_df <- dplyr::bind_rows(d_impacts)
+    return(combined_df)
+  }
 
 }
 

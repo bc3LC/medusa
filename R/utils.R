@@ -834,7 +834,7 @@ basic_graph <- function(data, var = categories$categories){
       dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", "")) %>%
       dplyr::filter(! LABELS %in% c("Not provided", "NA", "Others")) %>%
       order_var(., "LABELS")
-    
+
     # Convert LABELS to character if not DECILE
     if (g == "DECILE") {
       datapl <- datapl %>% dplyr::mutate(LABELS = as.numeric(LABELS))
@@ -892,8 +892,7 @@ basic_graph <- function(data, var = categories$categories){
 #' By default it is TRUE, for the graph/s not to be generated and saved indicate FALSE.
 #' @param shocks_scenario_names vector of the names of the considered scenario shocks
 #' @importFrom dplyr %>%
-#' @return a list containing the generated datasets (.RData) summarising the
-#' distributional impacts per selected variable.
+#' @return a dataframe summarising the distributional impacts per selected variable.
 #' @export
 impact <- function(data, var = categories$categories, save = T, file_name = "D_impacts", fig = T,
                    shocks_scenario_names) {
@@ -913,11 +912,11 @@ impact <- function(data, var = categories$categories, save = T, file_name = "D_i
                                        list(DI_s = ~ 100*(sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),        # generate a new column with the distributional impacts, where sum(.) is the value of the column we are using
                                        .names = "DI_{.col}")) %>%                                            # change the column name by adding DI to the column name you are using
                dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))  %>%       # change the names of the columns starting with DI_GASTOT to DI_ only (gsub is to replace and the latter to only look at the columns starting with DI_GASTOT).
-               dplyr::rename(LABELS = 1) %>% 
+               dplyr::rename(LABELS = 1) %>%
                dplyr::mutate(LABELS = as.character(LABELS))
       )
       d_impacts[[paste0('di_',g)]] = get(paste0('di_',g))                                                    # add the result to the list with the name di_g
-      
+
     } else {
         missing_vars <- c(missing_vars, g)
         warning(paste0(g, " is not present in the dataset"))
@@ -935,7 +934,7 @@ impact <- function(data, var = categories$categories, save = T, file_name = "D_i
     basic_graph(data = d_impacts, var)
 
   }
-  
+
   if (length(d_impacts) == 1) {
     return(d_impacts[[1]])
   } else {

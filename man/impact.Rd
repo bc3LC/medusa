@@ -35,8 +35,7 @@ By default it is TRUE, for the graph/s not to be generated and saved indicate FA
 \item{shocks_scenario_names}{vector of the names of the considered scenario shocks}
 }
 \value{
-a list containing the generated datasets (.RData) summarising the
-distributional impacts per selected variable.
+a dataframe summarising the distributional impacts per selected variable.
 }
 \description{
 Function to calculate the distributional impacts based in one or more

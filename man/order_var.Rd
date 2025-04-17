@@ -5,6 +5,8 @@
 \title{order_var}
 \usage{
 order_var(data, g)
+
+order_var(data, g)
 }
 \arguments{
 \item{data}{dataset in which we want to order the labels of the socioeconomic and demographic variables}
@@ -13,7 +15,11 @@ order_var(data, g)
 }
 \value{
 a dataset in which the labels are ordered for the selected socioeconomic or demographic variable
+
+a dataset in which the labels are ordered for the selected socioeconomic or demographic variable
 }
 \description{
-Function to order the labels of the socioeconomic and demographic variables
+Function to order the labels of the socioeconomic and demographic variablesin basic graph
+
+Function to order the labels of the socioeconomic and demographic variables in intersectional graph
 }

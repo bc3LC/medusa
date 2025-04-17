@@ -3,17 +3,44 @@
 \docType{data}
 \name{epf_list_2009}
 \alias{epf_list_2009}
-\title{Clean hbs list for 2009}
+\title{Cleaned Household Budget Survey (HBS) microdata for 2009}
 \format{
 .RData
 }
 \source{
-medusa
+medusa based on Instituto Nacional de Estadística (INE). Full survey documentation available at: \url{https://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736176806&menu=resultados&idp=1254735976608#_tabs-1254736195147}
 }
 \usage{
 epf_list_2009
 }
 \description{
-Clean hbs list for 2009
+This object contains cleaned microdata from the 2009 wave of the Spanish Household Budget Survey (EPF, Encuesta de Presupuestos Familiares), harmonized and prepared for use with the `medusa` package.
 }
+\details{
+The data are structured as a named list with the following main components:
+
+- `epf_hg`: Household-level data including consumption expenditure (COICOP categories prefixed with `EUR_`) and key socioeconomic variables such as income groupings, household type, region, and gender of the household reference person.
+- `epf_hgm`: Member-level data with individual characteristics of household members (e.g., age, gender, education).
+- `epf_hc`: Household-level data containing consumption quantities (physical amounts) by COICOP category.
+}
+\section{Main socioeconomic variables in `epf_hg`}{
+
+- `QUINTILE`, `DECILE`, `VENTILE`, `PERCENTILE`: Income distribution indicators.
+- `REGION`: Autonomous Community of residence (NUTS2).
+- `MUNISIZE`: Municipality size (`>10.000`, `<10.000`).
+- `ZONE`: Area type (`Urban`, `Semi-urban`, `Rural`).
+- `HHTYPE`: Household type (e.g., `Couples with children`, `Single parent`, `Elderly alone`).
+- `CHILDREN`: Children in the household (`No children`, `With children`, `Large family`).
+- `POVERTY`: Poverty risk status (`At risk`, `No risk`).
+- `GENDERRP`: Gender of the reference person (`Man`, `Woman`).
+- `FEMDEGREE`: Feminization degree of the household (FD1 to FD5).
+- `AGERP`: Age group of the reference person (`Young`, `Adult`, `Elder`).
+- `COUNTRYRP`: Country of birth of the reference person (`Spain`, `EU27`, `Other Europe`, `Rest of world`).
+- `STUDIESRP`: Education level (`Without studies` to `Higher education`).
+- `PROFESSIONALSRP`: Professional status (`Employee`, `Self-employed`, `Employer`, `Other`, `Not apply`).
+- `CONTTYPERP`: Employment contract type (`Indefinite`, `Temporary`, `Not apply`).
+- `WORKDAYRP`: Working hours (`Full time`, `Part time`, `Not apply`).
+- `REGMR`: Tenure status of main residence (`Ownership`, `Rented`, `Relinquish`).
+}
+
 \keyword{datasets}

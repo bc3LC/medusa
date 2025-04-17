@@ -784,7 +784,7 @@ adjust_wh_is <- function(data, var_w, var_h) {
 
 #' order_var
 #'
-#' Function to order the labels of the socioeconomic and demographic variables
+#' Function to order the labels of the socioeconomic and demographic variablesin basic graph
 #' @param data dataset in which we want to order the labels of the socioeconomic and demographic variables
 #' @param g variable for which we want to sort the labels
 #' @importFrom dplyr %>%
@@ -793,22 +793,22 @@ adjust_wh_is <- function(data, var_w, var_h) {
 order_var <- function(data, g){
   if (g == "CHILDREN"){
     data <- data %>%
-    dplyr::mutate(CHILDREN = factor(CHILDREN, levels = c("No children", "With children", "Large family")))
+    dplyr::mutate(LABELS = factor(LABELS, levels = c("No children", "With children", "Large family")))
   } else if (g == "COUNTRYRP") {
     data <- data %>%
-    dplyr::mutate(COUNTRYRP = factor(COUNTRYRP, levels = c("Spain", "EU27", "Other Europe", "Rest of world")))
+    dplyr::mutate(LABELS = factor(LABELS, levels = c("Spain", "EU27", "Other Europe", "Rest of world")))
   } else if (g == "STUDIESRP") {
     data <- data %>%
-    dplyr::mutate(STUDIESRP = factor(STUDIESRP, levels = c("Without studies", "Primary education", "Secondary education", "Post-secondary education", "Higher education")))
+    dplyr::mutate(LABELS = factor(LABELS, levels = c("Without studies", "Primary education", "Secondary education", "Post-secondary education", "Higher education")))
   } else if (g == "REGMR") {
     data <- data %>%
-    dplyr::mutate(REGMR = factor(REGMR, levels = c("Rented","Ownership", "Relinquish")))
+    dplyr::mutate(LABELS = factor(LABELS, levels = c("Rented","Ownership", "Relinquish")))
   } else if (g == "PROFESSIONALSRP") {
     data <- data %>%
-    dplyr::mutate(PROFESSIONALSRP = factor(PROFESSIONALSRP, levels = c("Employee", "Self-employed", "Employer")))
+    dplyr::mutate(LABELS = factor(LABELS, levels = c("Employee", "Self-employed", "Employer")))
   } else if (g == "AGERP") {
     data <- data %>%
-      dplyr::mutate(AGERP = factor(AGERP, levels = c("Young", "Adult", "Elder")))
+      dplyr::mutate(LABELS = factor(LABELS, levels = c("Young", "Adult", "Elder")))
   }
   return(data)
 }
@@ -833,7 +833,7 @@ basic_graph <- function(data, var = categories$categories){
       tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
       dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", "")) %>%
       dplyr::filter(! LABELS %in% c("Not provided", "NA", "Others")) %>%
-      order_var(., "LABELS")
+      order_var(., g)
 
     # Convert LABELS to character if not DECILE
     if (g == "DECILE") {
@@ -944,6 +944,37 @@ impact <- function(data, var = categories$categories, save = T, file_name = "D_i
 
 }
 
+#' order_vars
+#'
+#' Function to order the labels of the socioeconomic and demographic variables in intersectional graph
+#' @param data dataset in which we want to order the labels of the socioeconomic and demographic variables
+#' @param g variable for which we want to sort the labels
+#' @importFrom dplyr %>%
+#' @return a dataset in which the labels are ordered for the selected socioeconomic or demographic variable
+#' @export
+order_var <- function(data, g){
+  if (g == "CHILDREN"){
+    data <- data %>%
+      dplyr::mutate(CHILDREN = factor(CHILDREN, levels = c("No children", "With children", "Large family")))
+  } else if (g == "COUNTRYRP") {
+    data <- data %>%
+      dplyr::mutate(LABELS = factor(LABELS, levels = c("Spain", "EU27", "Other Europe", "Rest of world")))
+  } else if (g == "STUDIESRP") {
+    data <- data %>%
+      dplyr::mutate(COUNTRYRP = factor(COUNTRYRP, levels = c("Without studies", "Primary education", "Secondary education", "Post-secondary education", "Higher education")))
+  } else if (g == "REGMR") {
+    data <- data %>%
+      dplyr::mutate(REGMR = factor(REGMR, levels = c("Rented","Ownership", "Relinquish")))
+  } else if (g == "PROFESSIONALSRP") {
+    data <- data %>%
+      dplyr::mutate(PROFESSIONALSRP = factor(PROFESSIONALSRP, levels = c("Employee", "Self-employed", "Employer")))
+  } else if (g == "AGERP") {
+    data <- data %>%
+      dplyr::mutate(AGERP = factor(AGERP, levels = c("Young", "Adult", "Elder")))
+  }
+  return(data)
+}
+
 
 #' intersectional_graph
 #'
@@ -973,8 +1004,8 @@ intersectional_graph <- function(data, pairs = is_categories){
       dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", "")) %>%
       dplyr::filter(! get(var_a) %in% c("Not provided", "NA", "Others")) %>%
       dplyr::filter(! get(var_b) %in% c("Not provided", "NA", "Others")) %>%
-      order_var(., var_a) %>%
-      order_var(., var_b)
+      order_vars(., var_a) %>%
+      order_vars(., var_b)
 
     # Para definir el nombre largo de la variable que va a ir en el título del eje
     clean_a <- graph_labels %>%
@@ -1072,7 +1103,7 @@ impact_intersectional <- function(data, pairs = is_categories, save = T, file_na
                                 VARIABLE_B = var_b,                                                               # create the following columns
                                 WEIGHT = sum(FACTOR),
                                 dplyr::across(dplyr::all_of(gastotS_cols),                                        # for all columns that are in gastotS_cols
-                                              list(DI_s = ~ (sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),          # generate a new column with the distributional impacts, where sum(.) is the value of the column we are using
+                                              list(DI_s = ~ 100*(sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),          # generate a new column with the distributional impacts, where sum(.) is the value of the column we are using
                                               .names = "DI_{.col}")) %>%                                          # change the name of the column by adding DI to the column name that is being used
                dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))                 # change the names of the columns that start with DI GASTOR to DI_ only (gsub is for replacing and the second so that it only looks at those that start with DI_GASTOT)
       )

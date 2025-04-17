@@ -299,7 +299,7 @@ test_that("Test14_Calculate distributional impacts for all years (intersectional
 })
 
 
-test_that("Test15_Calculate distributional impacts for all years (intersectional), no elevated", {
+test_that("Test15_Calculate distributional impacts for all years (intersectional), elevated", {
   #y <- seq(2006,2021,1)
   y <- c(2006,2012,2019)
 

@@ -72,6 +72,8 @@ $$\Delta e_h^s = \frac{ \sum_c e_{c,h} (1+\Delta p_c^s) - \sum_c e_{c,h} }{ \sum
 
 here $e_{c,h}$ refers to the total spending on each consumption category $c$ consumed by each household $h$ in the baseline scenario and $\Delta p_c^s$ is the increase in prices by consumption category and scenario obtained with the price model.
 
+To the best of our knowledge, there was no existing software specifically designed for conducting distributional impact assessments of policies in an accessible and reproducible way. While some economic models allow for similar analyses, they are often highly specialized, require advanced technical expertise, or are not openly available. medusa fills this gap by providing the first R package dedicated to this type of analysis. It offers a transparent and user-friendly framework that enables a broader audience—including researchers, analysts, and policymakers—to incorporate equity considerations into policy evaluation. This democratization of access to distributional tools helps address a critical shortcoming in existing modeling approaches, supporting the design of more inclusive and just policies.
+
 # Functionality
 
 The `medusa` package includes several functions that have been classified in 3 main modules. Note that this functions are listed in an [R vignette](https://bc3lc.github.io/medusa/), which includes a [step-by-step tutorial](https://bc3lc.github.io/medusa/articles/Tutorials.html).

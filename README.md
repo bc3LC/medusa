@@ -112,7 +112,7 @@ To use `medusa` package first you need to follow this steps:
     library(medusa)
     ```
 
-:exclamation::exclamation: This may take a few minutes because the package contains a lot of data. 
+:exclamation::exclamation: This may take a few minutes because the package contains a lot of data. If the installation fails, the timeout parameter may need to be further increased. Additionally, sometimes users downloading `medusa` with remotes may need to set up a Personal Access Token (PAT) and store it in their credentials file. For more information about how to proceed click [here](https://usethis.r-lib.org/articles/git-credentials.html).
 
 <br> 
 Now the package is fully loaded and you can start using its functions.

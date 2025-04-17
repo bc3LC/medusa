@@ -838,8 +838,6 @@ basic_graph <- function(data, var = categories$categories){
     # Convert LABELS to character if not DECILE
     if (g == "DECILE") {
       datapl <- datapl %>% dplyr::mutate(LABELS = as.numeric(LABELS))
-    } else {
-      datapl <- datapl %>% dplyr::mutate(LABELS = as.character(LABELS))
     }
 
     # Para definir el nombre largo de la variable que va a ir en el título del eje
@@ -952,7 +950,7 @@ impact <- function(data, var = categories$categories, save = T, file_name = "D_i
 #' @importFrom dplyr %>%
 #' @return a dataset in which the labels are ordered for the selected socioeconomic or demographic variable
 #' @export
-order_var <- function(data, g){
+order_vars <- function(data, g){
   if (g == "CHILDREN"){
     data <- data %>%
       dplyr::mutate(CHILDREN = factor(CHILDREN, levels = c("No children", "With children", "Large family")))

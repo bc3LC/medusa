@@ -956,10 +956,10 @@ order_vars <- function(data, g){
       dplyr::mutate(CHILDREN = factor(CHILDREN, levels = c("No children", "With children", "Large family")))
   } else if (g == "COUNTRYRP") {
     data <- data %>%
-      dplyr::mutate(LABELS = factor(LABELS, levels = c("Spain", "EU27", "Other Europe", "Rest of world")))
+      dplyr::mutate(COUNTRYRP = factor(COUNTRYRP, levels = c("Spain", "EU27", "Other Europe", "Rest of world")))
   } else if (g == "STUDIESRP") {
     data <- data %>%
-      dplyr::mutate(COUNTRYRP = factor(COUNTRYRP, levels = c("Without studies", "Primary education", "Secondary education", "Post-secondary education", "Higher education")))
+      dplyr::mutate(STUDIESRP = factor(STUDIESRP, levels = c("Without studies", "Primary education", "Secondary education", "Post-secondary education", "Higher education")))
   } else if (g == "REGMR") {
     data <- data %>%
       dplyr::mutate(REGMR = factor(REGMR, levels = c("Rented","Ownership", "Relinquish")))

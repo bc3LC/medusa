@@ -252,3 +252,9 @@
 #' @source medusa
 #' @format .csv
 "variables_m_2020"
+
+#' Mapping for expenditure categories (COICOP)
+#'
+#' @source medusa
+#' @format .csv
+"mapping_coicop"

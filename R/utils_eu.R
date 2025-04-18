@@ -8,12 +8,13 @@ options(dplyr.summarise.inform = FALSE)
 #' Function to rename the codified values of the dataset to the meaningful
 #' values detailed in the mapping included in the package.
 #' @param data dataset to be standardized.
+#' @param map mapping file to be used (included in medusa)
 #' @param current_var column name to be standardized.
 #' @importFrom dplyr %>%
 #' @return a dataset with labels renamed based in the mapping included in the package.
 #' @export
-rename_values_eu = function(data, current_var) {
-  exchange_data = mapping %>%                                                # brings together the two df (mapping and data)
+rename_values_eu = function(data, map = variables_h, current_var) {
+  exchange_data = map %>%                                                # brings together the two df (mapping and data)
     dplyr::filter(VAR_EN == current_var) %>%                                 # but only takes the part we are interested in (only when the value of the variable is equal to current_var).
     dplyr::select(value, NAME) %>%
     dplyr::distinct()
@@ -23,6 +24,7 @@ rename_values_eu = function(data, current_var) {
       dplyr::rename(value = {{ current_var }}) %>%                             # rename the column (variable name) to value
       dplyr::mutate(value = as.character(value)) %>%                           # convert to a character
       dplyr::left_join(exchange_data, by = "value") %>%                        # it keeps only the columns we are interested in (value and name).
+      dplyr::mutate(NAME = dplyr::if_else(is.na(NAME), value, NAME)) %>%
       dplyr::select(-value) %>%                                                # removes the value column
       dplyr::rename_with(~current_var, 'NAME')                                 # rename to current_var
   }
@@ -35,15 +37,15 @@ rename_values_eu = function(data, current_var) {
 #'
 #' Function to standarize data names.
 #' @param data dataset to be standardized.
-#' @param mapping mapping file to be used (included in medusa)
+#' @param map mapping file to be used (included in medusa)
 #' @importFrom dplyr %>%
 #' @return a dataset with the variables and labels renamed based in the mapping included in the package.
 #' @export
-standardize_eu <- function(data, mapping) {
+standardize_eu <- function(data, map = variables_h) {
   # rename columns
   old_names = colnames(data)                                                # creates a vector with the column names
   new_names = dplyr::left_join(data.frame(VAR_EPF = old_names),             # the vector of column names is converted to a df and the column name is VAR_EPF
-                               mapping %>%
+                               map %>%
                                  dplyr::select(VAR_EPF, VAR_EN) %>%         # within the mapping selects only the columns we are interested in
                                  dplyr::distinct(.),                        # duplicate remove
                                by = 'VAR_EPF') %>%                          # left join in function to var_epf
@@ -53,13 +55,13 @@ standardize_eu <- function(data, mapping) {
 
   # rename values' codes to values' names for all items whose name is in the
   # renamed mapping's column and have not NA values
-  ccitems = mapping %>%
-    dplyr::filter(VAR_EN %in% intersect(unique(mapping$VAR_EN), new_names),
+  ccitems = map %>%
+    dplyr::filter(VAR_EN %in% intersect(unique(map$VAR_EN), new_names),
                   !is.na(value)) %>%
     dplyr::pull(VAR_EN) %>%
     unique()
   for (cc in ccitems) {                                                     # for all columns where variables can be mapped we overwrite the standardised dataset (with rename_value function)
-    data = rename_values_eu(data, cc)
+    data = rename_values_eu(data = data, map = map, current_var = cc)
   }
 
   return(data)
@@ -274,7 +276,7 @@ database_hbs <- function(year, country = "all", inputs_path) {
   # Define country if "all"
   if ("all" %in% country) {
     # List all folders in inputs_path
-    available_folders <- list.dirs(inputs_path, recursive = FALSE, full.names = FALSE)
+    available_folders <- list.dirs(path = inputs_path, recursive = FALSE, full.names = FALSE)
 
     # Keep only those that match the available country codes
     country <- available_folders[available_folders %in% av_country$code]
@@ -297,7 +299,7 @@ database_hbs <- function(year, country = "all", inputs_path) {
     for (c in country) {
 
       # Define the file path
-      file_path <- paste0(inputs_path, c, "/hbs_", y, "_", c, ".RData")
+      file_path <- paste0(inputs_path,"/", c, "/hbs_", y, "_", c, ".RData")
 
       # Check if the file exists before loading
       if (file.exists(file_path)) {
@@ -435,8 +437,8 @@ database_hbs <- function(year, country = "all", inputs_path) {
                                                         "SI" =  "Slovenia"    ,
                                                         "SK" =  "Slovakia"    ))
 
-      # Standardize household dataset variables --> fix rename values
-      #hbs_h <- standardize_eu(hbs_h, variables_h)
+      # Standardize household dataset variables
+      hbs_h <- standardize_eu(hbs_h, map = variables_h)
 
       # Save the modified data frame back to the list
       hbs_yearly_data[[name]] <- hbs_h
@@ -446,9 +448,6 @@ database_hbs <- function(year, country = "all", inputs_path) {
   # Code to create a joint database for 2020 and m file
   if (year == 2020) {
 
-    # Define mapping file
-    mapping <- variables_m_2020
-
     # List to store the datasets for each country
     member_files <- list()
 
@@ -456,7 +455,7 @@ database_hbs <- function(year, country = "all", inputs_path) {
     for (c in country){
 
       # Define the file path
-      file_path <- paste0(inputs_path, c, "/hbs_", y, "_", c, ".RData")
+      file_path <- paste0(inputs_path, "/", c, "/hbs_", y, "_", c, ".RData")
 
       # Check if the file exists before loading
       if (file.exists(file_path)) {
@@ -468,13 +467,13 @@ database_hbs <- function(year, country = "all", inputs_path) {
         if (c == "SI") {
 
           data <- dplyr::mutate(data, MC02B_agg = base::ifelse(MC02B_Recoded_3Categ ==  2, "A2",
-                                                          base::ifelse(MC02B_Recoded_3Categ ==  3, "A3",
-                                                          base::ifelse(MC02B_Recoded_3Categ ==  5, "A5",
-                                                          base::ifelse(MC02B_Recoded_3Categ == 88, "A88", NA)))))
+                                                  base::ifelse(MC02B_Recoded_3Categ ==  3, "A3",
+                                                  base::ifelse(MC02B_Recoded_3Categ ==  5, "A5",
+                                                  base::ifelse(MC02B_Recoded_3Categ == 88, "A88", NA)))))
         }
 
         # Standardize each country dataset
-        hbs_m <- standardize_eu(data, mapping)
+        hbs_m <- standardize_eu(data = data, map = variables_m_2020)
 
         # Create relationship reference person based in the income variable for BE
         if (c == "BE") {
@@ -513,7 +512,7 @@ database_hbs <- function(year, country = "all", inputs_path) {
 
   }
 
-  # Include reference person data from m file to h file --> FIX
+  # Include reference person data from m file to h file
   if (year == 2020) {
 
     # Extract hbs_h and hbs_m
@@ -523,75 +522,50 @@ database_hbs <- function(year, country = "all", inputs_path) {
     # Subset m dataset: keep just data for the household reference person
     hbs_m <- subset(hbs_m, relationship == "Reference person")
 
-    # CAUTION: nrows in hbs_m is higher than nrows in EU_hbs_h -> fix before merging
-    # Check duplicates
-    # for (c in country) {
-    #   h <- hbs_h %>% subset(country == c)
-    #   m <- hbs_m %>% subset(country == c)
-    #
-    #   nrows_m <- as.numeric(dplyr::count(h))
-    #
-    #   n_h <- length(unique(h$number))
-    #   n_m <- length(unique(m$number))
-    #   nurows_m <- as.numeric(n_m)
-    #
-    #   if (n_h != n_m) {
-    #     print(paste0("n_h & n_m don´t match in ", c))
-    #   }
-    #
-    #   if (nrows_m != nurows_m) {
-    #     print(paste0("unique values don´t match nrows in ", c))
-    #   }
-    #
-    #   h_n <- h[,c("number", "country")]
-    #   m_n <- m[,c("number", "country")]
-    #
-    #   dup_h <- sum(duplicated(h_n))
-    #   dup_m <- as.numeric(sum(duplicated(m_n)))
-    #
-    #   if (dup_m > 0) {
-    #     print(paste0("duplicates in m in ", c))
-    #   }
-    #
-    #   dupp <- subset(hbs_m, country == c & relationship == "Reference person")
-    #
-    #   dupp <- dupp[dupp$number %in% dupp$number[duplicated(dupp$number)],]
-    #
-    # }
+    # Check and fix duplicates in hbs_m for each country
+    for (c in country) {
+      h <- hbs_h %>% dplyr::filter(country == c)
+      m <- hbs_m %>% dplyr::filter(country == c)
 
-    # In BE and SE there are several members with the same income, so they have
-    # several reference persons. We need to keep just one
+      # Identificar duplicados en miembros con relación Reference person
+      dupp <- m %>%
+        dplyr::filter(relationship == "Reference person") %>%
+        dplyr::group_by(number) %>%
+        dplyr::filter(dplyr::n() > 1) %>%
+        dplyr::ungroup()
 
-    # Load duplicated data for SE and BE and create a vector with duplicated ids
-    dup_SE <- read.csv(paste0(path,"/calculation/outputs/duplicate_SE.csv"), header = T)
-    dupp_SE <- as.character(unique(dup_SE$number))
-    dup_BE <- read.csv(paste0(path,"/calculation/outputs/duplicate_BE.csv"), header = T)
-    dupp_BE <- as.character(unique(dup_BE$number))
+      if (nrow(dupp) > 0) {
+        warning(paste0("Duplicate reference persons found in the members file (2020 wave) for ", c,
+                       ". Rows with more missing values have been removed."))
 
-    # Fix SE
-    # Keep duplicated data and revalue relationship to keep just 1 reference person per household
-    hbs_m2 <- hbs_m %>%
-      subset(country == "Sweden" & number %in% dupp_SE ) %>%
-      mutate(relationship = if_else(age == "Adult" & gender == "Woman", "Reference person", "Other"))
+        # Function to count "Not provided" and "Not applicable"
+        count_missing_custom <- function(row) {
+          row <- as.character(row)
+          sum(row == "Not provided") * 10 + sum(row == "Not applicable")
+        }
 
-    # Remove duplicated data from hbs_m
-    hbs_m <- hbs_m[-(which(hbs_m$country== "Sweden" & hbs_m$number %in% dupp_SE)),]
+        # Count missing score
+        dupp$missing_score <- apply(dupp, 1, count_missing_custom)
 
-    # Add corrected data to hbs_m
-    hbs_m <- rbind(hbs_m,hbs_m2)
+        # Remove duplicates with more missing score, keeping one row per 'number'
+        dupp_cleaned <- dupp %>%
+          dplyr::group_by(number) %>%
+          dplyr::arrange(missing_score) %>%
+          dplyr::slice(1) %>%
+          dplyr::ungroup() %>%
+          dplyr::select(-missing_score)
 
-    # Keep Reference person only for SE
-    hbs_m <- subset(b, relationship == "Reference person")
+        # Replace the original duplicates in m
+        m <- m %>%
+          dplyr::filter(!(number %in% dupp$number & relationship == "Reference person")) %>%
+          dplyr::bind_rows(dupp_cleaned)
 
-    # Fix BE
-    # Keep duplicated data and revalue relationship to keep just 1 reference person per household
-    hbs_m2 <- read.csv(paste0(path,"/calculation/outputs/clean_dup_BE.csv"), header = T)
-
-    # Remove duplicated data from hbs_m
-    hbs_m <- hbs_m[-(which(hbs_m$country== "Belgium" & hbs_m$number %in% dupp_BE)),]
-
-    # Add corrected data to hbs_m
-    hbs_m <- rbind(hbs_m,hbs_m2)
+        # Include the adjustment in hbs_m
+        hbs_m <- hbs_m %>%
+          dplyr::filter(country != c) %>%
+          dplyr::bind_rows(m)
+      }
+    }
 
     # Merge reference person data with household data
     hbs_h$year <- as.character(hbs_h$year)
@@ -604,9 +578,6 @@ database_hbs <- function(year, country = "all", inputs_path) {
   # Code to create a joint database for 2015 and m file
   if (year == 2015) {
 
-    # Define mapping file
-    mapping <- variables_m_2015
-
     # List to store the datasets for each country
     member_files2 <- list()
 
@@ -614,7 +585,7 @@ database_hbs <- function(year, country = "all", inputs_path) {
     for (c in country){
 
       # Define the file path
-      file_path <- paste0(inputs_path, c, "/hbs_", y, "_", c, ".RData")
+      file_path <- paste0(inputs_path, "/", c, "/hbs_", y, "_", c, ".RData")
 
       # Check if the file exists before loading
       if (file.exists(file_path)) {
@@ -632,7 +603,7 @@ database_hbs <- function(year, country = "all", inputs_path) {
         }
 
         # Standardize each country dataset
-        hbs_m <- standardize(data)
+        hbs_m <- standardize_eu(data = data, map = variables_m_2015)
 
         # Create relationship reference person based in the income variable for SE
         if (c == "SE") {
@@ -672,7 +643,7 @@ database_hbs <- function(year, country = "all", inputs_path) {
 
   }
 
-  # Include reference person data from m file to h file --> FIX
+  # Include reference person data from m file to h file
   if (year == 2015) {
 
     # Extract hbs_h and hbs_m
@@ -682,76 +653,50 @@ database_hbs <- function(year, country = "all", inputs_path) {
     # Subset m dataset: keep just data for the household reference person
     hbs_m <- subset(hbs_m, relationship == "Reference person")
 
-    # CAUTION: nrows in hbs_m is higher than nrows in EU_hbs_h -> fix before merging
-    # Check duplicates
-    # for (c in country) {
-    #   h <- hbs_h %>% subset(country == c)
-    #   m <- hbs_m %>% subset(country == c)
-    #
-    #   nrows_m <- as.numeric(dplyr::count(h))
-    #
-    #   n_h <- length(unique(h$number))
-    #   n_m <- length(unique(m$number))
-    #   nurows_m <- as.numeric(n_m)
-    #
-    #   if (n_h != n_m) {
-    #     print(paste0("n_h & n_m don´t match in ", c))
-    #   }
-    #
-    #   if (nrows_m != nurows_m) {
-    #     print(paste0("unique values don´t match nrows in ", c))
-    #   }
-    #
-    #   h_n <- h[,c("number", "country")]
-    #   m_n <- m[,c("number", "country")]
-    #
-    #   dup_h <- sum(duplicated(h_n))
-    #   dup_m <- as.numeric(sum(duplicated(m_n)))
-    #
-    #   if (dup_m > 0) {
-    #     print(paste0("duplicates in m in ", c))
-    #   }
-    #
-    #   dupp <- subset(hbs_m, country == c & relationship == "Reference person")
-    #
-    #   dupp <- dupp[dupp$number %in% dupp$number[duplicated(dupp$number)],]
-    #
-    # }
+    # Check and fix duplicates in hbs_m for each country
+    for (c in country) {
+      h <- hbs_h %>% dplyr::filter(country == c)
+      m <- hbs_m %>% dplyr::filter(country == c)
 
-    # In Sweden there are several members with the same income, so they have
-    # several reference persons. We need to keep just one
+      # Identificar duplicados en miembros con relación Reference person
+      dupp <- m %>%
+        dplyr::filter(relationship == "Reference person") %>%
+        dplyr::group_by(number) %>%
+        dplyr::filter(dplyr::n() > 1) %>%
+        dplyr::ungroup()
 
-    # FIX SWEDEN
-    # View Sweden data
-    h <- hbs_h %>% subset(country == "Sweden")
-    m <- hbs_m %>% subset(country == "Sweden")
+      if (nrow(dupp) > 0) {
+        warning(paste0("Duplicate reference persons found in the members file (2015 wave) for ", c,
+                       ". Rows with more missing values have been removed."))
 
-    # Calculate the share of women in Sweden in members file
-    # Include weight in m
-    m2 <- m %>%
-      left_join(h %>% select(number, weight), by = "number")
-    # Calculate the share of women
-    sps_swoman <- m2 %>%
-      group_by(country) %>%
-      summarise(women = sum(case_when(gender == "Woman" ~ weight, TRUE ~ 0)),
-                total = sum(weight),
-                s_woman = women / total)
+        # Function to count "Not provided" and "Not applicable"
+        count_missing_custom <- function(row) {
+          row <- as.character(row)
+          sum(row == "Not provided") * 10 + sum(row == "Not applicable")
+        }
 
-    # View duplicated rows
-    dupp <- subset(hbs_m, country == "Sweden" & relationship == "Reference person")
-    dupp <- dupp[dupp$number %in% dupp$number[duplicated(dupp$number)],]
+        # Count missing score
+        dupp$missing_score <- apply(dupp, 1, count_missing_custom)
 
-    # Remove duplicated data from hbs_m
-    hbs_m <- anti_join(hbs_m, dupp)
+        # Remove duplicates with more missing score, keeping one row per 'number'
+        dupp_cleaned <- dupp %>%
+          dplyr::group_by(number) %>%
+          dplyr::arrange(missing_score) %>%
+          dplyr::slice(1) %>%
+          dplyr::ungroup() %>%
+          dplyr::select(-missing_score)
 
-    # Number 7998 and 21202 the reference person is duplicated --> Keep first observation
-    # keep 1st row -> but man is automaticaly 1st
-    # dup <- dupp %>%
-    #   distinct(number, relationship, .keep_all = TRUE)
-    # keep 1 woman and 1 man
-    dup <- dupp[c(2, 3), ]
-    # Add corrected data to hbs_m
-    hbs_m <- rbind(hbs_m, dup)
+        # Replace the original duplicates in m
+        m <- m %>%
+          dplyr::filter(!(number %in% dupp$number & relationship == "Reference person")) %>%
+          dplyr::bind_rows(dupp_cleaned)
+
+        # Include the adjustment in hbs_m
+        hbs_m <- hbs_m %>%
+          dplyr::filter(country != c) %>%
+          dplyr::bind_rows(m)
+      }
+    }
 
     # Merge reference person data with household data
     hbs_h$year <- as.character(hbs_h$year)
@@ -763,3 +708,30 @@ database_hbs <- function(year, country = "all", inputs_path) {
 
   return(hbs_yearly_data)
 }
+
+
+#' coicop_mapping
+#'
+#' Function to rename coicop expenditure categories
+#' @param data dataframe with the hbs data to rename
+#' @param mapping_file mapping file to be used (included in medusa)
+#' @importFrom dplyr %>%
+#' @return data file with the renamed expenditure categories
+#' @export
+coicop_mapping <- function(data, mapping_file = mapping_coicop) {
+
+  # Assign mapping values to vectors
+  var_old <- base::assign("var_old", mapping_file$var_hbs)
+  var_new <- base::assign("var_new", mapping_file$var)
+
+  # Create the selected variables with the new names
+  for (v in 1:length(var_old)) {
+    new = eval(parse(text = paste0("var_new[", v, "]")))
+    var = eval(parse(text = paste0("var_old[", v, "]")))
+    eval(parse( text = paste0("data <- data %>%
+  dplyr::mutate(",var_new,"=", var_old,")")))
+  }
+
+  return(data)
+}
+

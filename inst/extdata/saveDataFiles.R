@@ -185,3 +185,7 @@ use_data(variables_m_2015, overwrite=T)
 # variables_m_2020
 variables_m_2020 = read.csv(paste0(rawDataFolder,"variables_m_2020.csv"),header=T)
 use_data(variables_m_2020, overwrite=T)
+
+# mapping_coicop
+mapping_coicop = read.csv(paste0(rawDataFolder,"mapping_coicop.csv"),header=T)
+use_data(mapping_coicop, overwrite=T)

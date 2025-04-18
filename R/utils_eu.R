@@ -710,6 +710,28 @@ database_hbs <- function(year, country = "all", inputs_path) {
 }
 
 
+#' rename_coicop
+#'
+#' Function to rename all coicop expenditure categories
+#' @param data dataframe with the hbs data to rename
+#' @importFrom dplyr %>%
+#' @return data file with the renamed expenditure categories
+#' @export
+rename_coicop <- function(data) {
+
+  # Get original names
+  original_names <- names(data)
+
+  # Identificar columnas que empiezan por "EUR_HE" seguido de uno o más dígitos
+  matching <- grep("^EUR_HE\\d+$", original_names)
+
+  # Renombrarlas sustituyendo "EUR_HE" por "CP"
+  names(data)[matching] <- gsub("^EUR_HE", "CP", original_names[matching])
+
+  return(data)
+}
+
+
 #' coicop_mapping
 #'
 #' Function to rename coicop expenditure categories

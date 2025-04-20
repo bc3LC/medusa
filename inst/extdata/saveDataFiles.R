@@ -189,3 +189,7 @@ use_data(variables_m_2020, overwrite=T)
 # mapping_coicop
 mapping_coicop = read.csv(paste0(rawDataFolder,"mapping_coicop.csv"),header=T)
 use_data(mapping_coicop, overwrite=T)
+
+# shocks_eu
+shocks_eu = read.csv(paste0(rawDataFolder,"shocks_eu.csv"),header=T)
+use_data(shocks_eu, overwrite=T)

@@ -233,7 +233,8 @@
 "graph_labels"
 
 
-
+#################################################################################
+# Data medusa EU
 
 #' File containing available countries and country codes
 #'
@@ -258,3 +259,9 @@
 #' @source medusa
 #' @format .csv
 "mapping_coicop"
+
+#' Example csv file in which the change in prices must be introduced to apply a price shock to EU microdata
+#'
+#' @source medusa
+#' @format .csv
+"shocks_eu"

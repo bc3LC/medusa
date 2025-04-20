@@ -856,9 +856,87 @@ update_year <- function(data, new_year){
 }
 
 
+#' price_shock_eu
+#'
+#' Function to apply a specific price shock to the different COICOP
+#' categories of the Household Budget Survey (HBS).
+#' @param data input data from the HBS to apply the price shocks.
+#' @param shocks a dataset with the price shocks per coicop to be applied.
+#' The format of the dataset has to correspond to the predefined one in the package.
+#' To save a csv file with the right format to enter the price shocks run `ex_shocks_eu()`.
+#' You can enter more scenarios by including more columns to the right (e.g. s3).
+#' A price shock greater than 1 indicates a price increase (e.g. 1.1 indicates a
+#' 10\% increase) and less than 1 indicates a price decrease (e.g. 0.9 indicates a
+#' 10\% decrease). The COICOP variables correspond to the aggregate variables of
+#' the package, if you are not going to aggregate the COICOP variables you have to
+#' replace the column labels by the COICOP variables that appear in your dataset.
+#' @importFrom dplyr %>%
+#' @return a dataset with the HBS data and the new expenses for COICOP categories
+#' after the application of the price shock.
+#' @export
+price_shock_eu <- function(data, shocks) {
 
+  # Obtener la lista de países (intersección entre columnas de shocks y valores en data$country)
+  countries <- unique(data$country)
+  common_countries <- intersect(countries, colnames(shocks))
 
+  # Identificar columnas COICOP (todas las que empiezan por CP y no son CP00)
+  coicop_cols <- grep("^CP\\d+", colnames(data), value = TRUE)
+  coicop_cols <- setdiff(coicop_cols, "CP00")
 
+  for (country in common_countries) {
 
+    # Filas del país actual
+    idx <- which(data$country == country)
 
+    for (col in coicop_cols) {
 
+      # Shock correspondiente para el código coicop y país
+      shock_val <- shocks[shocks$coicop == col, country]
+
+      # Aplicar solo si shock distinto de 1 y no es NA
+      if (length(shock_val) == 1 && !is.na(shock_val) && shock_val != 1) {
+
+        # Nombre nueva columna
+        new_col <- paste0(col, "_new")
+
+        # Si la columna nueva aún no existe, crearla como copia del original
+        if (!(new_col %in% colnames(data))) {
+          data[[new_col]] <- data[[col]]
+        }
+
+        # Aplicar solo si shock distinto de 1 y no es NA
+        if (length(shock_val) == 1 && !is.na(shock_val) && shock_val != 1) {
+          data[idx, new_col] <- data[idx, col] * shock_val
+        }
+      }
+    }
+
+    # Calcular la nueva CP00 como original + diferencia con columnas modificadas
+    diff_cols <- grep("_new$", names(data), value = TRUE)
+    orig_cols <- gsub("_new$", "", diff_cols)
+
+    if (length(diff_cols) == 1) {
+      # Si solo hay una columna afectada
+      diff_val <- data[idx, diff_cols] - data[idx, orig_cols]
+    } else {
+      # Si hay más de una, tratamos como data.frame
+      diff_val <- data[idx, diff_cols] - data[idx, orig_cols]
+    }
+
+    # Asegurarse de que diff_val tenga dimensión de matriz
+    if (is.null(dim(diff_val))) {
+      diff_val <- matrix(diff_val, ncol = 1)
+    }
+
+    # Asegurar que CP00_new existe
+    if (!"CP00_new" %in% colnames(data)) {
+      data$CP00_new <- data$CP00
+    }
+
+    # Calcular nueva CP00
+    data$CP00_new[idx] <- data$CP00[idx] + rowSums(diff_val, na.rm = TRUE)
+  }
+
+  return(data)
+}

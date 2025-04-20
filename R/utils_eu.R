@@ -757,3 +757,108 @@ coicop_mapping <- function(data, mapping_file = mapping_coicop) {
   return(data)
 }
 
+
+#' upscale_year
+#'
+#' Function to rename coicop expenditure categories
+#' @param data dataframe with the hbs data to rename
+#' @param mapping_file mapping file to be used (included in medusa)
+#' @importFrom dplyr %>%
+#' @return data file with the renamed expenditure categories
+#' @export
+upscale_year <- function(data, new_year){
+
+  # Define countries
+  country <- unique(data$country)
+
+  # Define data year
+  base_year <- unique(data$year.x)
+
+  # Loop to upscale each country expenses
+  for (c in country) {
+
+    # Calculate adjustment coefficient if base year = 2015
+    if (base_year == 2015) {
+
+       # Get eurostat data: Harmonised index of consumer price (HICP)
+      prc <- restatapi::get_eurostat_data("prc_hicp_aind",
+                                          filters = c("INX_A_AVG", c),
+                                          date_filter = new_year )
+
+      # Calculate adjustment coefficient
+      prc <- prc %>%
+        dplyr::mutate(prc    = values/100)
+
+    } else if (base_year == 2020 & new_year < 2020 & new_year > 2015 ) {
+
+      # Define years
+      years <- c(base_year, new_year)
+
+      # Get eurostat data: Harmonised index of consumer price (HICP)
+      prc <- restatapi::get_eurostat_data("prc_hicp_aind",
+                                          filters = c("INX_A_AVG", c),
+                                          date_filter = years )
+
+      # Calculate adjustment coefficient if base year == 2020 & 2015 < new year > 2020
+      prc <- prc %>%
+        reshape2::dcast(coicop ~ time, value.var = "values") %>%
+        dplyr::rename(exp_2019 = "2019",
+               exp_2020 = "2020") %>%
+        dplyr::mutate(prc = 1+((exp_2019-exp_2020)/100))
+
+    }
+
+    # Inicializar dataframe resultante
+    data_updated <- data
+
+    # Filtrar solo las filas del país actual
+    idx <- which(data$country == c)
+
+    # Obtener columnas que corresponden a códigos COICOP
+    coicop_cols <- grep("^CP\\d+", names(data), value = TRUE)
+
+    for (col in coicop_cols) {
+      coicop_code <- col
+      coef <- NA
+
+      # Buscar el coeficiente más específico disponible
+      while (nchar(coicop_code) >= 2 && is.na(coef)) {
+        if (coicop_code %in% prc$coicop) {
+          coef <- prc$prc[prc$coicop == coicop_code]
+        } else {
+          coicop_code <- substr(coicop_code, 1, nchar(coicop_code) - 1)
+          if (coicop_code %in% prc$coicop) {
+          coef <- prc$prc[prc$coicop == coicop_code]
+          } else {
+            coicop_code <- substr(coicop_code, 1, nchar(coicop_code) - 1)
+            if (coicop_code %in% prc$coicop) {
+              coef <- prc$prc[prc$coicop == coicop_code]
+            } else {
+              coicop_code <- substr(coicop_code, 1, nchar(coicop_code) - 1)
+              if (coicop_code %in% prc$coicop) {
+                coef <- prc$prc[prc$coicop == coicop_code]
+              } else {
+                coef <- prc$prc[prc$coicop == "CP00"]
+              }
+            }
+          }
+        }
+      }
+
+      # Aplicar el coeficiente si se ha encontrado uno válido
+      if (!is.na(coef)) {
+        data_updated[idx, col] <- data_updated[idx, col] * coef
+      }
+    }
+  }
+
+  return(data_updated)
+}
+
+
+
+
+
+
+
+

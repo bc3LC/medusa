@@ -193,3 +193,11 @@ use_data(mapping_coicop, overwrite=T)
 # shocks_eu
 shocks_eu = read.csv(paste0(rawDataFolder,"shocks_eu.csv"),header=T)
 use_data(shocks_eu, overwrite=T)
+
+# shocks_eu_s
+shocks_eu_s = read.csv(paste0(rawDataFolder,"shocks_eu_s.csv"),header=T)
+use_data(shocks_eu_s, overwrite=T)
+
+# graph_labels
+graph_labels_eu = read.csv(paste0(rawDataFolder,"graph_labels_eu.csv"),header=T)
+use_data(graph_labels_eu, overwrite=T)

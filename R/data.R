@@ -265,3 +265,15 @@
 #' @source medusa
 #' @format .csv
 "shocks_eu"
+
+#' Example csv file in which the change in prices must be introduced to apply multiple scenarios and price shocks to EU microdata
+#'
+#' @source medusa
+#' @format .csv
+"shocks_eu_s"
+
+#' List of available variables for EU countries and long names for the socioeconomic and demographic categories to introduce them on the axes of the graphs
+#'
+#' @source medusa
+#' @format .csv
+"graph_labels_eu"

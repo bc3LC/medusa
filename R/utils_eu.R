@@ -864,12 +864,9 @@ update_year <- function(data, new_year){
 #' @param shocks a dataset with the price shocks per coicop to be applied.
 #' The format of the dataset has to correspond to the predefined one in the package.
 #' To save a csv file with the right format to enter the price shocks run `ex_shocks_eu()`.
-#' You can enter more scenarios by including more columns to the right (e.g. s3).
 #' A price shock greater than 1 indicates a price increase (e.g. 1.1 indicates a
 #' 10\% increase) and less than 1 indicates a price decrease (e.g. 0.9 indicates a
-#' 10\% decrease). The COICOP variables correspond to the aggregate variables of
-#' the package, if you are not going to aggregate the COICOP variables you have to
-#' replace the column labels by the COICOP variables that appear in your dataset.
+#' 10\% decrease).
 #' @importFrom dplyr %>%
 #' @return a dataset with the HBS data and the new expenses for COICOP categories
 #' after the application of the price shock.
@@ -940,3 +937,69 @@ price_shock_eu <- function(data, shocks) {
 
   return(data)
 }
+
+
+### PRUEBA VARIOS ESCENARIOS
+price_shock_eu <- function(data, shocks) {
+
+  # Extraer países presentes en los datos
+  countries <- unique(data$country)
+
+  # Extraer nombres de escenarios (columnas en shocks que contienen "_")
+  scenario_cols <- setdiff(colnames(shocks), "coicop")
+  scenarios <- unique(gsub(".*_", "", scenario_cols))  # s1, s2, etc.
+
+  # Columnas COICOP en data
+  coicop_cols <- grep("^CP\\d+", colnames(data), value = TRUE)
+  coicop_cols <- setdiff(coicop_cols, "CP00")
+
+  for (scenario in scenarios) {
+    for (country in countries) {
+
+      col_name <- paste0(country, "_", scenario)
+      if (!(col_name %in% colnames(shocks))) next  # Saltar si ese país no tiene escenario
+
+      idx <- which(data$country == country)
+
+      for (col in coicop_cols) {
+        # Buscar valor del shock
+        shock_val <- shocks[shocks$coicop == col, col_name]
+
+        # Si existe shock válido y distinto de 1
+        if (length(shock_val) == 1 && !is.na(shock_val) && shock_val != 1) {
+          new_col <- paste0(col, "_", scenario)
+
+          if (!(new_col %in% colnames(data))) {
+            data[[new_col]] <- data[[col]]
+          }
+
+          data[idx, new_col] <- data[idx, col] * shock_val
+        }
+      }
+
+      # Calcular nueva CP00 (total)
+      diff_cols <- grep(paste0("_", scenario, "$"), names(data), value = TRUE)
+      orig_cols <- gsub(paste0("_", scenario, "$"), "", diff_cols)
+
+      if (length(diff_cols) == 1) {
+        diff_val <- data[idx, diff_cols] - data[idx, orig_cols]
+      } else {
+        diff_val <- data[idx, diff_cols] - data[idx, orig_cols]
+      }
+
+      if (is.null(dim(diff_val))) {
+        diff_val <- matrix(diff_val, ncol = 1)
+      }
+
+      cp00_new <- paste0("CP00_", scenario)
+      if (!(cp00_new %in% colnames(data))) {
+        data[[cp00_new]] <- data$CP00
+      }
+
+      data[[cp00_new]][idx] <- data$CP00[idx] + rowSums(diff_val, na.rm = TRUE)
+    }
+  }
+
+  return(data)
+}
+

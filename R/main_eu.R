@@ -23,5 +23,14 @@ ex_shocks_eu <- function(){
 }
 
 
-
+#' available_var_impact_eu
+#'
+#' Function that returns the variables for which the calculation of
+#' basic distributional impacts is available for EU countries.
+#' @return variables for which the calculation of basic distributional impacts is available
+#' @export
+available_var_impact_eu <- function(){
+  av_var_impact <- graph_labels_eu$VARIABLE
+  print(av_var_impact)
+}
 

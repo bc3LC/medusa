@@ -758,15 +758,15 @@ coicop_mapping <- function(data, mapping_file = mapping_coicop) {
 }
 
 
-#' upscale_year
+#' update_year
 #'
-#' Function to rename coicop expenditure categories
-#' @param data dataframe with the hbs data to rename
-#' @param mapping_file mapping file to be used (included in medusa)
+#' Function to update the expenditure data of the HBS
+#' @param data dataframe with the hbs data to update
+#' @param new_year year to which you want to update the microdata
 #' @importFrom dplyr %>%
-#' @return data file with the renamed expenditure categories
+#' @return data file with the updated expenditure data
 #' @export
-upscale_year <- function(data, new_year){
+update_year <- function(data, new_year){
 
   # Define countries
   country <- unique(data$country)

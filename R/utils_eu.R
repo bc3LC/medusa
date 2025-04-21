@@ -935,6 +935,145 @@ price_shock_eu <- function(data, shocks) {
 }
 
 
+#' order_var_eu
+#'
+#' Function to order the labels of the socioeconomic and demographic variables
+#' @param data dataset in which we want to order the labels of the socioeconomic and demographic variables
+#' @param g variable for which we want to sort the labels
+#' @importFrom dplyr %>%
+#' @return a dataset in which the labels are ordered for the selected socioeconomic or demographic variable
+#' @export
+order_var_eu <- function(data, g){
+  if (g == "children"){
+    data <- data %>%
+      dplyr::mutate(LABELS = factor(LABELS, levels = c("No children", "With children", "Large family")))
+  } else if (g == "birth_country") {
+    data <- data %>%
+      dplyr::mutate(LABELS = factor(LABELS, levels = c("National", "EU", "Non-EU", "Non-national")))
+  } else if (g == "education") {
+    data <- data %>%
+      dplyr::mutate(LABELS = factor(LABELS, levels = c("Early childhood education", "Primary education", "Secondary education", "Post-secondary education",  "Tertiary education", "Higher education")))
+  } else if (g == "contract_type") {
+    data <- data %>%
+      dplyr::mutate(LABELS = factor(LABELS, levels = c("Permanent contract", "Fixed-term contract", "Not applicable")))
+  } else if (g == "activity") {
+    data <- data %>%
+      dplyr::mutate(LABELS = factor(LABELS, levels = c("Employed", "Unemployed", "Retired", "Student", "Domestic tasks", "Disabled", "Military service")))
+  } else if (g == "age") {
+    data <- data %>%
+      dplyr::mutate(LABELS = factor(LABELS, levels = c("Young", "Adult", "Elder")))
+  } else if (g == "employment_sector") {
+    data <- data %>%
+      dplyr::mutate(LABELS = factor(LABELS, levels = c("Private sector", "Public sector")))
+  } else if (g == "household_type") {
+    data <- data %>%
+      dplyr::mutate(LABELS = factor(LABELS, levels = c("Adult alone", "Couple", "Couple with children", "More than 2 adults", "More than 2 adults with children", "Single parent"  )))
+  } else if (g == "income_source") {
+    data <- data %>%
+      dplyr::mutate(LABELS = factor(LABELS, levels = c( "Wages", "Self-employment", "Property", "Pensions", "Unemployment")))
+  }
+  return(data)
+}
+
+#' basic_graph_eu
+#'
+#' Function to create a basic graph to summarize the distributional impact in the EU
+#' based in one or more socioeconomic or demographic variable (one plot per variable).
+#' @param data a dataset with the input data needed to generate a basic graph.
+#' @param var variable(s) according to which you want to generate the graph. If
+#' graph_labels_eu$VARIABLE (by default) creates a graph with the distributional
+#' impacts for each of the variables specified in the package. If not, you can
+#' indicate a variable or a vector of variables to crate the graph.If you want to
+#' see the variables for which the function is available run `available_var_impact_eu()`.
+#' @importFrom dplyr %>%
+#' @return a graph per selected variable/s summarizing distributional impacts.
+#' @export
+basic_graph_eu <- function(data, var = graph_labels_eu$VARIABLE) {
+  if (!dir.exists("figures")) dir.create("figures")
+
+  # Si es una lista de dataframes (como en el output original de impact_eu)
+  if (is.list(data) && !is.data.frame(data)) {
+    for (g in var) {
+      df <- data[[paste0("di_", g)]]
+
+      if (is.null(df)) next
+
+      source_tag <- unique(df$SOURCE)
+      folder <- ifelse(length(source_tag) == 1 && source_tag %in% c("EU"), "EU", source_tag)
+
+      folder_path <- file.path("figures", folder)
+      if (!dir.exists(folder_path)) dir.create(folder_path)
+
+      datapl <- df %>%
+        tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
+        dplyr::mutate(
+          Scenario = stringr::str_replace(Scenario, "^DI_", ""),
+          LABELS = as.character(LABELS)
+        ) %>%
+        dplyr::filter(!LABELS %in% c("Not provided", "NA", "Others", "Other", "Not applicable")) %>%
+        order_var_eu(., g) %>%
+        dplyr::filter(!is.na(LABELS)) %>%
+        droplevels()
+
+      # Ordenar LABELS para "country" por valor de impacto en cada escenario
+      if (g == "country") {
+        datapl <- datapl %>%
+          dplyr::group_by(Scenario) %>%
+          dplyr::mutate(LABELS = factor(LABELS, levels = LABELS[order(Impact)])) %>%
+          dplyr::ungroup()
+      }
+
+      if (g %in% c("decile", "decile_eu", "ventile", "ventile_eu", "percentile", "percentile_eu")) {
+        datapl <- datapl %>% dplyr::mutate(LABELS = as.numeric(LABELS))
+      }
+
+      clean_g <- graph_labels_eu %>%
+        dplyr::filter(VARIABLE == g) %>%
+        dplyr::pull(VAR_CLEAN)
+
+      pl <- ggplot2::ggplot(datapl,
+                            ggplot2::aes(x = LABELS, y = Impact, fill = Scenario)) +
+        ggplot2::geom_col(position = ggplot2::position_dodge(width = 1)) +
+        ggplot2::facet_grid(. ~ Scenario) +
+        ggplot2::scale_fill_manual(values = c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7")) +
+        ggplot2::labs(y = "Change in welfare (%)", x = clean_g) +
+        ggplot2::theme(legend.position = "none") +
+        ggplot2::theme(text = ggplot2::element_text(size = 16))
+
+      if (g %in% c("decile", "decile_eu")) {
+        pl <- pl + ggplot2::scale_x_continuous(breaks = 1:10, labels = 1:10)
+      }
+
+      if (g %in% c("ventile", "ventile_eu")) {
+        pl <- pl + ggplot2::scale_x_continuous(breaks = seq(0, 100, by = 2))
+      }
+
+      if (g %in% c("percentile", "percentile_eu")) {
+        pl <- pl + ggplot2::scale_x_continuous(breaks = seq(0, 100, by = 10))
+      }
+
+      if (g %in% c("country", "zone", "household_type", "children", "income_source", "COUNTRYRP", "activity", "education")) {
+        pl <- pl + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.25))
+      }
+
+      adj_wh <- adjust_wh(datapl, var_w = "Scenario", var_h = NULL)
+
+      # Aumenta anchura si g == "country"
+      if (g == "country") {
+        adj_wh$width <- adj_wh$width + 50  # Puedes ajustar el valor (p.ej., +70 si aún es pequeño)
+      }
+
+      ggplot2::ggsave(pl,
+                      file = file.path(folder_path, paste0("DI_", g, ".png")),
+                      width = adj_wh$width,
+                      height = adj_wh$heigth,
+                      units = "mm")
+    }
+  } else {
+    warning("The `data` object must be a list of data frames as returned by `impact_eu().")
+  }
+}
+
 #' impact_eu
 #'
 #' Function to calculate the distributional impacts based in one or more

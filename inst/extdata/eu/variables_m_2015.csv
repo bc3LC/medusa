@@ -32,6 +32,7 @@ MB01,birth_country,10,National,country of birth,m
 MB01,birth_country,21,EU,country of birth,m
 MB01,birth_country,22,Non-EU,country of birth,m
 MB01,birth_country,99,Not provided,country of birth,m
+MB01,birth_country,21_22,Non-national,country of birth,m
 MB02,gender,1,Man,gender,m
 MB02,gender,2,Woman,gender,m
 MB02,gender,9,Not provided,gender,m
@@ -46,12 +47,16 @@ MC01,education,0,Early childhood education,education,m
 MC01,education,1,Primary education,education,m
 MC01,education,2,Secondary education,education,m
 MC01,education,3,Secondary education,education,m
-MC01,education,4,Port-secondary education,education: non tertiary,m
+MC01,education,4,Post-secondary education,education: non tertiary,m
 MC01,education,5,Tertiary education,education: short cycle,m
 MC01,education,6,Higher education,education: bachelor,m
 MC01,education,7,Higher education,education: master,m
 MC01,education,8,Higher education,education: doctorate,m
 MC01,education,9,Not provided,education,m
+MC01,education,A2,Primary education,education,m
+MC01,education,A3,Secondary education,education,m
+MC01,education,A5,Tertiary education,education: short cycle,m
+MC01,education,A9,Not provided,education,m
 ME01,activity,1,Employed,main activity status,m
 ME01,activity,2,Unemployed,main activity status,m
 ME01,activity,3,Retired,main activity status,m
@@ -61,6 +66,7 @@ ME01,activity,6,Disabled,main activity status,m
 ME01,activity,7,Military service,main activity status,m
 ME01,activity,8,Not applicable,main activity status,m
 ME01,activity,9,Not provided,main activity status,m
+ME01,activity,3_7,Others,main activity status,m
 ME02,workday,1,Full time,main job: full or part time,m
 ME02,workday,2,Part time,main job: full or part time,m
 ME02,workday,8,Not applicable,main job: full or part time,m

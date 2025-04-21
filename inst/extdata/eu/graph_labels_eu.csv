@@ -13,7 +13,7 @@ household_type,Type of household,
 income_source,Main income source,
 POVERTY,Poverty status,to be included
 gender,Gender of the reference person,
-feminization_degree,Degree of feminisation of the household,
+feminization_degree,Degree of feminization of the household,
 age,Age of the reference person,
 birth_country,Country of birth of the reference person,
 education,Studies completed by the reference person,

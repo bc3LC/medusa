@@ -873,75 +873,6 @@ update_year <- function(data, new_year){
 #' @export
 price_shock_eu <- function(data, shocks) {
 
-  # Obtener la lista de países (intersección entre columnas de shocks y valores en data$country)
-  countries <- unique(data$country)
-  common_countries <- intersect(countries, colnames(shocks))
-
-  # Identificar columnas COICOP (todas las que empiezan por CP y no son CP00)
-  coicop_cols <- grep("^CP\\d+", colnames(data), value = TRUE)
-  coicop_cols <- setdiff(coicop_cols, "CP00")
-
-  for (country in common_countries) {
-
-    # Filas del país actual
-    idx <- which(data$country == country)
-
-    for (col in coicop_cols) {
-
-      # Shock correspondiente para el código coicop y país
-      shock_val <- shocks[shocks$coicop == col, country]
-
-      # Aplicar solo si shock distinto de 1 y no es NA
-      if (length(shock_val) == 1 && !is.na(shock_val) && shock_val != 1) {
-
-        # Nombre nueva columna
-        new_col <- paste0(col, "_new")
-
-        # Si la columna nueva aún no existe, crearla como copia del original
-        if (!(new_col %in% colnames(data))) {
-          data[[new_col]] <- data[[col]]
-        }
-
-        # Aplicar solo si shock distinto de 1 y no es NA
-        if (length(shock_val) == 1 && !is.na(shock_val) && shock_val != 1) {
-          data[idx, new_col] <- data[idx, col] * shock_val
-        }
-      }
-    }
-
-    # Calcular la nueva CP00 como original + diferencia con columnas modificadas
-    diff_cols <- grep("_new$", names(data), value = TRUE)
-    orig_cols <- gsub("_new$", "", diff_cols)
-
-    if (length(diff_cols) == 1) {
-      # Si solo hay una columna afectada
-      diff_val <- data[idx, diff_cols] - data[idx, orig_cols]
-    } else {
-      # Si hay más de una, tratamos como data.frame
-      diff_val <- data[idx, diff_cols] - data[idx, orig_cols]
-    }
-
-    # Asegurarse de que diff_val tenga dimensión de matriz
-    if (is.null(dim(diff_val))) {
-      diff_val <- matrix(diff_val, ncol = 1)
-    }
-
-    # Asegurar que CP00_new existe
-    if (!"CP00_new" %in% colnames(data)) {
-      data$CP00_new <- data$CP00
-    }
-
-    # Calcular nueva CP00
-    data$CP00_new[idx] <- data$CP00[idx] + rowSums(diff_val, na.rm = TRUE)
-  }
-
-  return(data)
-}
-
-
-### PRUEBA VARIOS ESCENARIOS
-price_shock_eu <- function(data, shocks) {
-
   # Extraer países presentes en los datos
   countries <- unique(data$country)
 
@@ -1002,4 +933,134 @@ price_shock_eu <- function(data, shocks) {
 
   return(data)
 }
+
+
+#' impact_eu
+#'
+#' Function to calculate the distributional impacts based in one or more
+#' socioeconomic or demographic variables (one impact per variable) for EU countries.
+#' @param data a dataset with the input data needed to calculate distributional
+#' impacts. The dataset should contain both the household expenditures collected
+#' in the HBS and the expenditures after applying the price shock.
+#' @param var variable(s) according to which you want to calculate distributional
+#' impacts. If categories$categories (by default) calculates the distributional
+#' impacts for each of the variables specified in the package. If not, you can
+#' indicate a variable or a vector of variables to calculate distributional impacts.
+#' If you want to see the variables for which the calculation is available run `available_var_impact()`.
+#' @param by_country If TRUE (by default) in addition to calculating the general distributional impacts
+#' for all the households (EU level), it also calculates the distributional impacts for
+#' each  country (and for each specified variables).
+#' @param save If TRUE (by default) saves a list of the generated datasets (.RData)
+#' summarising the distributional impacts per selected variable. If FALSE do not save.
+#' @param file_name name of the file to save the results, if save TRUE. By default "D_impacts".
+#' @param fig generates and saves a graph that summarises the distributional impacts.
+#' By default it is TRUE, for the graph/s not to be generated and saved indicate FALSE.
+#' @param shocks_scenario_names vector of the names of the considered scenario shocks
+#' @importFrom dplyr %>%
+#' @return a list containing the generated datasets (.RData) summarising the
+#' distributional impacts per selected variable.
+#' @export
+impact_eu <- function(data, var = graph_labels_eu$VARIABLE, by_country = TRUE, save = TRUE,
+                      file_name = "D_impacts", fig = TRUE, shocks_scenario_names) {
+
+  d_impacts <- list()
+  missing_vars <- c()
+
+  # 1. Calcular impacto distributivo por hogar
+  for (s in shocks_scenario_names) {
+    new_col <- paste0("CP00_", s)
+    impact_col <- paste0("impact_", s)
+
+    if (new_col %in% names(data)) {
+      data[[impact_col]] <- 100 * (data$CP00 - data[[new_col]]) / data$CP00
+    } else {
+      warning(paste(new_col, "not found in the dataset."))
+    }
+  }
+
+  # Asegurarse de que los pesos son numéricos
+  data$weight <- as.numeric(data$weight)
+
+  results_list <- list()
+
+  # 2. Impactos generales (UE)
+  for (g in var) {
+    if (g %in% colnames(data)) {
+      impact_cols <- grep("^impact_", names(data), value = TRUE)
+
+      df <- data %>%
+        dplyr::group_by(.data[[g]]) %>%
+        dplyr::summarise(
+          VARIABLE = g,
+          WEIGHT = sum(weight, na.rm = TRUE),
+          across(all_of(impact_cols), ~ weighted.mean(., w = weight, na.rm = TRUE), .names = "DI_{.col}")
+        ) %>%
+        dplyr::rename_with(~ gsub("^DI_impact_", "DI_", .), dplyr::starts_with("DI_impact_")) %>%
+        dplyr::rename(LABELS = 1) %>%
+        dplyr::mutate(LABELS = as.character(LABELS), SOURCE = "EU")
+
+      d_impacts[[paste0("di_", g)]] <- df
+      results_list[[paste0("EU_", g)]] <- df
+    } else {
+      missing_vars <- c(missing_vars, g)
+      warning(paste0(g, " is not present in the dataset"))
+    }
+  }
+
+  # 3. Guardar resultados generales
+  if (save == TRUE) {
+    if (!dir.exists("outputs_di")) dir.create("outputs_di")
+    save(d_impacts, file = paste0("outputs_di/", file_name, ".RData"))
+  }
+
+  if (fig == TRUE) {
+    var <- setdiff(var, missing_vars)
+    basic_graph_eu(data = d_impacts, var = var)
+  }
+
+  # 4. Impactos por país
+  if (by_country) {
+    countries <- unique(data$country)
+
+    for (c in countries) {
+      data_c <- data[data$country == c, ]
+      d_impacts_country <- list()
+
+      for (g in var) {
+        if (g %in% colnames(data_c)) {
+          impact_cols <- grep("^impact_", names(data_c), value = TRUE)
+
+          df <- data_c %>%
+            dplyr::group_by(.data[[g]]) %>%
+            dplyr::summarise(
+              VARIABLE = g,
+              WEIGHT = sum(weight, na.rm = TRUE),
+              across(all_of(impact_cols), ~ weighted.mean(., w = weight, na.rm = TRUE), .names = "DI_{.col}")
+            ) %>%
+            dplyr::rename_with(~ gsub("^DI_impact_", "DI_", .), dplyr::starts_with("DI_impact_")) %>%
+            dplyr::rename(LABELS = 1) %>%
+            dplyr::mutate(LABELS = as.character(LABELS), SOURCE = c)
+
+          d_impacts_country[[paste0("di_", g)]] <- df
+          results_list[[paste0(c, "_", g)]] <- df
+        }
+      }
+
+      if (save) {
+        save(d_impacts_country, file = paste0("outputs_di/", file_name, "_", c, ".RData"))
+      }
+
+      # if (fig) {
+      #   var_country <- setdiff(var, missing_vars)
+      #   basic_graph_eu(data = d_impacts_country, var = var_country)
+      # }
+    }
+  }
+
+  # 5. Devolver resultados combinados en un solo data.frame
+  combined_df <- dplyr::bind_rows(results_list, .id = "ID")
+  return(combined_df)
+}
+
+
 

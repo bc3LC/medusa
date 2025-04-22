@@ -34,3 +34,15 @@ available_var_impact_eu <- function(){
   print(av_var_impact)
 }
 
+
+#' available_var_intersec_eu
+#'
+#' Function that returns the set of variables for which the calculation
+#' of intersectional distributional impacts is available for EU countries.
+#' @return set of variables for which the calculation of intersectional
+#' distributional impacts is available for EU countries
+#' @export
+available_var_intersec <- function(){
+  av_var_intersec <- is_categories_eu
+  print(av_var_intersec)
+}

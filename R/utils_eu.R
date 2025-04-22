@@ -1061,7 +1061,7 @@ basic_graph_eu <- function(data, var = graph_labels_eu$VARIABLE) {
 
       # Aumenta anchura si g == "country"
       if (g == "country") {
-        adj_wh$width <- adj_wh$width + 50  # Puedes ajustar el valor (p.ej., +70 si aún es pequeño)
+        adj_wh$width <- adj_wh$width + 50
       }
 
       ggplot2::ggsave(pl,
@@ -1203,6 +1203,137 @@ impact_eu <- function(data, var = graph_labels_eu$VARIABLE, by_country = TRUE, s
   return(combined_df)
 }
 
+
+#' order_vars_eu
+#'
+#' Function to order the labels of the socioeconomic and demographic variables in intersectional graphs.
+#' @param data dataset in which we want to order the labels of the socioeconomic and demographic variables
+#' @param g variable for which we want to sort the labels
+#' @importFrom dplyr %>%
+#' @return a dataset in which the labels are ordered for the selected socioeconomic or demographic variable
+#' @export
+order_vars_eu <- function(data, var_col, col_name = "LABELS") {
+  levels_list <- list(
+    children = c("No children", "With children", "Large family"),
+    birth_country = c("National", "EU", "Non-EU", "Non-national"),
+    education = c("Early childhood education", "Primary education", "Secondary education",
+                  "Post-secondary education", "Tertiary education", "Higher education"),
+    contract_type = c("Permanent contract", "Fixed-term contract", "Not applicable"),
+    activity = c("Employed", "Unemployed", "Retired", "Student", "Domestic tasks", "Disabled", "Military service"),
+    age = c("Young", "Adult", "Elder"),
+    employment_sector = c("Private sector", "Public sector"),
+    household_type = c("Adult alone", "Couple", "Couple with children", "More than 2 adults",
+                       "More than 2 adults with children", "Single parent"),
+    income_source = c("Wages", "Self-employment", "Property", "Pensions", "Unemployment")
+  )
+
+  if (var_col %in% names(levels_list)) {
+    lvls <- levels_list[[var_col]]
+    data[[col_name]] <- factor(data[[col_name]], levels = lvls)
+  }
+
+  return(data)
+}
+
+
+#' intersectional_graph_eu
+#'
+#' Function to create an intersectional graph to summarize the distributional
+#' impact based in the intersection of two socioeconomic or demographic variables
+#' (2 variables per plot) for EU countries.
+#' @param data a dataset with the input data needed to generate the intersectional graph.
+#' @param pairs set of variables (2) according to which you want to create the
+#' intersectional graph. If is_categories (by default), it generates the intersectional
+#' graph for each of the combinations of variables specified in the package. If not,
+#' you can indicate the set of variables according to which you want to generste the
+#' intersectional graph. If you wish to see the set of variables for which the
+#' calculation is available, run `available_var_intersec_eu()`. To enter a set of
+#' variables for the calculation, it must follow the same format as the output of
+#' `available_var_intersec_eu()`, i.e. a table whose columns have category_a and
+#' category_b as their titles.
+#' @importFrom dplyr %>%
+#' @return a graph per selected set of variables summarizing the distributional impacts.
+#' @export
+intersectional_graph_eu <- function(data, pairs = is_categories_eu) {
+  if (!dir.exists("figures")) dir.create("figures")
+
+  for (r in 1:nrow(pairs)) {
+    var_a <- pairs$category_a[r]
+    var_b <- pairs$category_b[r]
+    df <- data[[paste0("di_", var_a, "_", var_b)]]
+    if (is.null(df)) next
+
+    source_tag <- unique(df$SOURCE)
+    folder <- ifelse(length(source_tag) == 1 && source_tag %in% c("EU"), "EU", source_tag)
+    folder_path <- file.path("figures", folder)
+    if (!dir.exists(folder_path)) dir.create(folder_path)
+
+    datapl <- df %>%
+      tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
+      dplyr::mutate(
+        Scenario = stringr::str_replace(Scenario, "^DI_", ""),
+        LABELS_A = as.character(LABELS_A),
+        LABELS_B = as.character(LABELS_B)
+      )
+
+    # Ordenar
+    datapl <- order_vars_eu(datapl, var_a, "LABELS_A")
+    datapl <- order_vars_eu(datapl, var_b, "LABELS_B")
+
+    datapl <- datapl %>%
+      dplyr::filter(
+        !LABELS_A %in% c("Not provided", "Others", "Other", "Not applicable"),
+        !LABELS_B %in% c("Not provided", "Others", "Other", "Not applicable")
+      ) %>%
+      dplyr::filter(!is.na(LABELS_A) & LABELS_A != "NA") %>%
+      dplyr::filter(!is.na(LABELS_B) & LABELS_B != "NA") %>%
+      droplevels()
+
+    clean_a <- graph_labels_eu %>% dplyr::filter(VARIABLE == var_a) %>% dplyr::pull(VAR_CLEAN)
+    clean_b <- graph_labels_eu %>% dplyr::filter(VARIABLE == var_b) %>% dplyr::pull(VAR_CLEAN)
+
+    if (var_a %in% c("decile", "decile_eu", "quintile", "quintile_eu", "ventile", "ventile_eu", "percentile", "percentile_eu")) {
+      pl <- ggplot2::ggplot(datapl, ggplot2::aes(x = as.numeric(LABELS_A), y = Impact, colour = Scenario)) +
+        ggplot2::geom_point() +
+        ggplot2::geom_line() +
+        ggplot2::facet_grid(LABELS_B ~ Scenario) +
+        ggplot2::scale_colour_manual(values = c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7")) +
+        ggplot2::labs(y = "Change in welfare (%)", x = clean_a) +
+        ggplot2::theme(text = ggplot2::element_text(size = 16),
+                       legend.position = "none")
+    } else {
+      pl <- ggplot2::ggplot(datapl, ggplot2::aes(x = LABELS_A, y = Impact, fill = Scenario)) +
+        ggplot2::geom_col(position = ggplot2::position_dodge(width = 1)) +
+        ggplot2::facet_grid(LABELS_B ~ Scenario) +
+        ggplot2::scale_fill_manual(values = c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7")) +
+        ggplot2::labs(y = "Change in welfare (%)", x = clean_a) +
+        ggplot2::theme(text = ggplot2::element_text(size = 16),
+                       legend.position = "none")
+    }
+
+    if (var_a %in% c("decile", "decile_eu")) {
+      pl <- pl + ggplot2::scale_x_continuous(breaks = 1:10, labels = 1:10)
+    }
+
+    if (var_a %in% c("country", "zone", "household_type", "children", "income_source", "COUNTRYRP", "activity", "education", "contract_type")) {
+      pl <- pl + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.25))
+    }
+
+    # Aumenta anchura si var_a == "country"
+    if (g == "country") {
+      adj_wh$width <- adj_wh$width + 50
+    }
+    adj_wh <- adjust_wh_is(datapl, var_w = "Scenario", var_h = "LABELS_B")
+    ggplot2::ggsave(pl,
+                    file = file.path(folder_path, paste0("DI_", var_a, "_", var_b, ".png")),
+                    width = adj_wh$width,
+                    height = adj_wh$heigth,
+                    units = "mm",
+                    limitsize = FALSE)
+  }
+
+  return(invisible(TRUE))
+}
 
 #' impact_intersectional_eu
 #'

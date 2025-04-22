@@ -975,6 +975,7 @@ order_var_eu <- function(data, g){
   return(data)
 }
 
+
 #' basic_graph_eu
 #'
 #' Function to create a basic graph to summarize the distributional impact in the EU
@@ -1073,6 +1074,7 @@ basic_graph_eu <- function(data, var = graph_labels_eu$VARIABLE) {
     warning("The `data` object must be a list of data frames as returned by `impact_eu().")
   }
 }
+
 
 #' impact_eu
 #'
@@ -1202,4 +1204,109 @@ impact_eu <- function(data, var = graph_labels_eu$VARIABLE, by_country = TRUE, s
 }
 
 
+#' impact_intersectional_eu
+#'
+#' Function to calculate the distributional impacts based in the intersection
+#' of two socioeconomic or demographic variables (2 variables per impact)
+#' across EU and by EU country.
+#' @param data a dataset with the input data needed to calculate the intersectional
+#' distributional impacts. The dataset should contain both the household expenditures
+#' collected in the HBS and the expenditures after applying the price shock.
+#' @param pairs set of variables (2) according to which you want to calculate
+#' distributional impacts. If is_categories (by default) calculates the intersectional
+#' distributional impacts for each of the set of variables specified in the package.
+#' If not, you can indicate the set of variables according to which you want to calculate
+#' the intersectional distributional impacts.If you want to see the set of variables for
+#' which the calculation is available run `available_var_intersec()`. To enter a
+#' set of variables for the calculation, it must follow the same format as the
+#' output of `available_var_intersec()`, i.e. a table whose columns have category_a
+#' and category_b as their titles.
+#' @param save If TRUE (by default) saves a list of the generated datasets (.RData)
+#' summarising the intersectional distributional impacts per selected set of variable.
+#' If FALSE do not save.
+#' @param file_name name of the file to save the results, if save TRUE. By default "DII_impacts".
+#' @param fig generates and saves a graph that summarises the intersectional distributional
+#' impacts. By default it is TRUE, for the graph/s not to be generated and saved indicate FALSE.
+#' @param shocks_scenario_names vector of the names of the considered scenario shocks
+#' @importFrom dplyr %>%
+#' @return a list containing the generated datasets (.RData) summarising the intersectional
+#' distributional impacts per selected set of variables.
+#' @export
+impact_intersectional_eu <- function(data, pairs = is_categories_eu, save = T, file_name = "DII_impact", fig = T,
+                                  shocks_scenario_names) {
+
+  is_d_impacts <- list()
+  missing_vars <- c()
+
+  # Internal function to compute impacts
+  compute_impacts <- function(df, var_a, var_b, tag) {
+    gastotS_cols <- intersect(paste0("CP00_", shocks_scenario_names), names(df))
+    for (s in shocks_scenario_names) {
+      new_col <- paste0("CP00_", s)
+      impact_col <- paste0("impact_", s)
+      if (new_col %in% names(df)) {
+        df[[impact_col]] <- 100 * (df$CP00 - df[[new_col]]) / df$CP00
+      }
+    }
+    impact_cols <- grep("^impact_", names(df), value = TRUE)
+
+    df_summarised <- df %>%
+      dplyr::group_by(.data[[var_a]], .data[[var_b]]) %>%
+      dplyr::summarise(
+        VARIABLE_A = var_a,
+        VARIABLE_B = var_b,
+        WEIGHT = sum(weight, na.rm = TRUE),
+        dplyr::across(all_of(impact_cols), ~ weighted.mean(., w = weight, na.rm = TRUE), .names = "DI_{.col}")
+      ) %>%
+      dplyr::rename_with(~ gsub("^DI_impact_", "DI_", .), dplyr::starts_with("DI_impact_")) %>%
+      dplyr::rename(LABELS_A = 1, LABELS_B = 2) %>%
+      dplyr::mutate(LABELS_A = as.character(LABELS_A), LABELS_B = as.character(LABELS_B), SOURCE = tag)
+
+    return(df_summarised)
+  }
+
+  data$weight <- as.numeric(data$weight)
+
+  # EU-wide results
+  for (r in 1:nrow(pairs)) {
+    var_a <- pairs$category_a[r]
+    var_b <- pairs$category_b[r]
+
+    if (var_a %in% colnames(data) & var_b %in% colnames(data)) {
+      df_out <- compute_impacts(data, var_a, var_b, tag = "EU")
+      is_d_impacts[[paste0("di_", var_a, "_", var_b)]] <- df_out
+    } else {
+      missing_vars <- c(missing_vars, var_a, var_b)
+      warning(paste0("Missing: ", var_a, " or ", var_b))
+    }
+  }
+
+  # By-country results
+  if (by_country) {
+    countries <- unique(data$country)
+    for (c in countries) {
+      data_c <- data[data$country == c, ]
+      for (r in 1:nrow(pairs)) {
+        var_a <- pairs$category_a[r]
+        var_b <- pairs$category_b[r]
+
+        if (var_a %in% colnames(data_c) & var_b %in% colnames(data_c)) {
+          df_out <- compute_impacts(data_c, var_a, var_b, tag = c)
+          is_d_impacts[[paste0("di_", var_a, "_", var_b, "_", c)]] <- df_out
+        }
+      }
+    }
+  }
+
+  if (save == TRUE) {
+    if (!dir.exists("outputs_dii")) dir.create("outputs_dii")
+    save(is_d_impacts, file = paste0("outputs_dii/", file_name, ".RData"))
+  }
+
+  if (fig == TRUE) {
+    intersectional_graph(data = is_d_impacts, pairs = pairs)
+  }
+
+  return(is_d_impacts)
+}
 

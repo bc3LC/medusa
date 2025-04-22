@@ -277,3 +277,9 @@
 #' @source medusa
 #' @format .csv
 "graph_labels_eu"
+
+#' List containing the socioeconomic and demographic categories for the calculation of intersectional distributional impacts for EU countries
+#'
+#' @source medusa
+#' @format .csv
+"is_categories_eu"

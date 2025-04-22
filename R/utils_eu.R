@@ -1191,10 +1191,10 @@ impact_eu <- function(data, var = graph_labels_eu$VARIABLE, by_country = TRUE, s
         save(d_impacts_country, file = paste0("outputs_di/", file_name, "_", c, ".RData"))
       }
 
-      # if (fig) {
-      #   var_country <- setdiff(var, missing_vars)
-      #   basic_graph_eu(data = d_impacts_country, var = var_country)
-      # }
+      if (fig) {
+        var_country <- setdiff(var, missing_vars)
+        basic_graph_eu(data = d_impacts_country, var = var_country)
+      }
     }
   }
 
@@ -1332,7 +1332,7 @@ intersectional_graph_eu <- function(data, pairs = is_categories_eu) {
                     limitsize = FALSE)
   }
 
-  return(invisible(TRUE))
+  return(pl)
 }
 
 #' impact_intersectional_eu
@@ -1438,6 +1438,9 @@ impact_intersectional_eu <- function(data, pairs = is_categories_eu, save = T, f
     intersectional_graph(data = is_d_impacts, pairs = pairs)
   }
 
-  return(is_d_impacts)
+  # Return combined results in a single data.frame
+  combined_df <- dplyr::bind_rows(is_d_impacts, .id = "ID")
+  return(combined_df)
+
 }
 

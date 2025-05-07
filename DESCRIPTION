@@ -32,9 +32,12 @@ Imports:
   	stringr,
   	here,
 	  spatstat.geom,
-	  tibble
+	  tibble,
+	  countrycode
 Remotes:
     github::JGCRI/rpackageutils,
+    github::JGCRI/gcamdata,
+    github::JGCRI/rgcam,
     github::eurostat/restatapi
 Suggests: 
     rmarkdown,

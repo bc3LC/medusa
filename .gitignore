@@ -51,6 +51,9 @@ figures/
 outputs_di/
 outputs_dii/
 
+# GCAM
+output
+*.dat
 
 # Tests
 tests/testthat/test_inputs/csv/*

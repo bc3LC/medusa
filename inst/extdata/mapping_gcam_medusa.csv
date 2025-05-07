@@ -1,0 +1,36 @@
+query,gcam,coicop
+prices by sector,regional rice,CP01111
+prices by sector,regional corn,CP01112
+prices by sector,regional othergrain,CP01112
+prices by sector,regional wheat,CP01112
+prices by sector,regional beef,CP01121
+prices by sector,regional pork,CP01122
+prices by sector,regional sheepgoat,CP01123
+prices by sector,regional poultry,CP01124
+prices by sector,regional dairy,CP0114
+prices by sector,regional oilcrop,CP01154
+prices by sector,regional fruits,CP0116
+prices by sector,regional nuts_seeds,CP01163
+prices by sector,regional vegetables,CP0117
+prices by sector,regional legumes,CP01176
+prices by sector,regional root_tuber,CP01176
+prices by sector,regional sugarcrop,CP01181
+prices by sector,cement,CP04310
+prices by sector,water_td_muni_C,CP0441
+prices by sector,elect_td_bld,CP04510
+prices by sector,delivered gas,CP04521
+prices by sector,delivered coal,CP04541
+prices by sector,delivered biomass,CP04549
+prices by sector,district heat,CP0455/0
+prices by sector,refined liquids enduse,CP07221
+prices by sector,refined liquids enduse,CP07222
+prices by sector,refined liquids enduse,CP04530
+prices by sector,elect_td_trn,CP07223
+costs by subsector,HSR,CP07311
+costs by subsector,Passenger Rail,CP07311
+costs by subsector,Passenger Rail,CP07312
+costs by subsector,Bus,CP07321
+costs by subsector,Domestic Aviation,CP07331
+prices by sector,trn_aviation_intl,CP07332
+prices by sector,N fertilizer,CP09331
+prices by sector,paper,CP09541

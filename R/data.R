@@ -719,3 +719,14 @@
 #' @source medusa
 #' @format .csv
 "is_categories_eu"
+#' Mapping between the GCAM items names and the COICOP codes
+#'
+#' @source medusa
+#' @format .csv
+"mapping_gcam_medusa"
+
+#' List of all COICOP codes available in MEDUSA
+#'
+#' @source medusa
+#' @format .csv
+"all_coicop"

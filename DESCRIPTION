@@ -37,8 +37,11 @@ Imports:
 	  spatstat.geom,
 	  tibble,
 	  restatapi
+	  countrycode
 Remotes:
     github::JGCRI/rpackageutils,
+    github::JGCRI/gcamdata,
+    github::JGCRI/rgcam,
     github::eurostat/restatapi
 Suggests: 
     rmarkdown,

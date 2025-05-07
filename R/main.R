@@ -11,6 +11,7 @@
 ex_shocks <- function(){
   exshock <- get("shocks")
   write.csv(exshock, file = "Example_shocks.csv", row.names = F)
+  print(paste0("The example file has been saved in`", getwd(),"/Example_shocks.csv´" ))
 }
 
 #' calc_di
@@ -60,6 +61,11 @@ calc_di <-function(year, elevate=F, shocks, var_impact = "all", var_intersec = N
   # Check year parameter
   check_year(year)
 
+  if (!is.null(var_impact) && length(var_impact) == 1 && var_impact != "all") {
+    # Check var_impact
+    check_var_impact(var_impact)
+  }
+
   # get hbs files
   hbs <- get(paste0("epf_list_", year))
 
@@ -104,7 +110,7 @@ calc_di <-function(year, elevate=F, shocks, var_impact = "all", var_intersec = N
   # calculate distributional impacts
   if(!is.null(var_impact)){
 
-    if(var_impact == "all"){
+    if(any(var_impact == "all")){
       var_impact = categories$categories
       }
     di <- impact(epf, var = var_impact, save = save,
@@ -175,6 +181,7 @@ available_var_intersec <- function(){
 ex_var_intersec <- function(){
   av_var_intersec <- get("is_categories")
   write.csv(av_var_intersec, file = "Var_Intersec.csv", row.names = F)
+  print(paste0("The example file has been saved in`", getwd(),"/Var_Intersec.csv´" ))
 }
 
 #' calc_ep

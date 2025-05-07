@@ -784,7 +784,7 @@ adjust_wh_is <- function(data, var_w, var_h) {
 
 #' order_var
 #'
-#' Function to order the labels of the socioeconomic and demographic variables
+#' Function to order the labels of the socioeconomic and demographic variablesin basic graph
 #' @param data dataset in which we want to order the labels of the socioeconomic and demographic variables
 #' @param g variable for which we want to sort the labels
 #' @importFrom dplyr %>%
@@ -793,22 +793,22 @@ adjust_wh_is <- function(data, var_w, var_h) {
 order_var <- function(data, g){
   if (g == "CHILDREN"){
     data <- data %>%
-    dplyr::mutate(CHILDREN = factor(CHILDREN, levels = c("No children", "With children", "Large family")))
+    dplyr::mutate(LABELS = factor(LABELS, levels = c("No children", "With children", "Large family")))
   } else if (g == "COUNTRYRP") {
     data <- data %>%
-    dplyr::mutate(COUNTRYRP = factor(COUNTRYRP, levels = c("Spain", "EU27", "Other Europe", "Rest of world")))
+    dplyr::mutate(LABELS = factor(LABELS, levels = c("Spain", "EU27", "Other Europe", "Rest of world")))
   } else if (g == "STUDIESRP") {
     data <- data %>%
-    dplyr::mutate(STUDIESRP = factor(STUDIESRP, levels = c("Without studies", "Primary education", "Secondary education", "Post-secondary education", "Higher education")))
+    dplyr::mutate(LABELS = factor(LABELS, levels = c("Without studies", "Primary education", "Secondary education", "Post-secondary education", "Higher education")))
   } else if (g == "REGMR") {
     data <- data %>%
-    dplyr::mutate(REGMR = factor(REGMR, levels = c("Rented","Ownership", "Relinquish")))
+    dplyr::mutate(LABELS = factor(LABELS, levels = c("Rented","Ownership", "Relinquish")))
   } else if (g == "PROFESSIONALSRP") {
     data <- data %>%
-    dplyr::mutate(PROFESSIONALSRP = factor(PROFESSIONALSRP, levels = c("Employee", "Self-employed", "Employer")))
+    dplyr::mutate(LABELS = factor(LABELS, levels = c("Employee", "Self-employed", "Employer")))
   } else if (g == "AGERP") {
     data <- data %>%
-      dplyr::mutate(AGERP = factor(AGERP, levels = c("Young", "Adult", "Elder")))
+      dplyr::mutate(LABELS = factor(LABELS, levels = c("Young", "Adult", "Elder")))
   }
   return(data)
 }
@@ -832,8 +832,13 @@ basic_graph <- function(data, var = categories$categories){
     datapl <- data[[paste0("di_",g)]] %>%
       tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
       dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", "")) %>%
-      dplyr::filter(! get(g) %in% c("Not provided", "NA", "Others")) %>%
+      dplyr::filter(! LABELS %in% c("Not provided", "NA", "Others")) %>%
       order_var(., g)
+
+    # Convert LABELS to character if not DECILE
+    if (g == "DECILE") {
+      datapl <- datapl %>% dplyr::mutate(LABELS = as.numeric(LABELS))
+    }
 
     # Para definir el nombre largo de la variable que va a ir en el título del eje
     clean_g <- graph_labels %>%
@@ -841,7 +846,7 @@ basic_graph <- function(data, var = categories$categories){
       dplyr::pull(VAR_CLEAN)
 
     pl <- ggplot2::ggplot(datapl,
-                          ggplot2::aes(x = !!dplyr::sym(g), y = Impact, fill = Scenario)) +
+                          ggplot2::aes(x = LABELS, y = Impact, fill = Scenario)) +
       ggplot2::geom_col(position = ggplot2::position_dodge(width = 1)) +
       ggplot2::facet_grid(.~Scenario) +
       ggplot2::scale_fill_manual(values=c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7" )) +
@@ -853,7 +858,6 @@ basic_graph <- function(data, var = categories$categories){
     if (g %in% c("DECILE")) {
       pl = pl + ggplot2::scale_x_continuous(breaks = 1:10, labels = 1:10)
     }
-
     if (g %in% c("REGION", "HHTYPE", "CHILDREN", "AGERP", "COUNTRYRP", "PROFESSIONALSRP", "STUDIESRP")) {
       pl <- pl +
         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.25))
@@ -886,8 +890,7 @@ basic_graph <- function(data, var = categories$categories){
 #' By default it is TRUE, for the graph/s not to be generated and saved indicate FALSE.
 #' @param shocks_scenario_names vector of the names of the considered scenario shocks
 #' @importFrom dplyr %>%
-#' @return a list containing the generated datasets (.RData) summarising the
-#' distributional impacts per selected variable.
+#' @return a dataframe summarising the distributional impacts per selected variable.
 #' @export
 impact <- function(data, var = categories$categories, save = T, file_name = "D_impacts", fig = T,
                    shocks_scenario_names) {
@@ -906,9 +909,12 @@ impact <- function(data, var = categories$categories, save = T, file_name = "D_i
                          dplyr::across(dplyr::all_of(gastotS_cols),                                          # for all columns that are in gastotS_cols
                                        list(DI_s = ~ 100*(sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),        # generate a new column with the distributional impacts, where sum(.) is the value of the column we are using
                                        .names = "DI_{.col}")) %>%                                            # change the column name by adding DI to the column name you are using
-               dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))            # change the names of the columns starting with DI_GASTOT to DI_ only (gsub is to replace and the latter to only look at the columns starting with DI_GASTOT).
+               dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))  %>%       # change the names of the columns starting with DI_GASTOT to DI_ only (gsub is to replace and the latter to only look at the columns starting with DI_GASTOT).
+               dplyr::rename(LABELS = 1) %>%
+               dplyr::mutate(LABELS = as.character(LABELS))
       )
       d_impacts[[paste0('di_',g)]] = get(paste0('di_',g))                                                    # add the result to the list with the name di_g
+
     } else {
         missing_vars <- c(missing_vars, g)
         warning(paste0(g, " is not present in the dataset"))
@@ -927,8 +933,44 @@ impact <- function(data, var = categories$categories, save = T, file_name = "D_i
 
   }
 
-  return(d_impacts)
+  if (length(d_impacts) == 1) {
+    return(d_impacts[[1]])
+  } else {
+    combined_df <- dplyr::bind_rows(d_impacts)
+    return(combined_df)
+  }
 
+}
+
+#' order_vars
+#'
+#' Function to order the labels of the socioeconomic and demographic variables in intersectional graph
+#' @param data dataset in which we want to order the labels of the socioeconomic and demographic variables
+#' @param g variable for which we want to sort the labels
+#' @importFrom dplyr %>%
+#' @return a dataset in which the labels are ordered for the selected socioeconomic or demographic variable
+#' @export
+order_vars <- function(data, g){
+  if (g == "CHILDREN"){
+    data <- data %>%
+      dplyr::mutate(CHILDREN = factor(CHILDREN, levels = c("No children", "With children", "Large family")))
+  } else if (g == "COUNTRYRP") {
+    data <- data %>%
+      dplyr::mutate(COUNTRYRP = factor(COUNTRYRP, levels = c("Spain", "EU27", "Other Europe", "Rest of world")))
+  } else if (g == "STUDIESRP") {
+    data <- data %>%
+      dplyr::mutate(STUDIESRP = factor(STUDIESRP, levels = c("Without studies", "Primary education", "Secondary education", "Post-secondary education", "Higher education")))
+  } else if (g == "REGMR") {
+    data <- data %>%
+      dplyr::mutate(REGMR = factor(REGMR, levels = c("Rented","Ownership", "Relinquish")))
+  } else if (g == "PROFESSIONALSRP") {
+    data <- data %>%
+      dplyr::mutate(PROFESSIONALSRP = factor(PROFESSIONALSRP, levels = c("Employee", "Self-employed", "Employer")))
+  } else if (g == "AGERP") {
+    data <- data %>%
+      dplyr::mutate(AGERP = factor(AGERP, levels = c("Young", "Adult", "Elder")))
+  }
+  return(data)
 }
 
 
@@ -960,8 +1002,8 @@ intersectional_graph <- function(data, pairs = is_categories){
       dplyr::mutate(Scenario = stringr::str_replace(Scenario, "^DI_", "")) %>%
       dplyr::filter(! get(var_a) %in% c("Not provided", "NA", "Others")) %>%
       dplyr::filter(! get(var_b) %in% c("Not provided", "NA", "Others")) %>%
-      order_var(., var_a) %>%
-      order_var(., var_b)
+      order_vars(., var_a) %>%
+      order_vars(., var_b)
 
     # Para definir el nombre largo de la variable que va a ir en el título del eje
     clean_a <- graph_labels %>%
@@ -1059,7 +1101,7 @@ impact_intersectional <- function(data, pairs = is_categories, save = T, file_na
                                 VARIABLE_B = var_b,                                                               # create the following columns
                                 WEIGHT = sum(FACTOR),
                                 dplyr::across(dplyr::all_of(gastotS_cols),                                        # for all columns that are in gastotS_cols
-                                              list(DI_s = ~ (sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),          # generate a new column with the distributional impacts, where sum(.) is the value of the column we are using
+                                              list(DI_s = ~ 100*(sum(GASTOT_CNR) - sum(.))/sum(GASTOT_CNR)),          # generate a new column with the distributional impacts, where sum(.) is the value of the column we are using
                                               .names = "DI_{.col}")) %>%                                          # change the name of the column by adding DI to the column name that is being used
                dplyr::rename_with(~ gsub("^DI_GASTOT", "DI", .), dplyr::starts_with("DI_GASTOT"))                 # change the names of the columns that start with DI GASTOR to DI_ only (gsub is for replacing and the second so that it only looks at those that start with DI_GASTOT)
       )
@@ -1117,3 +1159,26 @@ check_year <- function(year) {
   }
 
 }
+
+
+#' check_var_impact
+#'
+#' Check if the parameter var_impact is valid
+#' @param var_impact var_impact introduce by the user
+#' @return stop if year is wrongly introduced
+#' @export
+
+check_var_impact <- function(var_impact) {
+
+  wrong_vars <- var_impact[!var_impact %in% categories$categories]
+
+  if (length(wrong_vars) == 1) {
+    stop(sprintf('You introduced the variable %s which is not available. Possible options are: %s.',
+                   wrong_vars, paste(categories$categories, collapse = ", ")))
+  } else if (length(wrong_vars) > 1) {
+    stop(sprintf('You introduced the variables %s which are not available. Possible options are: %s.',
+                 paste(wrong_vars, collapse = ", "), paste(categories$categories, collapse = ", ")))
+    }
+  }
+
+

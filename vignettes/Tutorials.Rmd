@@ -52,7 +52,7 @@ calc_di( year,                     # Base year for the simulation (available 200
 ```r
 available_var_impact()
 ```
-2. Select one of the variables that the function returns in the console. For example, "ZONA".
+2. Select one of the variables that the function returns in the console. For example, "DECILE".
 
 3. Enter that variable in the `var_impact` argument of `calc_di`. By default, `var_impact = "all"` , i.e. it calculates the distributional impacts for all variables returned by `available_var_impact()`. For more information on variables click [here](https://bc3lc.github.io/medusa/articles/AvailableVariables.html). 
  ``` r
@@ -63,10 +63,10 @@ calc_di(year,                     # Base year for the simulation
 	     ...)                      # Additional arguments to be passed
 ```
 
-4. In case you want to calculate distributional impacts for several variables, e.g. for "ZONE" and "TAMAMU", create a vector with these variables and enter it in the `var_impact` argument of `calc_di`.
+4. In case you want to calculate distributional impacts for several variables, e.g. for "ZONE" and "QUINTILE", create a vector with these variables and enter it in the `var_impact` argument of `calc_di`.
  ``` r
 #Create a vector
-vars <- c("ZONA", "TAMAMU")
+vars <- c("ZONE", "QUINTILE")
 
 #Introduce the vector in var_impact argument
 calc_di(year,                     # Base year for the simulation

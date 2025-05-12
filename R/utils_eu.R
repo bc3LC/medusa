@@ -1016,6 +1016,13 @@ basic_graph_eu <- function(data, var = graph_labels_eu$VARIABLE) {
         dplyr::filter(!is.na(LABELS)) %>%
         droplevels()
 
+      # Skip plot if there is no sufficient data after filtering
+      if (nrow(datapl) <= 1) {
+        country_name <- unique(df$SOURCE)
+        message(sprintf(" Warning: Skipping plot for variable '%s' in '%s' (insufficient data after filtering).", g, country_name))
+        next
+      }
+
       # Ordenar LABELS para "country" por valor de impacto en cada escenario
       if (g == "country") {
         datapl <- datapl %>%

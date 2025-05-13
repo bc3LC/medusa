@@ -1326,11 +1326,16 @@ intersectional_graph_eu <- function(data, pairs = is_categories_eu) {
       pl <- pl + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.25))
     }
 
+
+    adj_wh <- adjust_wh_is(datapl, var_w = "Scenario", var_h = "LABELS_B")
+
     # Aumenta anchura si var_a == "country"
     if (var_a == "country") {
       adj_wh$width <- adj_wh$width + 50
     }
-    adj_wh <- adjust_wh_is(datapl, var_w = "Scenario", var_h = "LABELS_B")
+
+    print(file.path(folder_path, paste0("DI_", var_a, "_", var_b, ".png")))
+
     ggplot2::ggsave(pl,
                     file = file.path(folder_path, paste0("DI_", var_a, "_", var_b, ".png")),
                     width = adj_wh$width,
@@ -1341,6 +1346,7 @@ intersectional_graph_eu <- function(data, pairs = is_categories_eu) {
 
   return(pl)
 }
+
 
 #' impact_intersectional_eu
 #'
@@ -1370,8 +1376,8 @@ intersectional_graph_eu <- function(data, pairs = is_categories_eu) {
 #' @return a list containing the generated datasets (.RData) summarising the intersectional
 #' distributional impacts per selected set of variables.
 #' @export
-impact_intersectional_eu <- function(data, pairs = is_categories_eu, save = T, file_name = "DII_impact", fig = T,
-                                  shocks_scenario_names) {
+impact_intersectional_eu <- function(data, pairs = is_categories_eu, by_country = TRUE, save = T,
+                                     file_name = "DII_impact", fig = T, shocks_scenario_names) {
 
   is_d_impacts <- list()
   missing_vars <- c()
@@ -1420,7 +1426,7 @@ impact_intersectional_eu <- function(data, pairs = is_categories_eu, save = T, f
   }
 
   # By-country results
-  if (by_country) {
+  if (by_country == TRUE) {
     countries <- unique(data$country)
     for (c in countries) {
       data_c <- data[data$country == c, ]

@@ -184,6 +184,7 @@ calc_di_eu <-function(data, update_hbs=F, shocks, outputs_path=F, var = "all",
 
     dii <- impact_intersectional_eu(data = hbs,
                                     pairs = var_intersec,
+                                    by_country = by_country,
                                     save = save,
                                     file_name = file_name_intersec,
                                     fig = fig,

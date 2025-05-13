@@ -1327,7 +1327,7 @@ intersectional_graph_eu <- function(data, pairs = is_categories_eu) {
     }
 
     # Aumenta anchura si var_a == "country"
-    if (g == "country") {
+    if (var_a == "country") {
       adj_wh$width <- adj_wh$width + 50
     }
     adj_wh <- adjust_wh_is(datapl, var_w = "Scenario", var_h = "LABELS_B")
@@ -1442,7 +1442,7 @@ impact_intersectional_eu <- function(data, pairs = is_categories_eu, save = T, f
   }
 
   if (fig == TRUE) {
-    intersectional_graph(data = is_d_impacts, pairs = pairs)
+    intersectional_graph_eu(data = is_d_impacts, pairs = pairs)
   }
 
   # Return combined results in a single data.frame

@@ -1267,85 +1267,100 @@ intersectional_graph_eu <- function(data, pairs = is_categories_eu) {
   for (r in 1:nrow(pairs)) {
     var_a <- pairs$category_a[r]
     var_b <- pairs$category_b[r]
-    df <- data[[paste0("di_", var_a, "_", var_b)]]
-    if (is.null(df)) next
 
-    source_tag <- unique(df$SOURCE)
-    folder <- ifelse(length(source_tag) == 1 && source_tag %in% c("EU"), "EU", source_tag)
-    folder_path <- file.path("figures", folder)
-    if (!dir.exists(folder_path)) dir.create(folder_path)
+    # Buscar todos los objetos que coincidan con este par de variables
+    matching_keys <- grep(paste0("^di_", var_a, "_", var_b), names(data), value = TRUE)
 
-    datapl <- df %>%
-      tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
-      dplyr::mutate(
-        Scenario = stringr::str_replace(Scenario, "^DI_", ""),
-        LABELS_A = as.character(LABELS_A),
-        LABELS_B = as.character(LABELS_B)
-      )
+    for (key in matching_keys) {
+      df <- data[[key]]
+      if (is.null(df)) next
 
-    # Ordenar
-    datapl <- order_vars_eu(datapl, var_a, "LABELS_A")
-    datapl <- order_vars_eu(datapl, var_b, "LABELS_B")
+      source_tag <- unique(df$SOURCE)
+      folder <- ifelse(length(source_tag) == 1 && source_tag %in% c("EU"), "EU", source_tag)
+      folder_path <- file.path("figures", folder)
+      if (!dir.exists(folder_path)) dir.create(folder_path)
 
-    datapl <- datapl %>%
-      dplyr::filter(
-        !LABELS_A %in% c("Not provided", "Others", "Other", "Not applicable"),
-        !LABELS_B %in% c("Not provided", "Others", "Other", "Not applicable")
-      ) %>%
-      dplyr::filter(!is.na(LABELS_A) & LABELS_A != "NA") %>%
-      dplyr::filter(!is.na(LABELS_B) & LABELS_B != "NA") %>%
-      droplevels()
+      datapl <- df %>%
+        tidyr::pivot_longer(cols = dplyr::starts_with("DI_"), names_to = "Scenario", values_to = "Impact") %>%
+        dplyr::mutate(
+          Scenario = stringr::str_replace(Scenario, "^DI_", ""),
+          LABELS_A = as.character(LABELS_A),
+          LABELS_B = as.character(LABELS_B)
+        )
 
-    clean_a <- graph_labels_eu %>% dplyr::filter(VARIABLE == var_a) %>% dplyr::pull(VAR_CLEAN)
-    clean_b <- graph_labels_eu %>% dplyr::filter(VARIABLE == var_b) %>% dplyr::pull(VAR_CLEAN)
+      # Ordenar
+      datapl <- order_vars_eu(datapl, var_a, "LABELS_A")
+      datapl <- order_vars_eu(datapl, var_b, "LABELS_B")
 
-    if (var_a %in% c("decile", "decile_eu", "quintile", "quintile_eu", "ventile", "ventile_eu", "percentile", "percentile_eu")) {
-      pl <- ggplot2::ggplot(datapl, ggplot2::aes(x = as.numeric(LABELS_A), y = Impact, colour = Scenario)) +
-        ggplot2::geom_point() +
-        ggplot2::geom_line() +
-        ggplot2::facet_grid(LABELS_B ~ Scenario) +
-        ggplot2::scale_colour_manual(values = c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7")) +
-        ggplot2::labs(y = "Change in welfare (%)", x = clean_a) +
-        ggplot2::theme(text = ggplot2::element_text(size = 16),
-                       legend.position = "none")
-    } else {
-      pl <- ggplot2::ggplot(datapl, ggplot2::aes(x = LABELS_A, y = Impact, fill = Scenario)) +
-        ggplot2::geom_col(position = ggplot2::position_dodge(width = 1)) +
-        ggplot2::facet_grid(LABELS_B ~ Scenario) +
-        ggplot2::scale_fill_manual(values = c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7")) +
-        ggplot2::labs(y = "Change in welfare (%)", x = clean_a) +
-        ggplot2::theme(text = ggplot2::element_text(size = 16),
-                       legend.position = "none")
+      datapl <- datapl %>%
+        dplyr::filter(
+          !LABELS_A %in% c("Not provided", "Others", "Other", "Not applicable"),
+          !LABELS_B %in% c("Not provided", "Others", "Other", "Not applicable")
+        ) %>%
+        dplyr::filter(!is.na(LABELS_A) & LABELS_A != "NA") %>%
+        dplyr::filter(!is.na(LABELS_B) & LABELS_B != "NA") %>%
+        droplevels()
+
+      clean_a <- graph_labels_eu %>% dplyr::filter(VARIABLE == var_a) %>% dplyr::pull(VAR_CLEAN)
+      clean_b <- graph_labels_eu %>% dplyr::filter(VARIABLE == var_b) %>% dplyr::pull(VAR_CLEAN)
+
+      # Determinar si se usa faceta por país
+      if ("by_country" %in% names(datapl)) {
+        facet_formula <- as.formula("LABELS_B ~ Scenario + by_country")
+      } else {
+        facet_formula <- as.formula("LABELS_B ~ Scenario")
+      }
+
+      if (var_a %in% c("decile", "decile_eu", "quintile", "quintile_eu", "ventile", "ventile_eu", "percentile", "percentile_eu")) {
+        pl <- ggplot2::ggplot(datapl, ggplot2::aes(x = as.numeric(LABELS_A), y = Impact, colour = Scenario)) +
+          ggplot2::geom_point() +
+          ggplot2::geom_line() +
+          ggplot2::facet_grid(facet_formula) +
+          ggplot2::scale_colour_manual(values = c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7")) +
+          ggplot2::labs(y = "Change in welfare (%)", x = clean_a) +
+          ggplot2::theme(text = ggplot2::element_text(size = 16),
+                         legend.position = "none")
+      } else {
+        pl <- ggplot2::ggplot(datapl, ggplot2::aes(x = LABELS_A, y = Impact, fill = Scenario)) +
+          ggplot2::geom_col(position = ggplot2::position_dodge(width = 1)) +
+          ggplot2::facet_grid(facet_formula) +
+          ggplot2::scale_fill_manual(values = c("#3ed8d8", "#7ee5b2", "#e5e57e", "#e5b27e", "#e57f7e", "#e78ae7", "#b98ae7")) +
+          ggplot2::labs(y = "Change in welfare (%)", x = clean_a) +
+          ggplot2::theme(text = ggplot2::element_text(size = 16),
+                         legend.position = "none")
+      }
+
+      if (var_a %in% c("decile", "decile_eu")) {
+        pl <- pl + ggplot2::scale_x_continuous(breaks = 1:10, labels = 1:10)
+      }
+
+      if (var_a %in% c("country", "zone", "household_type", "children", "income_source", "COUNTRYRP", "activity", "education", "contract_type")) {
+        pl <- pl + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.25))
+      }
+
+      adj_wh <- adjust_wh_is(datapl, var_w = "Scenario", var_h = "LABELS_B")
+
+      if ("by_country" %in% names(datapl)) {
+        npaises <- length(unique(datapl$by_country))
+        adj_wh$width <- adj_wh$width + 20 * npaises
+      } else if (var_a == "country") {
+        adj_wh$width <- adj_wh$width + 50
+      }
+
+      print(file.path(folder_path, paste0(key, ".png")))
+
+      ggplot2::ggsave(pl,
+                      file = file.path(folder_path, paste0(key, ".png")),
+                      width = adj_wh$width,
+                      height = adj_wh$heigth,
+                      units = "mm",
+                      limitsize = FALSE)
     }
-
-    if (var_a %in% c("decile", "decile_eu")) {
-      pl <- pl + ggplot2::scale_x_continuous(breaks = 1:10, labels = 1:10)
-    }
-
-    if (var_a %in% c("country", "zone", "household_type", "children", "income_source", "COUNTRYRP", "activity", "education", "contract_type")) {
-      pl <- pl + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.25))
-    }
-
-
-    adj_wh <- adjust_wh_is(datapl, var_w = "Scenario", var_h = "LABELS_B")
-
-    # Aumenta anchura si var_a == "country"
-    if (var_a == "country") {
-      adj_wh$width <- adj_wh$width + 50
-    }
-
-    print(file.path(folder_path, paste0("DI_", var_a, "_", var_b, ".png")))
-
-    ggplot2::ggsave(pl,
-                    file = file.path(folder_path, paste0("DI_", var_a, "_", var_b, ".png")),
-                    width = adj_wh$width,
-                    height = adj_wh$heigth,
-                    units = "mm",
-                    limitsize = FALSE)
   }
 
-  return(pl)
+  return(invisible(NULL))
 }
+
 
 
 #' impact_intersectional_eu

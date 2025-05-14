@@ -1347,14 +1347,26 @@ intersectional_graph_eu <- function(data, pairs = is_categories_eu) {
         adj_wh$width <- adj_wh$width + 50
       }
 
-      print(file.path(folder_path, paste0(key, ".png")))
+      # Validar dimensiones
+      if (is.na(adj_wh$width) || is.na(adj_wh$heigth) ||
+          adj_wh$width <= 0 || adj_wh$heigth <= 0 ||
+          !is.numeric(adj_wh$width) || !is.numeric(adj_wh$heigth)) {
+        message(sprintf("Warning: Skipping '%s' plot for country '%s': insufficient data after filtering",
+                        key, folder))
+        next
+      }
+
+      # Guardar gráfico con manejo de errores
+      output_path <- file.path(folder_path, paste0(key, ".png"))
+      message(sprintf("✅ Saving '%s'  plot in folder '%s'", key, folder))
 
       ggplot2::ggsave(pl,
-                      file = file.path(folder_path, paste0(key, ".png")),
+                      file = output_path,
                       width = adj_wh$width,
                       height = adj_wh$heigth,
                       units = "mm",
                       limitsize = FALSE)
+
     }
   }
 

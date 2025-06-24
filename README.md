@@ -7,6 +7,7 @@
 [![codecov](https://codecov.io/gh/bc3LC/medusa/graph/badge.svg?token=VSmmxRUGO2)](https://codecov.io/gh/bc3LC/medusa)
 [![build](https://github.com/bc3LC/medusa/actions/workflows/build.yaml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/build.yaml)
 [![draft-pdf](https://github.com/bc3LC/medusa/actions/workflows/draft-pdf.yml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/draft-pdf.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15729051.svg)](https://doi.org/10.5281/zenodo.15729051)
 
 ## <a name="contents"></a>Contents
 

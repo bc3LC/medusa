@@ -76,7 +76,7 @@ To the best of our knowledge, there was no existing software specifically design
 
 # Functionality
 
-The `medusa` package includes several functions that have been classified in 3 main modules. Note that this functions are listed in an [R vignette](https://bc3lc.github.io/medusa/), which includes a [step-by-step tutorial](https://bc3lc.github.io/medusa/articles/Tutorials.html).
+The `medusa` package includes several functions that have been classified in 3 main modules. Note that these functions are listed in an [R vignette](https://bc3lc.github.io/medusa/), which includes a [step-by-step tutorial](https://bc3lc.github.io/medusa/articles/Tutorials.html).
 
 -   Module 1: Functions to calculate the distributional impacts. The main function for users, `calc_di()`, calculates the distributional impacts for different households according to a wide range of socioeconomic and demographic characteristics. The distributional impacts could be calculated for one or more intersecting variables. When introducing the outputs of a macro model in `medusa`, the microdata in which the microsimulation model is based should be elevated to the National Accounts [@cazcarro2022], this can be easily done indicating TRUE in the `elevate` parameter. Furthermore, in order to facilitate the analysis of the results, the package allows the generation of summary dataframes and figures of the distributional impacts either for one or several socioeconomic variables.
 

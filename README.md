@@ -8,6 +8,7 @@
 [![build](https://github.com/bc3LC/medusa/actions/workflows/build.yaml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/build.yaml)
 [![draft-pdf](https://github.com/bc3LC/medusa/actions/workflows/draft-pdf.yml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/draft-pdf.yml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15729051.svg)](https://doi.org/10.5281/zenodo.15729051)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.07697/status.svg)](https://doi.org/10.21105/joss.07697)
 
 ## <a name="contents"></a>Contents
 

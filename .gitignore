@@ -58,3 +58,6 @@ tests/testthat/test_outputs/*
 
 # Raw_data
 raw_data
+
+# Script database tests
+database_tests

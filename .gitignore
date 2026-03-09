@@ -60,4 +60,4 @@ tests/testthat/test_outputs/*
 raw_data
 
 # Script database tests
-database_tests
+database_tests.R

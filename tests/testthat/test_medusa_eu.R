@@ -372,3 +372,90 @@ test_that("Test11_Price shock EU", {
                                           as.numeric(hbs$CP00[idx_ES]))),
                          label = "CP00_Scenario2 for ES was not updated")
 })
+
+
+test_that("Test12_Impact EU & basic graph", {
+  path_inputs  <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
+  path_outputs <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")
+
+  # Load input from Test11 (price_shock output)
+  hbs <- readRDS(file.path(path_outputs, "hbs_price_shock_2015.rds"))
+
+  # Define scenario names from the shock columns
+  shocks_scenario_names <- unique(gsub(".*_", "", grep("^CP00_", colnames(hbs), value = TRUE)))
+
+  # Run impact_eu
+  setwd(path_outputs)
+  test_result <- impact_eu(data = hbs,
+                           shocks_scenario_names = shocks_scenario_names,
+                           save = TRUE,
+                           fig  = TRUE)
+
+  # --- Reference RDS check ---
+  path2 <- file.path(path_inputs, "D_impacts_eu.rds")
+
+  test_expect <- readRDS(path2)
+  testthat::expect_equal(test_result, test_expect,
+                         label = "impact_eu output mismatch")
+
+  # --- Structural checks ---
+
+  # 1. Verify output is a dataframe
+  testthat::expect_s3_class(test_result, "data.frame")
+
+  # 2. Verify expected columns exist
+  expected_cols <- c("ID", "LABELS", "VARIABLE", "WEIGHT", "SOURCE")
+  for (col in expected_cols) {
+    testthat::expect_true(col %in% colnames(test_result),
+                          label = paste0("Column '", col, "' missing in impact_eu output"))
+  }
+
+  # 3. Verify DI columns have been created for each scenario
+  for (s in shocks_scenario_names) {
+    di_col <- paste0("DI_", s)
+    testthat::expect_true(di_col %in% colnames(test_result),
+                          label = paste0("DI column '", di_col, "' not found in result"))
+  }
+
+  # 4. Verify output is not empty
+  testthat::expect_gt(nrow(test_result), 0,
+                      label = "impact_eu returned an empty dataframe")
+
+  # 5. Verify SOURCE contains EU and country codes
+  sources <- unique(test_result$SOURCE)
+  testthat::expect_true("EU" %in% sources,
+                        label = "EU-level results not found in SOURCE column")
+  countries <- unique(hbs$country)
+  for (c in countries) {
+    testthat::expect_true(c %in% sources,
+                          label = paste0("Country '", c, "' not found in SOURCE column"))
+  }
+
+  # --- Figure checks ---
+  vars <- intersect(unique(test_result$VARIABLE),
+                    list.files(file.path(path_outputs, "figures"),
+                               pattern = "^DI_.*\\.png$") |>
+                      gsub(pattern = "^DI_|\\.png$", replacement = ""))
+
+  for (g in vars) {
+    fig_output <- file.path(path_outputs, "figures", paste0("DI_", g, ".png"))
+    fig_input  <- file.path(path_inputs,  "figures", paste0("DI_", g, ".png"))
+
+    # Verify figure was generated
+    testthat::expect_true(file.exists(fig_output),
+                          label = paste0("Figure DI_", g, ".png was not generated"))
+
+    # Compare against reference if it exists
+    if (file.exists(fig_input)) {
+      img_result <- png::readPNG(fig_output)
+      img_expect <- png::readPNG(fig_input)
+      testthat::expect_true(identical(attributes(img_result), attributes(img_expect)),
+                            label = paste0("Figure DI_", g, ".png dimensions do not match"))
+    } else {
+      # First run: copy figures to test_inputs as reference
+      if (!dir.exists(file.path(path_inputs, "figures"))) dir.create(file.path(path_inputs, "figures"))
+      file.copy(fig_output, fig_input)
+      message("Reference figure created: ", fig_input)
+    }
+  }
+})

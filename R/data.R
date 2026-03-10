@@ -242,6 +242,12 @@
 #' @format .csv
 "av_country"
 
+#' Mapping for 2010 member file
+#'
+#' @source medusa
+#' @format .csv
+"variables_m_2010"
+
 #' Mapping for 2015 member file
 #'
 #' @source medusa

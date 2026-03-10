@@ -709,6 +709,99 @@ database_hbs <- function(year, country = "all", inputs_path) {
     hbs_yearly_data[["hbs_2015"]] <- hbs
   }
 
+  # Code to create a joint database for 2010 and m file
+  if (year == 2010) {
+
+    # List to store the datasets for each country
+    member_files_2010 <- list()
+
+    # Standardize members files variables for 2010
+    for (c in country) {
+
+      file_path <- paste0(inputs_path, "/", c, "/hbs_", y, "_", c, ".RData")
+
+      if (file.exists(file_path)) {
+
+        data <- get(paste0(c, "_hbs_m"))
+
+        hbs_m <- standardize_eu(data = data, map = variables_m_2010)  # <-- ajusta el map a 2010
+
+        new <- c("number", "country", "year", "birth_country", "gender", "relationship",
+                 "education", "activity", "workday", "contract_type", "employment_sector", "age")
+        hbs_m <- hbs_m[, new]
+
+        hbs_m$number <- as.character(hbs_m$number)
+        member_files_2010[[c]] <- hbs_m
+
+        # For checking purpose: Check row number
+        eval(parse(text = paste0("hbs_m_", c, "<- hbs_m")))
+        if (nrow(get(paste0(c, "_hbs_m"))) != nrow(get(paste0("hbs_m_", c)))) {
+          warning(paste0(c, " nrows do not match"))
+        }
+      }
+    }
+
+    hbs_m_2010 <- dplyr::bind_rows(member_files_2010)
+    hbs_yearly_data[["hbs_m_2010"]] <- hbs_m_2010
+  }
+
+  # Include reference person data from m file to h file
+  if (year == 2010) {
+
+    # Extract hbs_h and hbs_m
+    hbs_h <- hbs_yearly_data$hbs_h_2010
+    hbs_m <- hbs_yearly_data$hbs_m_2010
+
+    # Subset m dataset: keep just data for the household reference person
+    hbs_m <- subset(hbs_m, relationship == "Reference person")
+
+    # Check and fix duplicates in hbs_m for each country
+    for (c in country) {
+      h <- hbs_h %>% dplyr::filter(country == c)
+      m <- hbs_m %>% dplyr::filter(country == c)
+
+      dupp <- m %>%
+        dplyr::filter(relationship == "Reference person") %>%
+        dplyr::group_by(number) %>%
+        dplyr::filter(dplyr::n() > 1) %>%
+        dplyr::ungroup()
+
+      if (nrow(dupp) > 0) {
+        warning(paste0("Duplicate reference persons found in the members file (2010 wave) for ", c,
+                       ". Rows with more missing values have been removed."))
+
+        count_missing_custom <- function(row) {
+          row <- as.character(row)
+          sum(row == "Not provided") * 10 + sum(row == "Not applicable")
+        }
+
+        dupp$missing_score <- apply(dupp, 1, count_missing_custom)
+
+        dupp_cleaned <- dupp %>%
+          dplyr::group_by(number) %>%
+          dplyr::arrange(missing_score) %>%
+          dplyr::slice(1) %>%
+          dplyr::ungroup() %>%
+          dplyr::select(-missing_score)
+
+        m <- m %>%
+          dplyr::filter(!(number %in% dupp$number & relationship == "Reference person")) %>%
+          dplyr::bind_rows(dupp_cleaned)
+
+        hbs_m <- hbs_m %>%
+          dplyr::filter(country != c) %>%
+          dplyr::bind_rows(m)
+      }
+    }
+
+    # Merge reference person data with household data
+    hbs_h$year <- as.character(hbs_h$year)
+    hbs <- merge(hbs_h, hbs_m, by = c("number", "country"), all.x = TRUE)
+
+    # Save joint data frame in the list
+    hbs_yearly_data[["hbs_2010"]] <- hbs
+  }
+
   return(hbs_yearly_data)
 }
 

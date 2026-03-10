@@ -178,6 +178,10 @@ use_data(av_country, overwrite=T)
 variables_h = read.csv(paste0(rawDataFolder,"variables_h.csv"),header=T)
 use_data(variables_h, overwrite=T)
 
+# variables_m_2010
+variables_m_2010 = read.csv(paste0(rawDataFolder,"variables_m_2010.csv"),header=T)
+use_data(variables_m_2010, overwrite=T)
+
 # variables_m_2015
 variables_m_2015 = read.csv(paste0(rawDataFolder,"variables_m_2015.csv"),header=T)
 use_data(variables_m_2015, overwrite=T)

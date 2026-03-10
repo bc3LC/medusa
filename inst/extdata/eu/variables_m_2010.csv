@@ -1,0 +1,87 @@
+VAR_EPF,VAR_EN,value,NAME,description,file
+MA04,number,,,hh identification number,m
+COUNTRY,country,AT,AT,hbs country,m
+COUNTRY,country,BE,BE,hbs country,m
+COUNTRY,country,BG,BG,hbs country,m
+COUNTRY,country,CY,CY,hbs country,m
+COUNTRY,country,CZ,CZ,hbs country,m
+COUNTRY,country,DE,DE,hbs country,m
+COUNTRY,country,DK,DK,hbs country,m
+COUNTRY,country,EE,EE,hbs country,m
+COUNTRY,country,EL,EL,hbs country,m
+COUNTRY,country,ES,ES,hbs country,m
+COUNTRY,country,FI,FI,hbs country,m
+COUNTRY,country,FR,FR,hbs country,m
+COUNTRY,country,HR,HR,hbs country,m
+COUNTRY,country,HU,HU,hbs country,m
+COUNTRY,country,IE,IE,hbs country,m
+COUNTRY,country,IT,IT,hbs country,m
+COUNTRY,country,LT,LT,hbs country,m
+COUNTRY,country,LU,LU,hbs country,m
+COUNTRY,country,LV,LV,hbs country,m
+COUNTRY,country,MT,MT,hbs country,m
+COUNTRY,country,NL,NL,hbs country,m
+COUNTRY,country,PL,PL,hbs country,m
+COUNTRY,country,PT,PT,hbs country,m
+COUNTRY,country,RO,RO,hbs country,m
+COUNTRY,country,SE,SE,hbs country,m
+COUNTRY,country,SI,SI,hbs country,m
+COUNTRY,country,SK,SK,hbs country,m
+YEAR,year,2010,2010,hbs wave reference year,m
+MB01,birth_country,10,National,country of birth,m
+MB01,birth_country,21,EU,country of birth,m
+MB01,birth_country,22,Non-EU,country of birth,m
+MB01,birth_country,99,Not provided,country of birth,m
+MB01,birth_country,21_22,Non-national,country of birth,m
+MB02,gender,1,Man,gender,m
+MB02,gender,2,Woman,gender,m
+MB02,gender,9,Not provided,gender,m
+MB05,relationship,1,Reference person,Reference Person is the person aged 16 or more who most contributes to the household income.,m
+MB05,relationship,2,Partner,relationship,m
+MB05,relationship,3,Child,relationship,m
+MB05,relationship,4,Parent,relationship,m
+MB05,relationship,5,Other,relationship,m
+MB05,relationship,6,Other,relationship,m
+MB05,relationship,9,Not provided,relationship,m
+MC01,education,0,Early childhood education,education,m
+MC01,education,1,Primary education,education,m
+MC01,education,2,Secondary education,education,m
+MC01,education,3,Secondary education,education,m
+MC01,education,4,Post-secondary education,education: non tertiary,m
+MC01,education,5,Tertiary education,education: short cycle,m
+MC01,education,6,Higher education,education: bachelor,m
+MC01,education,7,Higher education,education: master,m
+MC01,education,8,Higher education,education: doctorate,m
+MC01,education,9,Not provided,education,m
+MC01,education,A2,Primary education,education,m
+MC01,education,A3,Secondary education,education,m
+MC01,education,A5,Tertiary education,education: short cycle,m
+MC01,education,A9,Not provided,education,m
+ME01,activity,1,Employed,main activity status,m
+ME01,activity,2,Unemployed,main activity status,m
+ME01,activity,3,Retired,main activity status,m
+ME01,activity,4,Student,main activity status,m
+ME01,activity,5,Domestic tasks,main activity status,m
+ME01,activity,6,Disabled,main activity status,m
+ME01,activity,7,Military service,main activity status,m
+ME01,activity,8,Not applicable,main activity status,m
+ME01,activity,9,Not provided,main activity status,m
+ME01,activity,3_7,Others,main activity status,m
+ME02,workday,1,Full time,main job: full or part time,m
+ME02,workday,2,Part time,main job: full or part time,m
+ME02,workday,8,Not applicable,main job: full or part time,m
+ME02,workday,9,Not provided,main job: full or part time,m
+ME03,contract_type,1,Permanent contract,permanency of main job,m
+ME03,contract_type,2,Fixed-term contract,permanency of main job,m
+ME03,contract_type,8,Not applicable,permanency of main job,m
+ME03,contract_type,9,Not provided,permanency of main job,m
+ME13,employment_sector,1,Public sector,employment sector,m
+ME13,employment_sector,2,Private sector,employment sector,m
+ME13,employment_sector,8,Not applicable,employment sector,m
+ME13,employment_sector,9,Not provided,employment sector,m
+MB03_Recoded_5Classes,age,0_14,Young,age,m
+MB03_Recoded_5Classes,age,15_29,Young,age,m
+MB03_Recoded_5Classes,age,30_44,Adult,age,m
+MB03_Recoded_5Classes,age,45_59,Adult,age,m
+MB03_Recoded_5Classes,age,60_Inf,Elder,age,m
+MB03_Recoded_5Classes,age,60_inf,Elder,age,m

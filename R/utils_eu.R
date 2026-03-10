@@ -863,68 +863,63 @@ coicop_mapping <- function(data, mapping_file = mapping_coicop) {
 #' @return data file with the updated expenditure data
 #' @export
 update_year <- function(data, new_year){
-
   # Define countries
   country <- unique(data$country)
-
   # Define data year
   base_year <- unique(data$year.x)
 
+  # Inicializar dataframe resultante fuera del bucle
+  data_updated <- data
+  # Asegurar que las columnas CP son numéricas
+  coicop_cols <- grep("^CP\\d+", names(data), value = TRUE)
+  data_updated[, coicop_cols] <- lapply(data_updated[, coicop_cols], as.numeric)
+
   # Loop to upscale each country expenses
   for (c in country) {
-
-    # Calculate adjustment coefficient if base year = 2015
     if (base_year == 2015) {
-
-       # Get eurostat data: Harmonised index of consumer price (HICP)
       prc <- restatapi::get_eurostat_data("prc_hicp_aind",
                                           filters = c("INX_A_AVG", c),
-                                          date_filter = new_year )
-
-      # Calculate adjustment coefficient
+                                          date_filter = new_year)
+      # Check if data was retrieved
+      if (is.null(prc)) {
+        warning(sprintf("No HICP data found for country %s and year %s. Skipping.", c, new_year))
+        next
+      }
       prc <- prc %>%
-        dplyr::mutate(prc    = values/100)
+        dplyr::mutate(prc = values / 100)
 
-    }else if (base_year == 2020) {
+    } else if (base_year == 2020) {
       years <- c(base_year, new_year)
       prc <- restatapi::get_eurostat_data("prc_hicp_aind",
                                           filters = c("INX_A_AVG", c),
                                           date_filter = years)
+      # Check if data was retrieved
+      if (is.null(prc)) {
+        warning(sprintf("No HICP data found for country %s and years %s-%s. Skipping.", c, base_year, new_year))
+        next
+      }
       prc <- prc %>%
         reshape2::dcast(coicop ~ time, value.var = "values") %>%
         dplyr::rename(exp_2020 = "2020",
                       exp_new  = as.character(new_year)) %>%
         dplyr::mutate(prc = 1 + ((exp_new - exp_2020) / 100))
-
     } else {
       stop(sprintf("base_year %s is not supported. Available options are: 2015, 2020.", base_year))
     }
 
-    # Inicializar dataframe resultante
-    data_updated <- data
-
-    # Asegurar que las columnas CP son numéricas
-    coicop_cols <- grep("^CP\\d+", names(data), value = TRUE)
-    data_updated[, coicop_cols] <- lapply(data_updated[, coicop_cols], as.numeric)
-
     # Filtrar solo las filas del país actual
-    idx <- which(data$country == c)
-
-    # Obtener columnas que corresponden a códigos COICOP
-    coicop_cols <- grep("^CP\\d+", names(data), value = TRUE)
+    idx <- which(data_updated$country == c)
 
     for (col in coicop_cols) {
       coicop_code <- col
       coef <- NA
-
-      # Buscar el coeficiente más específico disponible
       while (nchar(coicop_code) >= 2 && is.na(coef)) {
         if (coicop_code %in% prc$coicop) {
           coef <- prc$prc[prc$coicop == coicop_code]
         } else {
           coicop_code <- substr(coicop_code, 1, nchar(coicop_code) - 1)
           if (coicop_code %in% prc$coicop) {
-          coef <- prc$prc[prc$coicop == coicop_code]
+            coef <- prc$prc[prc$coicop == coicop_code]
           } else {
             coicop_code <- substr(coicop_code, 1, nchar(coicop_code) - 1)
             if (coicop_code %in% prc$coicop) {
@@ -940,17 +935,13 @@ update_year <- function(data, new_year){
           }
         }
       }
-
-      # Aplicar el coeficiente si se ha encontrado uno válido
       if (!is.na(coef)) {
         data_updated[idx, col] <- data_updated[idx, col] * coef
       }
     }
   }
-
   return(data_updated)
 }
-
 
 #' price_shock_eu
 #'

@@ -242,7 +242,7 @@ test_that("Test10b_Update year EU with full dataset", {
   hbs <- readRDS(file.path(path_outputs, "hbs_coicop_2015.rds"))
 
   # Apply update_year
-  test_result <- suppressWarnings(update_year(data = hbs, new_year = new_year))
+  test_result <- update_year(data = hbs, new_year = new_year)
 
   path2 <- file.path(path_outputs, paste0("hbs_updated_2015_to_", new_year, ".rds"))
   test_expect <- readRDS(path2)

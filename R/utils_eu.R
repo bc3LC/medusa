@@ -857,7 +857,7 @@ coicop_mapping <- function(data, mapping_file = mapping_coicop) {
 #' update_year
 #'
 #' Function to update the expenditure data of the HBS
-#' @param data dataframe with the hbs data to update
+#' @param data dataframe with the hbs data to update (The COICOP codes in the dataframe must be renamed beforehand using rename_coicop.)
 #' @param new_year year to which you want to update the microdata
 #' @importFrom dplyr %>%
 #' @return data file with the updated expenditure data
@@ -885,27 +885,27 @@ update_year <- function(data, new_year){
       prc <- prc %>%
         dplyr::mutate(prc    = values/100)
 
-    } else if (base_year == 2020 & new_year < 2020 & new_year > 2015 ) {
-
-      # Define years
+    }else if (base_year == 2020) {
       years <- c(base_year, new_year)
-
-      # Get eurostat data: Harmonised index of consumer price (HICP)
       prc <- restatapi::get_eurostat_data("prc_hicp_aind",
                                           filters = c("INX_A_AVG", c),
-                                          date_filter = years )
-
-      # Calculate adjustment coefficient if base year == 2020 & 2015 < new year > 2020
+                                          date_filter = years)
       prc <- prc %>%
         reshape2::dcast(coicop ~ time, value.var = "values") %>%
-        dplyr::rename(exp_2019 = "2019",
-               exp_2020 = "2020") %>%
-        dplyr::mutate(prc = 1+((exp_2019-exp_2020)/100))
+        dplyr::rename(exp_2020 = "2020",
+                      exp_new  = as.character(new_year)) %>%
+        dplyr::mutate(prc = 1 + ((exp_new - exp_2020) / 100))
 
+    } else {
+      stop(sprintf("base_year %s is not supported. Available options are: 2015, 2020.", base_year))
     }
 
     # Inicializar dataframe resultante
     data_updated <- data
+
+    # Asegurar que las columnas CP son numéricas
+    coicop_cols <- grep("^CP\\d+", names(data), value = TRUE)
+    data_updated[, coicop_cols] <- lapply(data_updated[, coicop_cols], as.numeric)
 
     # Filtrar solo las filas del país actual
     idx <- which(data$country == c)

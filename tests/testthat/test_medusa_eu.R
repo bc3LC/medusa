@@ -183,6 +183,30 @@ test_that("Test8_Rename COICOP columns EU", {
 })
 
 
+test_that("Test8b_Rename COICOP columns EU on full database", {
+  path_inputs  <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
+  path_outputs <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")
+  years <- c(2010, 2015, 2020)
+
+  for (y in years) {
+
+    # Load the RDS created in Test7
+    hbs <- readRDS(file.path(path_inputs, paste0("hbs_", y, ".rds")))
+
+    # Apply rename_coicop
+    test_result <- rename_coicop(hbs)
+
+    # Load or create the reference RDS
+    path2 <- file.path(path_outputs, paste0("hbs_coicop_", y, ".rds"))
+
+    # Subsequent runs: compare against reference
+    test_expect <- readRDS(path2)
+    testthat::expect_equal(test_result, test_expect,
+                           label = paste0("rename_coicop output mismatch for year ", y))
+  }
+})
+
+
 test_that("Test9_Map COICOP columns EU", {
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
   hbs <- read.csv(file.path(path, "ex_coicop2_eu.csv"), header = T, fileEncoding = "UTF-8-BOM")
@@ -206,6 +230,53 @@ test_that("Test10_Update HBS year", {
   test_expect <- read.csv(file.path(path, "ex_dataset_expenses_ps_eu.csv"), header = T, fileEncoding = "UTF-8-BOM")
 
   testthat::expect_equal(test_result, test_expect)
+})
+
+
+test_that("Test10b_Update year EU with full dataset", {
+  path_inputs  <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
+  path_outputs <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")
+  new_year <- 2022
+
+  # Load input RDS generated in Test8b (rename_coicop output for 2015)
+  hbs <- readRDS(file.path(path_outputs, "hbs_coicop_2015.rds"))
+
+  # Apply update_year
+  test_result <- suppressWarnings(update_year(data = hbs, new_year = new_year))
+
+  path2 <- file.path(path_outputs, paste0("hbs_updated_2015_to_", new_year, ".rds"))
+  test_expect <- readRDS(path2)
+  testthat::expect_equal(test_result, test_expect,
+                         label = paste0("update_year output mismatch for 2015 -> ", new_year))
+
+  # 1. Verify output is a dataframe
+  testthat::expect_s3_class(test_result, "data.frame")
+
+  # 2. Verify same number of rows as input
+  testthat::expect_equal(nrow(test_result), nrow(hbs),
+                         label = "update_year changed the number of rows")
+
+  # 3. Verify same columns as input
+  testthat::expect_equal(colnames(test_result), colnames(hbs),
+                         label = "update_year changed the column names")
+
+  # 4. Verify that CP columns have been updated (values should differ from input)
+  coicop_cols <- grep("^CP\\d+", names(hbs), value = TRUE)
+  testthat::expect_gt(length(coicop_cols), 0,
+                      label = "No CP columns found in input data")
+
+  cols_updated <- sapply(coicop_cols, function(col) {
+    !isTRUE(all.equal(test_result[[col]], hbs[[col]]))
+  })
+  testthat::expect_true(any(cols_updated),
+                        label = "No CP columns were updated by update_year")
+
+  # 5. Verify that non-COICOP columns remain unchanged
+  other_cols <- setdiff(names(hbs), coicop_cols)
+  for (col in other_cols) {
+    testthat::expect_equal(test_result[[col]], hbs[[col]],
+                           label = paste0("Non-COICOP column '", col, "' was modified"))
+  }
 })
 
 

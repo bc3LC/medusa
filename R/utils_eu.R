@@ -164,31 +164,31 @@ rawhbs_eu <- function(year, country = "all", path) {
       if (y == 2010) {
 
         # Households file
-        hbs_h <- openxlsx::read.xlsx(  paste0(path, y, "/", c, "_HBS_hh",".xlsx") ,
+        hbs_h <- openxlsx::read.xlsx(  file.path(path, y, paste0(c, "_HBS_hh.xlsx")) ,
                                        colNames = TRUE)
 
         # Members file
-        hbs_m <- openxlsx::read.xlsx(  paste0(path, y, "/", c, "_HBS_hm",".xlsx") ,
+        hbs_m <- openxlsx::read.xlsx(  file.path(path, y, paste0(c, "_HBS_hm",".xlsx")) ,
                                        colNames = TRUE)
 
       } else if (y == 2015) {
 
         # Households file
-        hbs_h <- openxlsx::read.xlsx(  paste0(path, y, "/", c, "_MFR_hh",".xlsx") ,
+        hbs_h <- openxlsx::read.xlsx(  file.path(path, y, paste0(c, "_MFR_hh",".xlsx")) ,
                                        colNames = TRUE)
 
         # Members file
-        hbs_m <- openxlsx::read.xlsx(  paste0(path, y, "/", c, "_MFR_hm",".xlsx") ,
+        hbs_m <- openxlsx::read.xlsx(  file.path(path, y, paste0(c, "_MFR_hm",".xlsx")) ,
                                        colNames = TRUE)
 
       } else {
 
         # Households file
-        hbs_h <- openxlsx::read.xlsx(  paste0(path, y, "/HBS_HH_", c, ".xlsx") ,
+        hbs_h <- openxlsx::read.xlsx(  file.path(path, y, paste0("/HBS_HH_", c, ".xlsx")) ,
                                        colNames = TRUE)
 
         # Members file
-        hbs_m <- openxlsx::read.xlsx(  paste0(path, y, "/HBS_HM_", c, ".xlsx") ,
+        hbs_m <- openxlsx::read.xlsx(  file.path(path, y, paste0("/HBS_HM_", c, ".xlsx")) ,
                                        colNames = TRUE)
       }
 
@@ -343,6 +343,9 @@ database_hbs <- function(year, country = "all", inputs_path) {
           return(y)
         }
 
+        hbs_h$EUR_HE00 <- as.numeric(hbs_h$EUR_HE00)
+        hbs_h$HB062    <- as.numeric(hbs_h$HB062)
+        hbs_h$HA10     <- as.numeric(hbs_h$HA10)
         hbs_h             <- dplyr::mutate(hbs_h, total_exp_eq = EUR_HE00/HB062)
         hbs_h$decile      <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$HA10 , 10)
         hbs_h$quintile    <- Nquantiles(hbs_h$total_exp_eq, w = hbs_h$HA10 , 5)
@@ -734,29 +737,29 @@ rename_coicop <- function(data) {
 
 #' coicop_mapping
 #'
-#' Function to rename coicop expenditure categories
+#' Function to map coicop expenditure categories
 #' @param data dataframe with the hbs data to rename
 #' @param mapping_file mapping file to be used (included in medusa)
 #' @importFrom dplyr %>%
 #' @return data file with the renamed expenditure categories
 #' @export
 coicop_mapping <- function(data, mapping_file = mapping_coicop) {
+  var_old <- mapping_file$var_hbs
+  var_new <- mapping_file$var
 
-  # Assign mapping values to vectors
-  var_old <- base::assign("var_old", mapping_file$var_hbs)
-  var_new <- base::assign("var_new", mapping_file$var)
+  for (v in seq_along(var_old)) {
+    old_col <- var_old[v]
+    new_col <- var_new[v]
 
-  # Create the selected variables with the new names
-  for (v in 1:length(var_old)) {
-    new = eval(parse(text = paste0("var_new[", v, "]")))
-    var = eval(parse(text = paste0("var_old[", v, "]")))
-    eval(parse( text = paste0("data <- data %>%
-  dplyr::mutate(",var_new,"=", var_old,")")))
+    if (old_col %in% names(data)) {
+      data[[new_col]] <- data[[old_col]]
+    } else {
+      warning(paste0("Column '", old_col, "' not found in data, skipping."))
+    }
   }
 
   return(data)
 }
-
 
 #' update_year
 #'

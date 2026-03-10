@@ -14,9 +14,9 @@ weighted.quantile(
 )
 }
 \arguments{
-\item{x}{Data values. A vector pf numeric values, for which the median or quantiles are required.}
+\item{x}{Data values. A vector of numeric values, for which the median or quantiles are required.}
 
-\item{w}{Weights. A vector of nonnegative numbers, of the same lenght as x.}
+\item{w}{Weights. A vector of non negative numbers, of the same lenght as x.}
 
 \item{probs}{Probabilities for which the quantiles should be computed. A numeric vector of values between 0 and 1.}
 

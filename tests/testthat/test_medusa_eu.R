@@ -281,13 +281,94 @@ test_that("Test10b_Update year EU with full dataset", {
 
 
 test_that("Test11_Price shock EU", {
-  path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
-  hbs   <- read.csv(file.path(path, "ex_dataset_expenses_eu.csv"), header = T, fileEncoding = "UTF-8-BOM")
-  shocks <- read.csv(file.path(path, "shocks_ps_eu.csv"), header = T, fileEncoding = "UTF-8-BOM")
+  path_inputs <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
+  path_outputs <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")
+  hbs   <- readRDS(file.path(path_outputs, "hbs_coicop_2015.rds"))
+  shocks <- read.csv(file.path(path_inputs, "shocks_ps_eu2.csv"), header = T, fileEncoding = "UTF-8-BOM")
 
   test_result <- price_shock_eu(hbs, shocks)
 
-  test_expect <- read.csv(file.path(path, "ex_dataset_expenses_ps_eu.csv"), header = T, fileEncoding = "UTF-8-BOM")
+  # --- Reference RDS check ---
+  path2 <- file.path(path_outputs, "hbs_price_shock_2015.rds")
 
-  testthat::expect_equal(test_result, test_expect)
+  if (!file.exists(path2)) {
+    saveRDS(test_result, path2)
+    message("Reference RDS created: ", path2)
+  } else {
+    test_expect <- readRDS(path2)
+    testthat::expect_equal(test_result, test_expect,
+                           label = "price_shock_eu output mismatch")
+  }
+
+  # --- Structural checks ---
+
+  # 1. Verify output is a dataframe
+  testthat::expect_s3_class(test_result, "data.frame")
+
+  # 2. Verify same number of rows as input
+  testthat::expect_equal(nrow(test_result), nrow(hbs),
+                         label = "price_shock_eu changed the number of rows")
+
+  # 3. Verify that scenario columns have been created
+  scenario_cols <- setdiff(colnames(shocks), "coicop")
+  scenarios <- unique(gsub(".*_", "", scenario_cols))
+  for (s in scenarios) {
+    new_cols <- grep(paste0("_", s, "$"), colnames(test_result), value = TRUE)
+    testthat::expect_gt(length(new_cols), 0,
+                        label = paste0("No columns created for scenario ", s))
+  }
+
+  # 4. Verify that CP00 scenario columns have been created
+  for (s in scenarios) {
+    cp00_col <- paste0("CP00_", s)
+    testthat::expect_true(cp00_col %in% colnames(test_result),
+                          label = paste0(cp00_col, " not found in result"))
+  }
+
+  # --- Shock value checks ---
+  idx_BE <- which(test_result$country == "BE")
+  idx_ES <- which(test_result$country == "ES")
+
+  # 5. Verify shock columns have been created
+  expected_new_cols <- c("CP0111_Scenario1", "CP0112_Scenario2", "CP0113_Scenario1", "CP0114_Scenario2")
+  for (col in expected_new_cols) {
+    testthat::expect_true(col %in% colnames(test_result),
+                          label = paste0("Column '", col, "' was not created"))
+  }
+
+  # 6. Verify shocks applied correctly per country and scenario
+  # BE Scenario1: CP0111 * 2
+  testthat::expect_equal(test_result$CP0111_Scenario1[idx_BE],
+                         as.numeric(hbs$CP0111[idx_BE]) * 2,
+                         label = "BE CP0111_Scenario1: shock x2 not applied correctly")
+
+  # BE Scenario2: CP0112 * 3
+  testthat::expect_equal(test_result$CP0112_Scenario2[idx_BE],
+                         as.numeric(hbs$CP0112[idx_BE]) * 3,
+                         label = "BE CP0112_Scenario2: shock x3 not applied correctly")
+
+  # ES Scenario1: CP0113 * 4
+  testthat::expect_equal(test_result$CP0113_Scenario1[idx_ES],
+                         as.numeric(hbs$CP0113[idx_ES]) * 4,
+                         label = "ES CP0113_Scenario1: shock x4 not applied correctly")
+
+  # ES Scenario2: CP0114 * 2
+  testthat::expect_equal(test_result$CP0114_Scenario2[idx_ES],
+                         as.numeric(hbs$CP0114[idx_ES]) * 2,
+                         label = "ES CP0114_Scenario2: shock x2 not applied correctly")
+
+  # 7. Verify shock = 1 leaves values unchanged (ES CP0111_Scenario1 should equal original)
+  if ("CP0111_Scenario1" %in% colnames(test_result)) {
+    testthat::expect_equal(test_result$CP0111_Scenario1[idx_ES],
+                           as.numeric(hbs$CP0111[idx_ES]),
+                           label = "ES CP0111_Scenario1: should be unchanged (shock = 1)")
+  }
+
+  # 8. Verify CP00 per scenario has changed for countries with active shocks
+  testthat::expect_false(isTRUE(all.equal(test_result$CP00_Scenario1[idx_BE],
+                                          as.numeric(hbs$CP00[idx_BE]))),
+                         label = "CP00_Scenario1 for BE was not updated")
+  testthat::expect_false(isTRUE(all.equal(test_result$CP00_Scenario2[idx_ES],
+                                          as.numeric(hbs$CP00[idx_ES]))),
+                         label = "CP00_Scenario2 for ES was not updated")
 })

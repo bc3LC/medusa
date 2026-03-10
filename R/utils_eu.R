@@ -971,6 +971,9 @@ price_shock_eu <- function(data, shocks) {
   coicop_cols <- grep("^CP\\d+", colnames(data), value = TRUE)
   coicop_cols <- setdiff(coicop_cols, "CP00")
 
+  # Asegurar que las columnas CP son numéricas
+  data[, coicop_cols] <- lapply(data[, coicop_cols], as.numeric)
+
   for (scenario in scenarios) {
     for (country in countries) {
 

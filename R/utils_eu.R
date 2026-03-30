@@ -1391,6 +1391,13 @@ intersectional_graph_eu <- function(data, pairs = is_categories_eu) {
         dplyr::filter(!is.na(LABELS_B) & LABELS_B != "NA") %>%
         droplevels()
 
+      # Skip if no data remains after filtering
+      if (nrow(datapl) == 0) {
+        message(sprintf("Warning: Skipping '%s' plot for country '%s': no data after filtering",
+                        key, folder))
+        next
+      }
+
       clean_a <- graph_labels_eu %>% dplyr::filter(VARIABLE == var_a) %>% dplyr::pull(VAR_CLEAN)
       clean_b <- graph_labels_eu %>% dplyr::filter(VARIABLE == var_b) %>% dplyr::pull(VAR_CLEAN)
 
@@ -1448,14 +1455,26 @@ intersectional_graph_eu <- function(data, pairs = is_categories_eu) {
 
       # Guardar gráfico con manejo de errores
       output_path <- file.path(folder_path, paste0(key, ".png"))
-      message(sprintf("✅ Saving '%s'  plot in folder '%s'", key, folder))
-
-      ggplot2::ggsave(pl,
-                      file = output_path,
-                      width = adj_wh$width,
-                      height = adj_wh$heigth,
-                      units = "mm",
-                      limitsize = FALSE)
+      # message(sprintf("✅ Saving '%s'  plot in folder '%s'", key, folder))
+      #
+      # ggplot2::ggsave(pl,
+      #                 file = output_path,
+      #                 width = adj_wh$width,
+      #                 height = adj_wh$heigth,
+      #                 units = "mm",
+      #                 limitsize = FALSE)
+      tryCatch({
+        message(sprintf("✅ Saving '%s'  plot in folder '%s'", key, folder))
+        ggplot2::ggsave(pl,
+                        file = output_path,
+                        width = adj_wh$width,
+                        height = adj_wh$heigth,
+                        units = "mm",
+                        limitsize = FALSE)
+      }, error = function(e) {
+        message(sprintf("Warning: Skipping '%s' plot for country '%s': %s",
+                        key, folder, conditionMessage(e)))
+      })
 
     }
   }

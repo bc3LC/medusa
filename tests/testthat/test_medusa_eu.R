@@ -459,3 +459,108 @@ test_that("Test12_Impact EU & basic graph", {
     }
   }
 })
+
+
+test_that("Test13_Intersectional impact EU & graph", {
+  path_inputs  <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
+  path_outputs <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")
+
+  # Load input from Test11 (price_shock output)
+  hbs <- readRDS(file.path(path_outputs, "hbs_price_shock_2015.rds"))
+
+  # Define scenario names from the shock columns
+  shocks_scenario_names <- unique(gsub("^CP00_", "", grep("^CP00_", colnames(hbs), value = TRUE)))
+
+  # Run impact_intersectional_eu
+  setwd(path_outputs)
+  test_result <- suppressWarnings(impact_intersectional_eu(data = hbs,
+                                          shocks_scenario_names = shocks_scenario_names,
+                                          save = TRUE,
+                                          fig  = TRUE))
+
+  # --- Reference RDS check ---
+  ref_path <- file.path(path_inputs, "DII_impacts_eu.rds")
+
+  if (!file.exists(ref_path)) {
+    saveRDS(test_result, ref_path)
+    message("Reference RDS created: ", ref_path)
+  } else {
+    test_expect <- readRDS(ref_path)
+    testthat::expect_equal(test_result, test_expect,
+                           label = "impact_intersectional_eu output mismatch")
+  }
+
+  # --- Structural checks ---
+
+  # 1. Verify output is a dataframe
+  testthat::expect_s3_class(test_result, "data.frame")
+
+  # 2. Verify expected columns exist
+  expected_cols <- c("ID", "LABELS_A", "LABELS_B", "VARIABLE_A", "VARIABLE_B", "WEIGHT", "SOURCE")
+  for (col in expected_cols) {
+    testthat::expect_true(col %in% colnames(test_result),
+                          label = paste0("Column '", col, "' missing in impact_intersectional_eu output"))
+  }
+
+  # 3. Verify DI columns have been created for each scenario
+  for (s in shocks_scenario_names) {
+    di_col <- paste0("DI_", s)
+    testthat::expect_true(di_col %in% colnames(test_result),
+                          label = paste0("DI column '", di_col, "' not found in result"))
+  }
+
+  # 4. Verify output is not empty
+  testthat::expect_gt(nrow(test_result), 0,
+                      label = "impact_intersectional_eu returned an empty dataframe")
+
+  # 5. Verify SOURCE contains EU and country codes
+  sources <- unique(test_result$SOURCE)
+  testthat::expect_true("EU" %in% sources,
+                        label = "EU-level results not found in SOURCE column")
+  countries <- unique(hbs$country)
+  for (c in countries) {
+    testthat::expect_true(c %in% sources,
+                          label = paste0("Country '", c, "' not found in SOURCE column"))
+  }
+
+  # 6. Verify variable pairs are present in results
+  for (r in 1:nrow(is_categories_eu)) {
+    var_a <- is_categories_eu$category_a[r]
+    var_b <- is_categories_eu$category_b[r]
+    if (var_a %in% colnames(hbs) & var_b %in% colnames(hbs)) {
+      pair_rows <- test_result[test_result$VARIABLE_A == var_a &
+                                 test_result$VARIABLE_B == var_b &
+                                 test_result$SOURCE == "EU", ]
+      testthat::expect_gt(nrow(pair_rows), 0,
+                          label = paste0("No EU results found for pair: ", var_a, " x ", var_b))
+    }
+  }
+
+  # --- Figure checks ---
+  generated_figs <- list.files(file.path(path_outputs, "figures"),
+                               pattern = "^DII_.*\\.png$")
+
+  testthat::expect_gt(length(generated_figs), 0,
+                      label = "No intersectional figures were generated")
+
+  for (fig_name in generated_figs) {
+    fig_output <- file.path(path_outputs, "figures", fig_name)
+    fig_input  <- file.path(path_inputs,  "figures", fig_name)
+
+    # Verify figure was generated
+    testthat::expect_true(file.exists(fig_output),
+                          label = paste0("Figure ", fig_name, " was not generated"))
+
+    # Compare against reference if it exists
+    if (file.exists(fig_input)) {
+      img_result <- png::readPNG(fig_output)
+      img_expect <- png::readPNG(fig_input)
+      testthat::expect_true(identical(attributes(img_result), attributes(img_expect)),
+                            label = paste0("Figure ", fig_name, " dimensions do not match"))
+    } else {
+      if (!dir.exists(file.path(path_inputs, "figures"))) dir.create(file.path(path_inputs, "figures"))
+      file.copy(fig_output, fig_input)
+      message("Reference figure created: ", fig_input)
+    }
+  }
+})

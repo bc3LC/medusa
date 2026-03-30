@@ -117,7 +117,7 @@ rawhbs_eu <- function(year, country = "all", path) {
     # If there is one invalid country, show a singular message
     if (length(invalid_country) == 1) {
       stop(sprintf("You introduced the country code %s which is not available. Possible options are: %s.",
-                   invalid_years, paste(available_country, collapse = ", ")))
+                   invalid_country, paste(available_country, collapse = ", ")))
     } else if (length(invalid_country) > 1) {
       # If there are multiple invalid countries, show a plural message
       stop(sprintf("You introduced the countries %s which are not available. Possible options are: %s.",
@@ -143,17 +143,22 @@ rawhbs_eu <- function(year, country = "all", path) {
       }
     } else {
 
+      # List xlsx files in the year folder to validate selected countries
+      year_path <- file.path(path, y)
+      xlsx_files <- list.files(year_path, pattern = "\\.xlsx$", full.names = FALSE)
+
       if (y == 2020) {
-        countries <- unique(substr(xlsx_files, nchar(xlsx_files) - 6, nchar(xlsx_files) - 5))
+        available_in_year <- unique(substr(xlsx_files, nchar(xlsx_files) - 6, nchar(xlsx_files) - 5))
       } else {
-        countries <- unique(substr(xlsx_files, 1, 2))
+        available_in_year <- unique(substr(xlsx_files, 1, 2))
       }
-      # Verify that the selected country exists in the extracted country codes
-      invalid_selected <- country[!country %in% countries]
+
+      # Verify that the selected countries exist in the data for this year
+      invalid_selected <- country[!country %in% available_in_year]
 
       if (length(invalid_selected) > 0) {
         stop(sprintf("The selected country code(s) %s do not exist in your data for the year %s. Available countries: %s.",
-                     paste(invalid_selected, collapse = ", "), y, paste(countries, collapse = ", ")))
+                     paste(invalid_selected, collapse = ", "), y, paste(available_in_year, collapse = ", ")))
       }
       countries <- country
     }
@@ -253,7 +258,7 @@ database_hbs <- function(year, country = "all", inputs_path) {
     # If there is one invalid country, show a singular message
     if (length(invalid_country) == 1) {
       stop(sprintf("You introduced the country code %s which is not available. Possible options are: %s.",
-                   invalid_years, paste(available_country, collapse = ", ")))
+                   invalid_country, paste(available_country, collapse = ", ")))
     } else if (length(invalid_country) > 1) {
       # If there are multiple invalid countries, show a plural message
       stop(sprintf("You introduced the countries %s which are not available. Possible options are: %s.",
@@ -1591,5 +1596,179 @@ impact_intersectional_eu <- function(data, pairs = is_categories_eu, by_country 
   combined_df <- dplyr::bind_rows(is_d_impacts, .id = "ID")
   return(combined_df)
 
+}
+
+
+#' id_ep_eu
+#'
+#' Function to identify energy poor households in EU countries.
+#' Thresholds are calculated per member state.
+#' @param data dataset with the EU HBS data (output from hbs_eu, with COICOP columns renamed via rename_coicop).
+#' @importFrom dplyr %>%
+#' @return a dataset with EU HBS data where energy poor households are identified per country.
+#' @export
+id_ep_eu <- function(data) {
+
+  # Ensure COICOP columns are numeric
+  data <- data %>%
+    dplyr::mutate(
+      CP045   = as.numeric(CP045),
+      CP00    = as.numeric(CP00),
+      CP0411  = as.numeric(CP0411),
+      CP0421  = as.numeric(CP0421),
+      eq_size = as.numeric(eq_size),
+      weight  = as.numeric(weight)
+    )
+
+  # Calculate energy poverty variables
+  data <- data %>%
+    dplyr::mutate(
+      endom       = CP045,
+      endom_eq    = endom / eq_size,
+      total_eq    = CP00 / eq_size,
+      share_endom = endom_eq / total_eq,
+      exp_aec     = total_eq - endom_eq,
+      exp_aehc    = exp_aec - CP0411 - CP0421
+    )
+
+  # Calculate medians and thresholds per country
+  data <- data %>%
+    dplyr::group_by(country) %>%
+    dplyr::mutate(
+      med_sendom = weighted.median(share_endom, w = weight, na.rm = TRUE),
+      med_endom  = weighted.median(endom_eq,    w = weight, na.rm = TRUE),
+      med_exp    = weighted.median(total_eq,    w = weight, na.rm = TRUE),
+      poverty_t  = med_exp * 0.6
+    ) %>%
+    dplyr::ungroup()
+
+  # Calculate energy poverty indices
+  data <- data %>%
+    dplyr::mutate(
+      IEP10PC     = base::ifelse(share_endom >= 0.10,                              weight, 0),
+      ID_EP10PC   = base::ifelse(share_endom >= 0.10,                              "Vulnerable", "No vulnerable"),
+      IEP2M       = base::ifelse(share_endom >= 2 * med_sendom,                    weight, 0),
+      ID_EP2M     = base::ifelse(share_endom >= 2 * med_sendom,                    "Vulnerable", "No vulnerable"),
+      IEPHEP      = base::ifelse(endom_eq <= med_endom / 2,                        weight, 0),
+      ID_EPHEP    = base::ifelse(endom_eq <= med_endom / 2,                        "Vulnerable", "No vulnerable"),
+      IEPHEP_LI   = base::ifelse(endom_eq <= med_endom / 2 & exp_aec <= poverty_t, weight, 0),
+      ID_EPHEP_LI = base::ifelse(endom_eq <= med_endom / 2 & exp_aec <= poverty_t, "Vulnerable", "No vulnerable"),
+      IEPLIHC     = base::ifelse(endom_eq >= med_endom & exp_aec <= poverty_t,     weight, 0),
+      ID_EPLIHC   = base::ifelse(endom_eq >= med_endom & exp_aec <= poverty_t,     "Vulnerable", "No vulnerable")
+    )
+
+  return(data)
+}
+
+
+#' id_tp_eu
+#'
+#' Function to identify transport poor households in EU countries.
+#' Thresholds are calculated per member state. Long-distance transport
+#' (air and sea) is excluded from the calculation.
+#' @param data dataset with the EU HBS data (output from hbs_eu, with COICOP columns renamed via rename_coicop).
+#' @importFrom dplyr %>%
+#' @return a dataset with EU HBS data where transport poor households are identified per country.
+#' @export
+id_tp_eu <- function(data) {
+
+  # Ensure COICOP columns are numeric
+  coicop_tp <- c("CP072", "CP073", "CP0731", "CP0732", "CP0733", "CP0734", "CP0735",
+                 "CP0411", "CP0421", "CP00")
+  for (col in coicop_tp) {
+    if (col %in% names(data)) data[[col]] <- as.numeric(data[[col]])
+  }
+  data$eq_size <- as.numeric(data$eq_size)
+  data$weight  <- as.numeric(data$weight)
+
+  # Calculate transport poverty variables
+  # Transport = private transport (CP072) + transport services (CP073)
+  #             - air transport (CP0733) - sea/inland transport (CP0734)
+  data <- data %>%
+    dplyr::mutate(
+      air_sea         = dplyr::coalesce(as.numeric(CP0733), 0) + dplyr::coalesce(as.numeric(CP0734), 0),
+      transport       = CP072 + CP073 - air_sea,
+      transport_eq    = transport / eq_size,
+      public_transport    = dplyr::coalesce(as.numeric(CP0731), 0) +
+                            dplyr::coalesce(as.numeric(CP0732), 0) +
+                            dplyr::coalesce(as.numeric(CP0735), 0),
+      public_transport_eq = public_transport / eq_size,
+      total_eq        = CP00 / eq_size,
+      share_transport = transport_eq / total_eq,
+      exp_atc         = total_eq - transport_eq,
+      exp_athc        = exp_atc - CP0411 - CP0421
+    )
+
+  # Calculate medians per country (excluding households without transport/public transport expenses)
+  med_transport <- data %>%
+    dplyr::filter(transport > 0) %>%
+    dplyr::group_by(country) %>%
+    dplyr::summarise(
+      med_stransport = weighted.median(share_transport, w = weight, na.rm = TRUE),
+      med_transport  = weighted.median(transport_eq,   w = weight, na.rm = TRUE),
+      .groups = "drop"
+    )
+
+  med_ptransport <- data %>%
+    dplyr::filter(public_transport > 0) %>%
+    dplyr::group_by(country) %>%
+    dplyr::summarise(
+      med_ptransport = weighted.median(public_transport_eq, w = weight, na.rm = TRUE),
+      .groups = "drop"
+    )
+
+  # Merge medians back to main data
+  data <- data %>%
+    dplyr::left_join(med_transport,  by = "country") %>%
+    dplyr::left_join(med_ptransport, by = "country")
+
+  # Calculate poverty threshold per country
+  data <- data %>%
+    dplyr::group_by(country) %>%
+    dplyr::mutate(
+      med_exp   = weighted.median(total_eq, w = weight, na.rm = TRUE),
+      poverty_t = med_exp * 0.6
+    ) %>%
+    dplyr::ungroup()
+
+  # Calculate transport poverty indices
+  data <- data %>%
+    dplyr::mutate(
+      ITP10PC     = base::ifelse(share_transport >= 0.10, weight, 0),
+      ID_TP10PC   = base::ifelse(share_transport >= 0.10, "Vulnerable", "No vulnerable"),
+      ITP2M       = base::ifelse(share_transport >= 2 * med_stransport, weight, 0),
+      ID_TP2M     = base::ifelse(share_transport >= 2 * med_stransport, "Vulnerable", "No vulnerable"),
+      ITPLIHC     = base::ifelse(transport_eq >= med_transport & exp_atc <= poverty_t, weight, 0),
+      ID_TPLIHC   = base::ifelse(transport_eq >= med_transport & exp_atc <= poverty_t, "Vulnerable", "No vulnerable"),
+      ITPVTU      = base::ifelse(share_transport >= 2 * med_stransport &
+                                 public_transport_eq < med_ptransport &
+                                 total_eq < med_exp, weight, 0),
+      ID_TPVTU    = base::ifelse(share_transport >= 2 * med_stransport &
+                                 public_transport_eq < med_ptransport &
+                                 total_eq < med_exp, "Vulnerable", "No vulnerable")
+    )
+
+  return(data)
+}
+
+
+#' check_var_eu
+#'
+#' Check if the parameter var is valid for EU distributional impact calculation
+#' @param var var introduced by the user
+#' @return stop if var is wrongly introduced
+#' @export
+check_var_eu <- function(var) {
+  available_vars <- graph_labels_eu$VARIABLE
+
+  wrong_vars <- var[!var %in% available_vars]
+
+  if (length(wrong_vars) == 1) {
+    stop(sprintf('You introduced the variable %s which is not available. Possible options are: %s.',
+                 wrong_vars, paste(available_vars, collapse = ", ")))
+  } else if (length(wrong_vars) > 1) {
+    stop(sprintf('You introduced the variables %s which are not available. Possible options are: %s.',
+                 paste(wrong_vars, collapse = ", "), paste(available_vars, collapse = ", ")))
+  }
 }
 

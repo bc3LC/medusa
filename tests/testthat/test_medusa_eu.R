@@ -564,3 +564,121 @@ test_that("Test13_Intersectional impact EU & graph", {
     }
   }
 })
+
+
+test_that("Test14_Example intersectional variables csv EU", {
+  setwd(file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs"))
+  ex_var_intersec_eu()
+  path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")
+  test_result <- read.csv(file = paste0(path, "/Var_Intersec_eu.csv"),
+                          fileEncoding = "UTF-8-BOM",
+                          header = TRUE,
+                          sep = ",",
+                          dec = ".")
+  path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
+  test_expect <- read.csv(file = paste0(path, "/is_categories_eu.csv"),
+                          fileEncoding = "UTF-8-BOM",
+                          header = TRUE,
+                          sep = ",",
+                          dec = ".")
+  testthat::expect_equal(test_result, test_expect)
+})
+
+
+test_that("Test15_calc_di_eu rejects invalid var", {
+  path_inputs  <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
+  path_outputs <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")
+
+  hbs    <- readRDS(file.path(path_outputs, "hbs_price_shock_2015.rds"))
+  shocks <- read.csv(file.path(path_inputs, "shocks_ps_eu2.csv"), header = TRUE, fileEncoding = "UTF-8-BOM")
+
+  testthat::expect_error(
+    calc_di_eu(data = hbs, shocks = shocks, var = "INVALID_VAR",
+               outputs_path = path_outputs),
+    regexp = "not available"
+  )
+})
+
+
+test_that("Test16_calc_ep_eu returns correct structure", {
+  path_outputs <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")
+
+  hbs <- readRDS(file.path(path_outputs, "hbs_coicop_2015.rds"))
+
+  test_result <- calc_ep_eu(hbs)
+
+  # 1. Is a dataframe
+  testthat::expect_s3_class(test_result, "data.frame")
+
+  # 2. Has EP_index column
+  testthat::expect_true("EP_index" %in% colnames(test_result),
+                        label = "EP_index column missing")
+
+  # 3. Contains all five indices
+  expected_indices <- c("10%", "2M", "HEP", "HEP_LI", "LIHC")
+  testthat::expect_true(all(expected_indices %in% test_result$EP_index),
+                        label = "Not all EP indices are present")
+
+  # 4. Has a column per country
+  countries <- unique(hbs$country)
+  for (cc in countries) {
+    testthat::expect_true(cc %in% colnames(test_result),
+                          label = paste0("Country column '", cc, "' missing in calc_ep_eu output"))
+  }
+
+  # 5. Values are between 0 and 1
+  value_cols <- setdiff(colnames(test_result), "EP_index")
+  for (col in value_cols) {
+    vals <- test_result[[col]]
+    testthat::expect_true(all(vals >= 0 & vals <= 1, na.rm = TRUE),
+                          label = paste0("EP values for ", col, " outside [0,1]"))
+  }
+
+  # 6. index filter works
+  test_filtered <- calc_ep_eu(hbs, index = "2M")
+  testthat::expect_equal(nrow(test_filtered), 1,
+                         label = "calc_ep_eu index filter not working")
+  testthat::expect_equal(test_filtered$EP_index, "2M")
+})
+
+
+test_that("Test17_calc_tp_eu returns correct structure", {
+  path_outputs <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_outputs")
+
+  hbs <- readRDS(file.path(path_outputs, "hbs_coicop_2015.rds"))
+
+  test_result <- calc_tp_eu(hbs)
+
+  # 1. Is a dataframe
+  testthat::expect_s3_class(test_result, "data.frame")
+
+  # 2. Has TP_index column
+  testthat::expect_true("TP_index" %in% colnames(test_result),
+                        label = "TP_index column missing")
+
+  # 3. Contains all four indices
+  expected_indices <- c("10%", "2M", "LIHC", "VTU")
+  testthat::expect_true(all(expected_indices %in% test_result$TP_index),
+                        label = "Not all TP indices are present")
+
+  # 4. Has a column per country
+  countries <- unique(hbs$country)
+  for (cc in countries) {
+    testthat::expect_true(cc %in% colnames(test_result),
+                          label = paste0("Country column '", cc, "' missing in calc_tp_eu output"))
+  }
+
+  # 5. Values are between 0 and 1
+  value_cols <- setdiff(colnames(test_result), "TP_index")
+  for (col in value_cols) {
+    vals <- test_result[[col]]
+    testthat::expect_true(all(vals >= 0 & vals <= 1, na.rm = TRUE),
+                          label = paste0("TP values for ", col, " outside [0,1]"))
+  }
+
+  # 6. index filter works
+  test_filtered <- calc_tp_eu(hbs, index = "LIHC")
+  testthat::expect_equal(nrow(test_filtered), 1,
+                         label = "calc_tp_eu index filter not working")
+  testthat::expect_equal(test_filtered$TP_index, "LIHC")
+})

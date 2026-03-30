@@ -48,6 +48,22 @@ available_var_intersec_eu <- function(){
 }
 
 
+#' ex_var_intersec_eu
+#'
+#' Function to save a csv file in which the set of variables must be
+#' introduced for the calculation of intersectional distributional impacts
+#' for EU countries. Save the file, keep just the combinations you are
+#' interested in and load in R.
+#' @return a csv file with the set of variables for which the calculation of
+#' intersectional distributional impacts is available for EU countries
+#' @export
+ex_var_intersec_eu <- function(){
+  av_var_intersec <- get("is_categories_eu")
+  write.csv(av_var_intersec, file = "Var_Intersec_eu.csv", row.names = F)
+  print(paste0("The example file has been saved in`", getwd(),"/Var_Intersec_eu.csv´" ))
+}
+
+
 #' hbs_eu
 #'
 #' Main function to generate the database (from EUROSTAT microdata) to calculate
@@ -65,8 +81,8 @@ available_var_intersec_eu <- function(){
 #' @export
 hbs_eu <- function(year, country = "all", path) {
 
-  # Process raw data from EUROSAT
-  rawhbs_eu(year, country = "all", path)
+  # Process raw data from EUROSTAT
+  rawhbs_eu(year, country = country, path)
 
   # Create a joint database for household and member files
   if (length(year) != 1) {
@@ -138,6 +154,11 @@ calc_di_eu <-function(data, update_hbs=F, shocks, outputs_path=F, var = "all",
                       var_intersec = NULL, by_country = TRUE, save=T, fig=TRUE,
                       file_name = "D_impact", file_name_intersec = "DI_impact") {
 
+  # Check var parameter
+  if (!is.null(var) && !any(var == "all")) {
+    check_var_eu(var)
+  }
+
   # Update hbs
   if(update_hbs != F) {
     data <- update_year(data, new_year = update_hbs )
@@ -148,7 +169,7 @@ calc_di_eu <-function(data, update_hbs=F, shocks, outputs_path=F, var = "all",
 
   # Set working directory to save results
   if (outputs_path == F) {
-    outputs_path <- file.path(path, "outputs")
+    outputs_path <- file.path(getwd(), "outputs")
     if (!dir.exists(outputs_path)) dir.create(outputs_path, recursive = TRUE)
     setwd(outputs_path)
   } else {
@@ -204,4 +225,133 @@ calc_di_eu <-function(data, update_hbs=F, shocks, outputs_path=F, var = "all",
 
   return(return_list)
 
+}
+
+
+#' calc_ep_eu
+#'
+#' Function to calculate energy poverty indices for EU countries.
+#' Thresholds are calculated per member state.
+#' @param data dataset with the EU HBS data (output from hbs_eu, with COICOP columns
+#' renamed via rename_coicop). Must contain columns: CP045, CP00, CP0411, CP0421,
+#' eq_size, weight, country.
+#' @param index energy poverty index or indices to be calculated. Possible
+#' options: "10%", "2M", "LIHC", "HEP", "HEP_LI". If "all" (by default) calculates
+#' all the indices for each country.
+#' @importFrom dplyr %>%
+#' @importFrom tidyr pivot_longer pivot_wider
+#' @return a dataframe with the selected energy poverty indices per country.
+#' @export
+calc_ep_eu <- function(data, index = "all") {
+
+  accepted <- c("all", "10%", "2M", "LIHC", "HEP", "HEP_LI")
+  missmatch <- setdiff(index, accepted)
+
+  if (length(missmatch) == 1) {
+    warning(sprintf('ATTENTION: The indicated index %s is not available. Possible options are %s.',
+                    paste(missmatch, collapse = ", "), paste(accepted, collapse = ", ")))
+  }
+  if (length(missmatch) > 1) {
+    warning(sprintf('ATTENTION: The indicated indices %s are not available. Possible options are %s.',
+                    paste(missmatch, collapse = ", "), paste(accepted, collapse = ", ")))
+  }
+
+  # Identify energy poor households
+  data <- id_ep_eu(data)
+
+  # Calculate total households per country
+  df <- data %>%
+    dplyr::group_by(country) %>%
+    dplyr::summarise(
+      TOT_FACTOR  = sum(weight, na.rm = TRUE),
+      EP10PC      = sum(IEP10PC,   na.rm = TRUE) / TOT_FACTOR,
+      EP2M        = sum(IEP2M,     na.rm = TRUE) / TOT_FACTOR,
+      EPHEP       = sum(IEPHEP,    na.rm = TRUE) / TOT_FACTOR,
+      EPHEP_LI    = sum(IEPHEP_LI, na.rm = TRUE) / TOT_FACTOR,
+      EPLIHC      = sum(IEPLIHC,   na.rm = TRUE) / TOT_FACTOR,
+      .groups     = "drop"
+    ) %>%
+    dplyr::select(-TOT_FACTOR) %>%
+    tidyr::pivot_longer(
+      cols      = c(EP10PC, EP2M, EPHEP, EPHEP_LI, EPLIHC),
+      names_to  = "EP_index",
+      values_to = "value"
+    ) %>%
+    dplyr::mutate(EP_index = dplyr::recode(EP_index,
+                                           "EP10PC"   = "10%",
+                                           "EP2M"     = "2M",
+                                           "EPHEP"    = "HEP",
+                                           "EPHEP_LI" = "HEP_LI",
+                                           "EPLIHC"   = "LIHC")) %>%
+    tidyr::pivot_wider(names_from = country, values_from = value)
+
+  if (!any(index == "all")) {
+    df <- df %>% dplyr::filter(EP_index %in% index)
+  }
+
+  return(df)
+}
+
+
+#' calc_tp_eu
+#'
+#' Function to calculate transport poverty indices for EU countries.
+#' Thresholds are calculated per member state. Long-distance transport
+#' (air and sea) is excluded from the calculation.
+#' @param data dataset with the EU HBS data (output from hbs_eu, with COICOP columns
+#' renamed via rename_coicop). Must contain columns: CP072, CP073, CP0731, CP0732,
+#' CP0733, CP0734, CP0735, CP0411, CP0421, CP00, eq_size, weight, country.
+#' @param index transport poverty index or indices to be calculated. Possible
+#' options: "10%", "2M", "LIHC", "VTU". If "all" (by default) calculates all the
+#' indices for each country.
+#' @importFrom dplyr %>%
+#' @importFrom tidyr pivot_longer pivot_wider
+#' @return a dataframe with the selected transport poverty indices per country.
+#' @export
+calc_tp_eu <- function(data, index = "all") {
+
+  accepted <- c("all", "10%", "2M", "LIHC", "VTU")
+  missmatch <- setdiff(index, accepted)
+
+  if (length(missmatch) == 1) {
+    warning(sprintf('ATTENTION: The indicated index %s is not available. Possible options are %s.',
+                    paste(missmatch, collapse = ", "), paste(accepted, collapse = ", ")))
+  }
+  if (length(missmatch) > 1) {
+    warning(sprintf('ATTENTION: The indicated indices %s are not available. Possible options are %s.',
+                    paste(missmatch, collapse = ", "), paste(accepted, collapse = ", ")))
+  }
+
+  # Identify transport poor households
+  data <- id_tp_eu(data)
+
+  # Calculate total households per country
+  df <- data %>%
+    dplyr::group_by(country) %>%
+    dplyr::summarise(
+      TOT_FACTOR = sum(weight,    na.rm = TRUE),
+      TP10PC     = sum(ITP10PC,   na.rm = TRUE) / TOT_FACTOR,
+      TP2M       = sum(ITP2M,     na.rm = TRUE) / TOT_FACTOR,
+      TPLIHC     = sum(ITPLIHC,   na.rm = TRUE) / TOT_FACTOR,
+      TPVTU      = sum(ITPVTU,    na.rm = TRUE) / TOT_FACTOR,
+      .groups    = "drop"
+    ) %>%
+    dplyr::select(-TOT_FACTOR) %>%
+    tidyr::pivot_longer(
+      cols      = c(TP10PC, TP2M, TPLIHC, TPVTU),
+      names_to  = "TP_index",
+      values_to = "value"
+    ) %>%
+    dplyr::mutate(TP_index = dplyr::recode(TP_index,
+                                           "TP10PC"  = "10%",
+                                           "TP2M"    = "2M",
+                                           "TPLIHC"  = "LIHC",
+                                           "TPVTU"   = "VTU")) %>%
+    tidyr::pivot_wider(names_from = country, values_from = value)
+
+  if (!any(index == "all")) {
+    df <- df %>% dplyr::filter(TP_index %in% index)
+  }
+
+  return(df)
 }

@@ -7,7 +7,7 @@
 update_year(data, new_year)
 }
 \arguments{
-\item{data}{dataframe with the hbs data to update}
+\item{data}{dataframe with the hbs data to update (The COICOP codes in the dataframe must be renamed beforehand using rename_coicop.)}
 
 \item{new_year}{year to which you want to update the microdata}
 }

@@ -15,5 +15,5 @@ coicop_mapping(data, mapping_file = mapping_coicop)
 data file with the renamed expenditure categories
 }
 \description{
-Function to rename coicop expenditure categories
+Function to map coicop expenditure categories
 }

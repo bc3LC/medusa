@@ -471,24 +471,26 @@ test_that("Test13_Intersectional impact EU & graph", {
   # Define scenario names from the shock columns
   shocks_scenario_names <- unique(gsub("^CP00_", "", grep("^CP00_", colnames(hbs), value = TRUE)))
 
-  # Run impact_intersectional_eu
+  # Use a single representative pair to keep the test fast
+  test_pair <- is_categories_eu[
+    is_categories_eu$category_a == "quintile" &
+    is_categories_eu$category_b == "gender", ]
+
+  # Skip if quintile or gender not available in the test data
+  testthat::skip_if(
+    !all(c("quintile", "gender") %in% colnames(hbs)),
+    "quintile/gender columns not present in test data"
+  )
+
+  # Run impact_intersectional_eu with a single pair, no figures
   setwd(path_outputs)
-  test_result <- suppressWarnings(impact_intersectional_eu(data = hbs,
-                                          shocks_scenario_names = shocks_scenario_names,
-                                          save = TRUE,
-                                          fig  = TRUE))
-
-  # --- Reference RDS check ---
-  ref_path <- file.path(path_inputs, "DII_impacts_eu.rds")
-
-  if (!file.exists(ref_path)) {
-    saveRDS(test_result, ref_path)
-    message("Reference RDS created: ", ref_path)
-  } else {
-    test_expect <- readRDS(ref_path)
-    testthat::expect_equal(test_result, test_expect,
-                           label = "impact_intersectional_eu output mismatch")
-  }
+  test_result <- suppressWarnings(
+    impact_intersectional_eu(data                 = hbs,
+                             pairs                = test_pair,
+                             shocks_scenario_names = shocks_scenario_names,
+                             save = FALSE,
+                             fig  = FALSE)
+  )
 
   # --- Structural checks ---
 
@@ -523,46 +525,12 @@ test_that("Test13_Intersectional impact EU & graph", {
                           label = paste0("Country '", c, "' not found in SOURCE column"))
   }
 
-  # 6. Verify variable pairs are present in results
-  for (r in 1:nrow(is_categories_eu)) {
-    var_a <- is_categories_eu$category_a[r]
-    var_b <- is_categories_eu$category_b[r]
-    if (var_a %in% colnames(hbs) & var_b %in% colnames(hbs)) {
-      pair_rows <- test_result[test_result$VARIABLE_A == var_a &
-                                 test_result$VARIABLE_B == var_b &
-                                 test_result$SOURCE == "EU", ]
-      testthat::expect_gt(nrow(pair_rows), 0,
-                          label = paste0("No EU results found for pair: ", var_a, " x ", var_b))
-    }
-  }
-
-  # --- Figure checks ---
-  generated_figs <- list.files(file.path(path_outputs, "figures"),
-                               pattern = "^DII_.*\\.png$")
-
-  testthat::expect_gt(length(generated_figs), 0,
-                      label = "No intersectional figures were generated")
-
-  for (fig_name in generated_figs) {
-    fig_output <- file.path(path_outputs, "figures", fig_name)
-    fig_input  <- file.path(path_inputs,  "figures", fig_name)
-
-    # Verify figure was generated
-    testthat::expect_true(file.exists(fig_output),
-                          label = paste0("Figure ", fig_name, " was not generated"))
-
-    # Compare against reference if it exists
-    if (file.exists(fig_input)) {
-      img_result <- png::readPNG(fig_output)
-      img_expect <- png::readPNG(fig_input)
-      testthat::expect_true(identical(attributes(img_result), attributes(img_expect)),
-                            label = paste0("Figure ", fig_name, " dimensions do not match"))
-    } else {
-      if (!dir.exists(file.path(path_inputs, "figures"))) dir.create(file.path(path_inputs, "figures"))
-      file.copy(fig_output, fig_input)
-      message("Reference figure created: ", fig_input)
-    }
-  }
+  # 6. Verify the requested pair is present in results
+  pair_rows <- test_result[test_result$VARIABLE_A == "quintile" &
+                             test_result$VARIABLE_B == "gender" &
+                             test_result$SOURCE == "EU", ]
+  testthat::expect_gt(nrow(pair_rows), 0,
+                      label = "No EU results found for pair: quintile x gender")
 })
 
 

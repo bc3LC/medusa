@@ -105,7 +105,7 @@ rawhbs_eu <- function(year, country = "all", path) {
   }
 
   # Check countries
-  if (country == "all") {
+  if (length(country) == 1 && country == "all") {
     country <- "all"
   } else {
     # Check country
@@ -128,7 +128,7 @@ rawhbs_eu <- function(year, country = "all", path) {
   # Loop to process raw data for each year
   for (y in year) {
 
-    if (country == "all") {
+    if (length(country) == 1 && country == "all") {
       # Get the path of the year folder
       year_path <- file.path(path, y)
 

@@ -17,7 +17,7 @@ country_code <- function(){
 #' @return a csv file in which the change in prices must be introduced to apply a price shock to EU countries
 #' @export
 ex_shocks_eu <- function(){
-  exshock <- get("shocks_eu")
+  exshock <- get("shocks_eu_s")
   write.csv(exshock, file = "Example_shocks_eu.csv", row.names = F)
   print(paste0("The example file has been saved in`", getwd(),"/Example_shocks_eu.csv´" ))
 }

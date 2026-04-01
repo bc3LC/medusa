@@ -59,5 +59,8 @@ tests/testthat/test_outputs/*
 # Raw_data
 raw_data
 
+# EU review folder (scripts + derived outputs from confidential microdata)
+Medusa_eu_review/
+
 # Script database tests
 database_tests.R

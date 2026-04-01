@@ -2,7 +2,7 @@
 title: "Calculate distributional impacts (EU)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{TutorialsEU_di}
+  %\VignetteIndexEntry{Calculate distributional impacts (EU)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

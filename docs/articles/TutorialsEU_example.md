@@ -243,8 +243,7 @@ print(tp)
 ```
 
 The result follows the same structure: four rows (one per index: `10%`,
-`2M`, `LIHC`, `VTU`) and one column per country. Long-distance transport
-(air and sea) is excluded from all calculations.
+`2M`, `LIHC`, `VTU`) and one column per country.
 
 13. Save to Excel:
 

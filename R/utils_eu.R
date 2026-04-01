@@ -1664,8 +1664,7 @@ id_ep_eu <- function(data) {
 #' id_tp_eu
 #'
 #' Function to identify transport poor households in EU countries.
-#' Thresholds are calculated per member state. Long-distance transport
-#' (air and sea) is excluded from the calculation.
+#' Thresholds are calculated per member state.
 #' @param data dataset with the EU HBS data (output from hbs_eu, with COICOP columns renamed via rename_coicop).
 #' @importFrom dplyr %>%
 #' @return a dataset with EU HBS data where transport poor households are identified per country.

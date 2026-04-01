@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">medusa</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,29 +60,12 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.0" id="medusa-010">medusa 0.1.0<a class="anchor" aria-label="anchor" href="#medusa-010"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="medusa-020">medusa 0.2.0<a class="anchor" aria-label="anchor" href="#medusa-020"></a></h2>
 <div class="section level3">
-<h3 id="initial-release-0-1-0">Initial release<a class="anchor" aria-label="anchor" href="#initial-release-0-1-0"></a></h3>
-<p>First public release of the <code>medusa</code> package, providing a complete framework for distributional, energy poverty, and transport poverty analysis for both Spain (INE microdata) and all EU countries (Eurostat HBS microdata).</p>
-<div class="section level4">
-<h4 id="spain-module-0-1-0">Spain module<a class="anchor" aria-label="anchor" href="#spain-module-0-1-0"></a></h4>
+<h3 id="new-features-eu-module-0-2-0">New features: EU module<a class="anchor" aria-label="anchor" href="#new-features-eu-module-0-2-0"></a></h3>
+<p>New module supporting distributional, energy poverty, and transport poverty analysis for all 27 EU countries using Eurostat Household Budget Survey (HBS) microdata (waves 2010, 2015 and 2020).</p>
 <ul><li>
-<code><a href="../reference/calc_di.html">calc_di()</a></code>: Calculate distributional impacts of price shocks across socioeconomic groups (income deciles/quintiles, gender, household type, etc.).</li>
-<li>
-<code><a href="../reference/ex_shocks.html">ex_shocks()</a></code>: Download the price shock template file.</li>
-<li>
-<code><a href="../reference/available_var_impact.html">available_var_impact()</a></code>: List variables available for distributional analysis.</li>
-<li>
-<code><a href="../reference/ex_var_intersec.html">ex_var_intersec()</a></code>, <code><a href="../reference/available_var_intersec.html">available_var_intersec()</a></code>: Manage intersectional variable pairs for combined analysis (e.g. income x gender).</li>
-<li>
-<code><a href="../reference/calc_ep.html">calc_ep()</a></code>: Calculate five energy poverty indices (10%, 2M, LIHC, HEP, HEP_LI).</li>
-<li>
-<code><a href="../reference/calc_tp.html">calc_tp()</a></code>: Calculate four transport poverty indices (10%, 2M, LIHC, VTU).</li>
-</ul></div>
-<div class="section level4">
-<h4 id="eu-module-new-in-this-release-0-1-0">EU module (new in this release)<a class="anchor" aria-label="anchor" href="#eu-module-new-in-this-release-0-1-0"></a></h4>
-<ul><li>
-<code><a href="../reference/hbs_eu.html">hbs_eu()</a></code>: Process Eurostat Household Budget Survey microdata into the format required by <code>medusa</code> (supports 27 EU countries, waves 2010, 2015 and 2020).</li>
+<code><a href="../reference/hbs_eu.html">hbs_eu()</a></code>: Process Eurostat HBS microdata into the format required by <code>medusa</code> (supports 27 EU countries, waves 2010, 2015 and 2020).</li>
 <li>
 <code><a href="../reference/calc_di_eu.html">calc_di_eu()</a></code>: Calculate distributional impacts for EU countries with support for two price shock scenarios, country-level disaggregation and intersectional analysis.</li>
 <li>
@@ -98,11 +81,26 @@
 <li>
 <code><a href="../reference/calc_tp_eu.html">calc_tp_eu()</a></code>: Calculate transport poverty indices by country for EU data.</li>
 </ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.0" id="medusa-010">medusa 0.1.0<a class="anchor" aria-label="anchor" href="#medusa-010"></a></h2>
+<div class="section level3">
+<h3 id="initial-release-0-1-0">Initial release<a class="anchor" aria-label="anchor" href="#initial-release-0-1-0"></a></h3>
+<p>First release of the <code>medusa</code> package for Spain (INE microdata).</p>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0"></a></h4>
-<ul><li>Fixed <code><a href="../reference/rawhbs_eu.html">rawhbs_eu()</a></code> to correctly handle multi-country requests (vector <code>country</code> argument was incorrectly evaluated in <code>if()</code> condition).</li>
-<li>Fixed <code><a href="../reference/ex_shocks_eu.html">ex_shocks_eu()</a></code> to export the two-scenario template (<code>shocks_eu_s</code>) instead of the single-scenario dataset.</li>
-<li>Cleaned <code>shocks_eu_s</code> package data: all shock values initialised to <code>1</code> (neutral) so the exported template is always a clean starting point.</li>
+<h4 id="spain-module-0-1-0">Spain module<a class="anchor" aria-label="anchor" href="#spain-module-0-1-0"></a></h4>
+<ul><li>
+<code><a href="../reference/calc_di.html">calc_di()</a></code>: Calculate distributional impacts of price shocks across socioeconomic groups (income deciles/quintiles, gender, household type, etc.).</li>
+<li>
+<code><a href="../reference/ex_shocks.html">ex_shocks()</a></code>: Download the price shock template file.</li>
+<li>
+<code><a href="../reference/available_var_impact.html">available_var_impact()</a></code>: List variables available for distributional analysis.</li>
+<li>
+<code><a href="../reference/ex_var_intersec.html">ex_var_intersec()</a></code>, <code><a href="../reference/available_var_intersec.html">available_var_intersec()</a></code>: Manage intersectional variable pairs for combined analysis (e.g. income x gender).</li>
+<li>
+<code><a href="../reference/calc_ep.html">calc_ep()</a></code>: Calculate five energy poverty indices (10%, 2M, LIHC, HEP, HEP_LI).</li>
+<li>
+<code><a href="../reference/calc_tp.html">calc_tp()</a></code>: Calculate four transport poverty indices (10%, 2M, LIHC, VTU).</li>
 </ul></div>
 </div>
 </div>

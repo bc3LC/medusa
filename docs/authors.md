@@ -23,13 +23,13 @@ Source:
 
 Alonso-Epelde E, Rodés-Bachs C, Moyano-Reina M, Sampedro J, García-Muros
 X (2026). *medusa: MEDUSA - Modelling Equity and DistribUtional impacts
-for Socioeconomic Analysis*. R package version 0.1.0,
+for Socioeconomic Analysis*. R package version 0.2.0,
 <https://github.com/bc3LC/medusa>.
 
     @Manual{,
       title = {medusa: MEDUSA - Modelling Equity and DistribUtional impacts for Socioeconomic Analysis},
       author = {Eva Alonso-Epelde and Clàudia Rodés-Bachs and María Moyano-Reina and Jon Sampedro and Xaquín García-Muros},
       year = {2026},
-      note = {R package version 0.1.0},
+      note = {R package version 0.2.0},
       url = {https://github.com/bc3LC/medusa},
     }

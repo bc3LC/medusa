@@ -2,7 +2,7 @@
 
 ### All vignettes
 
-- [AvailableVariables](AvailableVariables.md):
+- [Available Variables](AvailableVariables.md):
 - [Energy poverty indices](EnergyPoverty.md):
 - [Get started](GetStarted.md):
 - [Package Data](PackageData.md):

@@ -19,12 +19,12 @@ have been used before for energy poverty in households. While the last
 one (VTU) also takes into account the level of accessibility to public
 transport in households:
 
-- 10% indicator. The household is vulnerable to transport if it spends
-  more than 10% of its expenditure on meeting its mobility needs.
+- **10% indicator.** The household is vulnerable to transport if it
+  spends more than 10% of its expenditure on meeting its mobility needs.
   Transport expenditure is understood as both expenditure on private
   transport and on short or medium distance public transport services.
 
-- Double the national median (2M). A household is considered to be
+- **Double the national median (2M).** A household is considered to be
   vulnerable to transport if the proportion of expenditure it allocates
   to transport is more than twice the national median. That is, these
   are households that, due to their socioeconomic situation, have to
@@ -33,14 +33,14 @@ transport in households:
   threshold through the national median, those households that are users
   of transport, both private and public, have been used.
 
-- Low-income, high-cost (LIHC) metric. A household is considered to be
-  transportation vulnerable if it meets the following two conditions: i)
-  its disposable income after subtracting housing and transportation
-  costs is below the poverty line (set at 60% of the national median);
-  and ii) its transportation expenditure is higher than the median
-  transportation expenditure.
+- **Low-income, high-cost (LIHC) metric.** A household is considered to
+  be transportation vulnerable if it meets the following two
+  conditions: i) its disposable income after subtracting housing and
+  transportation costs is below the poverty line (set at 60% of the
+  national median); and ii) its transportation expenditure is higher
+  than the median transportation expenditure.
 
-- Vulnerable Transportation User (VTU). A household is considered a
+- **Vulnerable Transportation User (VTU).** A household is considered a
   transportation vulnerable user if: i) its transportation expenditure
   is more than twice the national median, ii) its income is below the
   median for all households, and iii) its expenditure on public

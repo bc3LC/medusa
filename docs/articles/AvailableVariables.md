@@ -1,4 +1,4 @@
-# AvailableVariables
+# Available Variables
 
 `medusa` allows for the calculation of distributional impacts according
 to numerous socio-economic and demographic variables of households. The

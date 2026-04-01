@@ -79,6 +79,13 @@ test_that("Test6_Raw data processing", {
   paths <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs/raw_data")
   years <- c(2010, 2015, 2020)
 
+  # Skip if confidential Eurostat microdata are not present
+  raw_files_exist <- any(sapply(years, function(y) {
+    length(list.files(file.path(paths, as.character(y)), pattern = "\\.xlsx$")) > 0
+  }))
+  testthat::skip_if_not(raw_files_exist,
+                        "Skipping Test6: Eurostat HBS raw microdata not available")
+
   rawhbs_eu(year = years, path = paths)
 
   for (y in years) {
@@ -126,6 +133,14 @@ test_that("Test7_Create joint database", {
   path <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs/raw_data/inputs")
   path2 <- file.path(rprojroot::find_root(rprojroot::is_testthat), "test_inputs")
   years <- c(2010, 2015, 2020)
+
+  # Skip if processed inputs from Test6 are not present
+  inputs_exist <- any(sapply(years, function(y) {
+    length(list.files(file.path(path), pattern = paste0("hbs_", y, ".*\\.RData$"),
+                      recursive = TRUE)) > 0
+  }))
+  testthat::skip_if_not(inputs_exist,
+                        "Skipping Test7: processed HBS inputs not available (run Test6 first)")
 
   for (y in years) {
 

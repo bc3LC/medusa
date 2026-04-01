@@ -16,10 +16,6 @@ For a description of the transport poverty indices calculated by
 `medusa`, see [Transport poverty
 indices](https://bc3lc.github.io/medusa/articles/TransportPoverty.html).
 
-> **Note:** In the EU version, long-distance transport (air and sea) is
-> excluded from all indices to focus on short and medium distance
-> mobility.
-
 ------------------------------------------------------------------------
 
 ### Example 1. How to calculate a specific transport poverty index

@@ -2,7 +2,7 @@
 title: "Calculate transport poverty indices"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{TutorialsTransportPoverty}
+  %\VignetteIndexEntry{Calculate transport poverty indices}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

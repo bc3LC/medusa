@@ -2,7 +2,7 @@
 title: "Step-by-step example (EU)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{TutorialsEU_example}
+  %\VignetteIndexEntry{Step-by-step example (EU)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -195,7 +195,7 @@ tp <- calc_tp_eu(data = hbs,
 print(tp)
 ```
 
-The result follows the same structure: four rows (one per index: `10%`, `2M`, `LIHC`, `VTU`) and one column per country. Long-distance transport (air and sea) is excluded from all calculations.
+The result follows the same structure: four rows (one per index: `10%`, `2M`, `LIHC`, `VTU`) and one column per country.
 
 13. Save to Excel:
 

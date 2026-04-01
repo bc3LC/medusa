@@ -2,7 +2,7 @@
 title: "Step-by-step example"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{TutorialsExample}
+  %\VignetteIndexEntry{Step-by-step example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -2,7 +2,7 @@
 title: "Calculate energy poverty indices (EU)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{TutorialsEU_ep}
+  %\VignetteIndexEntry{Calculate energy poverty indices (EU)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -2,7 +2,7 @@
 title: "Calculate transport poverty indices (EU)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{TutorialsEU_tp}
+  %\VignetteIndexEntry{Calculate transport poverty indices (EU)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,8 +16,6 @@ hbs <- hbs_eu(year = 2015, country = "all", path = "raw_data")
 ```
 
 For a description of the transport poverty indices calculated by `medusa`, see [Transport poverty indices](https://bc3lc.github.io/medusa/articles/TransportPoverty.html).
-
-> **Note:** In the EU version, long-distance transport (air and sea) is excluded from all indices to focus on short and medium distance mobility.
 
 ---
 

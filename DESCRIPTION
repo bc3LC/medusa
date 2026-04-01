@@ -18,14 +18,15 @@ Depends: R (>= 4.1.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+LazyDataCompression: xz
 RoxygenNote: 7.3.2
-Imports: 
+Imports:
     usethis,
     knitr,
     dplyr,
   	reshape2,
   	markdown,
-  	png, 
+  	png,
   	magrittr,
   	tidyr,
   	ggplot2,
@@ -34,7 +35,8 @@ Imports:
 	gtools,
   	here,
 	  spatstat.geom,
-	  tibble
+	  tibble,
+	  restatapi
 Remotes:
     github::JGCRI/rpackageutils,
     github::eurostat/restatapi

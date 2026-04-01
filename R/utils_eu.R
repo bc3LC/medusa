@@ -1506,6 +1506,8 @@ intersectional_graph_eu <- function(data, pairs = is_categories_eu) {
 #' set of variables for the calculation, it must follow the same format as the
 #' output of `available_var_intersec()`, i.e. a table whose columns have category_a
 #' and category_b as their titles.
+#' @param by_country If TRUE (by default) calculates distributional impacts by EU country
+#' in addition to the overall EU-level results. If FALSE, only EU-level results are calculated.
 #' @param save If TRUE (by default) saves a list of the generated datasets (.RData)
 #' summarising the intersectional distributional impacts per selected set of variable.
 #' If FALSE do not save.

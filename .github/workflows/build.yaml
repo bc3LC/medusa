@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev_k
+      - dev
 
 jobs:
   R-CMD:

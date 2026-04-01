@@ -44,6 +44,9 @@
 
   </a>
 </li>
+<li>
+  <a href="../articles/GetStarted.html">Get started</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-solid fa-indent"></span>
@@ -68,7 +71,7 @@
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-solid fa-chart-pie"></span>
 
-    Packge Data
+    Package Data
 
     <span class="caret"></span>
   </a>
@@ -91,6 +94,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../#">--- Spain ---</a>
+    </li>
+    <li>
       <a href="../articles/Tutorials.html">Calculate distributional impacts</a>
     </li>
     <li>
@@ -101,6 +107,24 @@
     </li>
     <li>
       <a href="../articles/TutorialsExample.html">Step-by-step example</a>
+    </li>
+    <li>
+      <a href="../#">--- EU (Eurostat microdata) ---</a>
+    </li>
+    <li>
+      <a href="../articles/TutorialsEU_data.html">Preparing the data</a>
+    </li>
+    <li>
+      <a href="../articles/TutorialsEU_di.html">Calculate distributional impacts</a>
+    </li>
+    <li>
+      <a href="../articles/TutorialsEU_ep.html">Calculate energy poverty indices</a>
+    </li>
+    <li>
+      <a href="../articles/TutorialsEU_tp.html">Calculate transport poverty indices</a>
+    </li>
+    <li>
+      <a href="../articles/TutorialsEU_example.html">Step-by-step example</a>
     </li>
   </ul>
 </li>
@@ -153,11 +177,17 @@
 <h2 id="energy-poverty-indices">Energy poverty indices<a class="anchor" aria-label="anchor" href="#energy-poverty-indices"></a>
 </h2>
 <p><code>medusa</code> allows to calculate different energy poverty
-indices for a time series (2006-2021). The indicators covered by medusa
-have been commonly used in the literature to measure energy poverty
-during the last decades and can be useful to assess the dimension of
-energy poverty, as well as to monitor policies aimed at alleviating this
-problem.</p>
+indices. For <strong>Spain</strong>, indices are available for the full
+time series <strong>2006–2021</strong> using the data included in the
+package. For <strong>EU countries</strong>, indices can be calculated
+for the available HBS waves (<strong>2010, 2015 and 2020</strong>),
+using Eurostat microdata processed with <code><a href="../reference/hbs_eu.html">hbs_eu()</a></code>. In both
+cases, the thresholds used in each index (e.g. national medians) are
+calculated at the <strong>member state level</strong>.</p>
+<p>The indicators covered by medusa have been commonly used in the
+literature to measure energy poverty during the last decades and can be
+useful to assess the dimension of energy poverty, as well as to monitor
+policies aimed at alleviating this problem.</p>
 <ul>
 <li><p>10% indicator. The household is energy poor if it spends more
 than 10% of its expenditure on meeting its energy needs. Energy
@@ -205,7 +235,7 @@ needs</p></li>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

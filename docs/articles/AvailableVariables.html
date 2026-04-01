@@ -44,6 +44,9 @@
 
   </a>
 </li>
+<li>
+  <a href="../articles/GetStarted.html">Get started</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-solid fa-indent"></span>
@@ -68,7 +71,7 @@
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-solid fa-chart-pie"></span>
 
-    Packge Data
+    Package Data
 
     <span class="caret"></span>
   </a>
@@ -91,6 +94,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../#">--- Spain ---</a>
+    </li>
+    <li>
       <a href="../articles/Tutorials.html">Calculate distributional impacts</a>
     </li>
     <li>
@@ -101,6 +107,24 @@
     </li>
     <li>
       <a href="../articles/TutorialsExample.html">Step-by-step example</a>
+    </li>
+    <li>
+      <a href="../#">--- EU (Eurostat microdata) ---</a>
+    </li>
+    <li>
+      <a href="../articles/TutorialsEU_data.html">Preparing the data</a>
+    </li>
+    <li>
+      <a href="../articles/TutorialsEU_di.html">Calculate distributional impacts</a>
+    </li>
+    <li>
+      <a href="../articles/TutorialsEU_ep.html">Calculate energy poverty indices</a>
+    </li>
+    <li>
+      <a href="../articles/TutorialsEU_tp.html">Calculate transport poverty indices</a>
+    </li>
+    <li>
+      <a href="../articles/TutorialsEU_example.html">Step-by-step example</a>
     </li>
   </ul>
 </li>
@@ -151,8 +175,13 @@
     
 <p><code>medusa</code> allows for the calculation of distributional
 impacts according to numerous socio-economic and demographic variables
-of households. The variables for which the package currently works are
-detailed and described below.</p>
+of households. The variables available differ between the Spain and EU
+data.</p>
+<div class="section level2">
+<h2 id="spain">Spain<a class="anchor" aria-label="anchor" href="#spain"></a>
+</h2>
+<p>The variables available for Spain are detailed below. To see them in
+R, run <code><a href="../reference/available_var_impact.html">available_var_impact()</a></code>.</p>
 <table class="table">
 <colgroup>
 <col width="20%">
@@ -167,154 +196,267 @@ detailed and described below.</p>
 <tbody>
 <tr class="odd">
 <td>QUINTILE</td>
-<td>The quintile variable distributes households into 5 groups according
-to their income <a href="#id_1">[1]</a>, with 1 representing the poorest
-households in the distribution and 5 the richest.</td>
-<td>1-5</td>
+<td>Income quintile: distributes households into 5 groups according to
+their income <a href="#id_1">[1]</a>, with 1 representing the poorest
+and 5 the richest.</td>
+<td>1–5</td>
 </tr>
 <tr class="even">
 <td>DECILE</td>
-<td>The decile variable distributes households into 10 groups according
-to their income <a href="#id_1">[1]</a>, with 1 representing the poorest
-households in the distribution and 10 the richest.</td>
-<td>1-10</td>
+<td>Income decile: distributes households into 10 groups according to
+their income <a href="#id_1">[1]</a>, with 1 representing the poorest
+and 10 the richest.</td>
+<td>1–10</td>
 </tr>
 <tr class="odd">
 <td>VENTILE</td>
-<td>The variable ventil distributes households into 20 groups according
-to their income <a href="#id_1">[1]</a>, with 1 representing the poorest
-households in the distribution and 20 the richest.</td>
-<td>1-20</td>
+<td>Income ventile: distributes households into 20 groups according to
+their income <a href="#id_1">[1]</a>, with 1 representing the poorest
+and 20 the richest.</td>
+<td>1–20</td>
 </tr>
 <tr class="even">
 <td>PERCENTILE</td>
-<td>The percentile variable distributes households into 100 groups
-according to their income <a href="#id_1">[1]</a>, with 1 representing
-the poorest households in the distribution and 100 the richest.</td>
-<td>1-100</td>
+<td>Income percentile: distributes households into 100 groups according
+to their income <a href="#id_1">[1]</a>.</td>
+<td>1–100</td>
 </tr>
 <tr class="odd">
 <td>REGION</td>
-<td>Autonomous Community of residence of the household (NUTS2).</td>
-<td>Andalucía <br> Aragón <br> Asturias <br> Baleares <br> Canarias <br>
-Cantabria <br> Castilla y León <br> Castilla La Mancha <br> Cataluña
-<br> Comunidad Valenciana <br> Extremadura <br> Galicia <br> Madrid <br>
-Murcia <br> Navarra <br> País Vasco <br> La Rioja <br> Ceuta <br>
+<td>Autonomous Community of residence (NUTS2).</td>
+<td>Andalucía, Aragón, Asturias, Baleares, Canarias, Cantabria, Castilla
+y León, Castilla La Mancha, Cataluña, Comunidad Valenciana, Extremadura,
+Galicia, Madrid, Murcia, Navarra, País Vasco, La Rioja, Ceuta,
 Melilla</td>
 </tr>
 <tr class="even">
 <td>MUNISIZE</td>
 <td>Size of municipality of residence.</td>
-<td>&gt;10.000: Municipalities with more than 10,000 inhabitants <br>
-&lt;10.000: Small municipality with less than 10,000 inhabitants</td>
+<td>&gt;10.000: more than 10,000 inhabitants <br> &lt;10.000: less than
+10,000 inhabitants</td>
 </tr>
 <tr class="odd">
 <td>ZONE</td>
-<td>Level of rurality of the household’s area of residence</td>
-<td>Urban: densely populated urban area <br> Semi-urban: semi-urban area
-with an intermediate population density <br> Rural: rural area with a
-low population density</td>
+<td>Level of rurality of the area of residence.</td>
+<td>Urban, Semi-urban, Rural</td>
 </tr>
 <tr class="even">
 <td>HHTYPE</td>
 <td>Household type.</td>
-<td>Elderly alone <br> Single person <br> Single parent <br> Elderly
-couples <br> Couples without children <br> Couples with children <br>
-Others</td>
+<td>Elderly alone, Single person, Single parent, Elderly couples,
+Couples without children, Couples with children, Others</td>
 </tr>
 <tr class="odd">
 <td>CHILDREN</td>
 <td>Number of household members under 18 years.</td>
-<td>No children <br> With children: With 1 or 2 children <br> Large
-family: Large family with 3 or more children</td>
+<td>No children, With children (1–2), Large family (3+)</td>
 </tr>
 <tr class="even">
 <td>POVERTY</td>
-<td>The household is at risk of poverty if its income <a href="#id_1">[1]</a> is below 60% of the national median.</td>
-<td>At risk: At risk of general poverty <br> No risk: without risk of
-falling into general poverty</td>
+<td>At-risk-of-poverty status: household income <a href="#id_1">[1]</a>
+below 60% of the national median.</td>
+<td>At risk, No risk</td>
 </tr>
 <tr class="odd">
 <td>GENDERRP</td>
-<td>Gender of the reference person of the household.</td>
-<td>Man: when the household reference person is a man <br> Woman: when
-the household reference person is a woman</td>
+<td>Gender of the reference person.</td>
+<td>Man, Woman</td>
 </tr>
 <tr class="even">
 <td>FEMDEGREE</td>
 <td>Feminization degree of the household.</td>
-<td>FD1: households in which less than 20% of the household members are
-women <br> FD2:households in which 20-40% of the household members are
-female <br> FD3:households in which 40-60% of the household members are
-female <br> FD4:households in which 60-80% of the household members are
-female <br> FD5: households in which more than 80% of the household
-members are women</td>
+<td>FD1 (&lt;20% women), FD2 (20–40%), FD3 (40–60%), FD4 (60–80%), FD5
+(&gt;80%)</td>
 </tr>
 <tr class="odd">
 <td>AGERP</td>
-<td>Age of the reference person in the household. The age is calculated
-as at the date of completion of the household file.</td>
-<td>Young: Young person aged 30 years or less <br> Adult: Adult person
-between 30 and 65 years of age <br> Elder: Elderly person aged 65 years
-or more</td>
+<td>Age of the reference person.</td>
+<td>Young (≤30), Adult (30–65), Elder (≥65)</td>
 </tr>
 <tr class="even">
 <td>COUNTRYRP</td>
-<td>Country of birth of the reference person of the household.</td>
-<td>Spain: when the reference person in the household was born in Spain
-<br> EU27: when the reference person of the household was born in an
-EU27 country (excluding Spain) <br> Other Europe: when the reference
-person of the household was born in a European country outside the EU27
-<br> Rest of world: when the reference person of the household was born
-in a country in the rest of the world, i.e. in a non-European
-country</td>
+<td>Country of birth of the reference person.</td>
+<td>Spain, EU27, Other Europe, Rest of world</td>
 </tr>
 <tr class="odd">
 <td>STUDIESRP</td>
-<td>Education level completed by the reference person of the
-household.</td>
-<td>Without studies <br> Primary education <br> Secondary education <br>
-Post-secondary education <br> Higher education</td>
+<td>Education level of the reference person.</td>
+<td>Without studies, Primary, Secondary, Post-secondary, Higher
+education</td>
 </tr>
 <tr class="even">
 <td>PROFESSIONALSRP</td>
-<td>Professional status of the reference person of the household.</td>
-<td>Employee <br> Self-employed <br> Employer <br> Otros: Others <br> No
-aplica: Do not apply</td>
+<td>Professional status of the reference person.</td>
+<td>Employee, Self-employed, Employer, Others, Not applicable</td>
 </tr>
 <tr class="odd">
 <td>CONTTYPERP</td>
-<td>Type of employment contract of the reference person of the
-household.</td>
-<td>Indefinite: Indefinite contract <br> Temporary: Temporary contract
-<br> Not apply: Do not apply</td>
+<td>Type of employment contract of the reference person.</td>
+<td>Indefinite, Temporary, Not apply</td>
 </tr>
 <tr class="even">
 <td>WORKDAYRP</td>
-<td>Working hours of the reference person of the household.</td>
-<td>Full time <br> Part time <br> Not apply: Do not apply</td>
+<td>Working hours of the reference person.</td>
+<td>Full time, Part time, Not apply</td>
 </tr>
 <tr class="odd">
 <td>REGMR</td>
-<td>Tenure status of the household’s main residence.</td>
-<td>Ownership: with home ownership with or without mortgage <br> Rented:
-with rented housing <br> Relinquish: when you use a dwelling free of
-charge</td>
+<td>Tenure status of the main residence.</td>
+<td>Ownership, Rented, Relinquish</td>
 </tr>
 </tbody>
 </table>
-<p><small><i> <a name="1">[1]</a>Equivalent consumption expenditure is
+</div>
+<div class="section level2">
+<h2 id="eu">EU<a class="anchor" aria-label="anchor" href="#eu"></a>
+</h2>
+<p>The variables available for EU countries are detailed below. To see
+them in R, run <code><a href="../reference/available_var_eu.html">available_var_eu()</a></code>. Income groups (quintile,
+decile, ventile, percentile) are available both at the <strong>national
+level</strong> (calculated within each country) and at the <strong>EU
+level</strong> (calculated across all EU households jointly).</p>
+<table class="table">
+<colgroup>
+<col width="20%">
+<col width="40%">
+<col width="40%">
+</colgroup>
+<thead><tr class="header">
+<th>Variable</th>
+<th>Description</th>
+<th>Labels</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>quintile</td>
+<td>Income quintile at national level <a href="#id_1">[1]</a>.</td>
+<td>1–5</td>
+</tr>
+<tr class="even">
+<td>quintile_eu</td>
+<td>Income quintile at EU level <a href="#id_1">[1]</a>.</td>
+<td>1–5</td>
+</tr>
+<tr class="odd">
+<td>decile</td>
+<td>Income decile at national level <a href="#id_1">[1]</a>.</td>
+<td>1–10</td>
+</tr>
+<tr class="even">
+<td>decile_eu</td>
+<td>Income decile at EU level <a href="#id_1">[1]</a>.</td>
+<td>1–10</td>
+</tr>
+<tr class="odd">
+<td>ventile</td>
+<td>Income ventile at national level <a href="#id_1">[1]</a>.</td>
+<td>1–20</td>
+</tr>
+<tr class="even">
+<td>ventile_eu</td>
+<td>Income ventile at EU level <a href="#id_1">[1]</a>.</td>
+<td>1–20</td>
+</tr>
+<tr class="odd">
+<td>percentile</td>
+<td>Income percentile at national level <a href="#id_1">[1]</a>.</td>
+<td>1–100</td>
+</tr>
+<tr class="even">
+<td>percentile_eu</td>
+<td>Income percentile at EU level <a href="#id_1">[1]</a>.</td>
+<td>1–100</td>
+</tr>
+<tr class="odd">
+<td>country</td>
+<td>Country of residence.</td>
+<td>AT, BE, BG, CY, CZ, DE, DK, EE, EL, ES, FI, FR, HR, HU, IE, IT, LT,
+LU, LV, MT, NL, PL, PT, RO, SE, SI, SK</td>
+</tr>
+<tr class="even">
+<td>zone</td>
+<td>Zone of residence.</td>
+<td>Urban, Semi-urban, Rural</td>
+</tr>
+<tr class="odd">
+<td>household_type</td>
+<td>Type of household.</td>
+<td>Adult alone, Couple, Couple with children, More than 2 adults, More
+than 2 adults with children, Single parent</td>
+</tr>
+<tr class="even">
+<td>income_source</td>
+<td>Main income source of the household.</td>
+<td>Wages, Self-employment, Property, Pensions, Unemployment</td>
+</tr>
+<tr class="odd">
+<td>gender</td>
+<td>Gender of the reference person.</td>
+<td>Male, Female</td>
+</tr>
+<tr class="even">
+<td>feminization_degree</td>
+<td>Feminization degree of the household.</td>
+<td>FD1 (&lt;20% women), FD2 (20–40%), FD3 (40–60%), FD4 (60–80%), FD5
+(&gt;80%)</td>
+</tr>
+<tr class="odd">
+<td>age</td>
+<td>Age of the reference person.</td>
+<td>Young (≤30), Adult (30–65), Elder (≥65)</td>
+</tr>
+<tr class="even">
+<td>birth_country</td>
+<td>Country of birth of the reference person.</td>
+<td>National, EU, Non-EU, Non-national</td>
+</tr>
+<tr class="odd">
+<td>education</td>
+<td>Education level of the reference person.</td>
+<td>Early childhood education, Primary, Secondary, Post-secondary,
+Tertiary, Higher education</td>
+</tr>
+<tr class="even">
+<td>activity</td>
+<td>Professional status of the reference person.</td>
+<td>Employed, Unemployed, Retired, Student, Domestic tasks, Disabled,
+Military service</td>
+</tr>
+<tr class="odd">
+<td>contract_type</td>
+<td>Type of employment contract of the reference person.</td>
+<td>Permanent, Fixed-term, Not applicable</td>
+</tr>
+<tr class="even">
+<td>workday</td>
+<td>Type of working hours of the reference person.</td>
+<td>Full time, Part time, Not apply</td>
+</tr>
+<tr class="odd">
+<td>employment_sector</td>
+<td>Employment sector of the reference person.</td>
+<td>Private sector, Public sector</td>
+</tr>
+<tr class="even">
+<td>REGMR</td>
+<td>Tenure status of the main residence.</td>
+<td>Ownership, Rented, Relinquish</td>
+</tr>
+</tbody>
+</table>
+<p><small><i> <a name="1">[1]</a> Equivalent consumption expenditure is
 used instead of income as it is considered a better proxy for permanent
 household income since it fluctuates less in the long run <a href="#R1">(Goodman &amp; Oldfield, 2004)</a>. The equivalent spending
-is calculated based on household spending relativized by the modified
+is calculated based on household spending relativised by the modified
 OECD equivalence scale, thus considering the economies of scale
 generated in households based on their size. The modified OECD scale
 values 1 for the reference person in the household, 0.5 for other people
 aged 14 or over, and 0.3 for other people under 14 years of
 age.</i></small></p>
-<p><a name="R1">[R1]</a> Goodman, A., &amp; Oldfield, Z. (2004). <i>
-Permanent differences? Income and expenditure inequality in the 1990s
-and 2000s </i> (Research Report R66). IFS Report. <a href="https://doi.org/10.1920/re.ifs.2004.0066" class="external-link uri">https://doi.org/10.1920/re.ifs.2004.0066</a></p>
+<p><a name="R1">[R1]</a> Goodman, A., &amp; Oldfield, Z. (2004).
+<i>Permanent differences? Income and expenditure inequality in the 1990s
+and 2000s</i> (Research Report R66). IFS Report. <a href="https://doi.org/10.1920/re.ifs.2004.0066" class="external-link uri">https://doi.org/10.1920/re.ifs.2004.0066</a></p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -332,7 +474,7 @@ and 2000s </i> (Research Report R66). IFS Report. <a href="https://doi.org/10.19
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

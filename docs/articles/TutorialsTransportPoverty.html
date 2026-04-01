@@ -44,6 +44,9 @@
 
   </a>
 </li>
+<li>
+  <a href="../articles/GetStarted.html">Get started</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-solid fa-indent"></span>
@@ -68,7 +71,7 @@
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-solid fa-chart-pie"></span>
 
-    Packge Data
+    Package Data
 
     <span class="caret"></span>
   </a>
@@ -91,6 +94,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../#">--- Spain ---</a>
+    </li>
+    <li>
       <a href="../articles/Tutorials.html">Calculate distributional impacts</a>
     </li>
     <li>
@@ -101,6 +107,24 @@
     </li>
     <li>
       <a href="../articles/TutorialsExample.html">Step-by-step example</a>
+    </li>
+    <li>
+      <a href="../#">--- EU (Eurostat microdata) ---</a>
+    </li>
+    <li>
+      <a href="../articles/TutorialsEU_data.html">Preparing the data</a>
+    </li>
+    <li>
+      <a href="../articles/TutorialsEU_di.html">Calculate distributional impacts</a>
+    </li>
+    <li>
+      <a href="../articles/TutorialsEU_ep.html">Calculate energy poverty indices</a>
+    </li>
+    <li>
+      <a href="../articles/TutorialsEU_tp.html">Calculate transport poverty indices</a>
+    </li>
+    <li>
+      <a href="../articles/TutorialsEU_example.html">Step-by-step example</a>
     </li>
   </ul>
 </li>
@@ -173,7 +197,7 @@ in <code>calc_tp</code>
 <li>Save the output dataframe in excel</li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">write.xlsx</span><span class="op">(</span><span class="va">file</span>,                         <span class="co"># Indicate the dataframe created in step 1</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/write.xlsx.html" class="external-link">write.xlsx</a></span><span class="op">(</span><span class="va">file</span>,                         <span class="co"># Indicate the dataframe created in step 1</span></span>
 <span>           <span class="st">"File_name.xlsx"</span>,             <span class="co"># Indicate the file name of the excel to be saved</span></span>
 <span>           sheetName <span class="op">=</span> <span class="st">"sheet_name"</span>,     <span class="co"># Indicate the sheet name</span></span>
 <span>           <span class="va">...</span><span class="op">)</span></span></code></pre></div>
@@ -202,7 +226,7 @@ series<a class="anchor" aria-label="anchor" href="#example-2--how-to-calculate-a
 <li>Save the output dataframe in excel</li>
 </ol>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">write.xlsx</span><span class="op">(</span><span class="va">file</span>,                         <span class="co"># File name or full file path</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/write.xlsx.html" class="external-link">write.xlsx</a></span><span class="op">(</span><span class="va">file</span>,                         <span class="co"># File name or full file path</span></span>
 <span>           <span class="st">"File_name.xlsx"</span>,             <span class="co"># Indicate the file name of the excel to be saved</span></span>
 <span>           sheetName <span class="op">=</span> <span class="st">"sheet_name"</span>,     <span class="co"># Indicate the sheet name</span></span>
 <span>           <span class="va">...</span><span class="op">)</span></span></code></pre></div>
@@ -225,7 +249,7 @@ series<a class="anchor" aria-label="anchor" href="#example-2--how-to-calculate-a
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

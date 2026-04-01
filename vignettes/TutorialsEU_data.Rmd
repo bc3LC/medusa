@@ -1,0 +1,108 @@
+---
+title: "Preparing the data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{TutorialsEU_data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Preparing the EU data
+
+`medusa` supports distributional analysis for 27 EU member states using microdata from the Eurostat **Household Budget Survey (HBS)**. The microdata are confidential and **not included** in the package. Before using any EU function, you must:
+
+1. Request access to the Eurostat HBS microdata.
+2. Organise the raw files in the required folder structure.
+3. Process the data with `hbs_eu()`.
+
+## Step 1: Request access to the Eurostat microdata
+
+Access to the Eurostat HBS microdata must be requested through the [Eurostat microdata access page](https://ec.europa.eu/eurostat/web/microdata/household-budget-survey). The available waves are **2010**, **2015**, and **2020**.
+
+## Step 2: Organise the files
+
+Once access is granted and files are downloaded, organise them in a root folder (e.g. `raw_data/`) with **one subfolder per wave**. The naming conventions differ between waves, as shown below.
+
+```
+raw_data/
+├── 2010/
+│   ├── BE_HBS_hh.xlsx
+│   ├── BE_HBS_hm.xlsx
+│   ├── ES_HBS_hh.xlsx
+│   ├── ES_HBS_hm.xlsx
+│   └── ...
+├── 2015/
+│   ├── BE_MFR_hh.xlsx
+│   ├── BE_MFR_hm.xlsx
+│   ├── ES_MFR_hh.xlsx
+│   ├── ES_MFR_hm.xlsx
+│   └── ...
+└── 2020/
+    ├── HBS_HH_BE.xlsx
+    ├── HBS_HM_BE.xlsx
+    ├── HBS_HH_ES.xlsx
+    ├── HBS_HM_ES.xlsx
+    └── ...
+```
+
+Each country requires **two files**: one for households (`hh` / `HH`) and one for household members (`hm` / `HM`).
+
+### File naming by wave
+
+| Wave | Household file | Members file | Example (Belgium) |
+|------|---------------|--------------|-------------------|
+| 2010 | `CC_HBS_hh.xlsx` | `CC_HBS_hm.xlsx` | `BE_HBS_hh.xlsx`, `BE_HBS_hm.xlsx` |
+| 2015 | `CC_MFR_hh.xlsx` | `CC_MFR_hm.xlsx` | `BE_MFR_hh.xlsx`, `BE_MFR_hm.xlsx` |
+| 2020 | `HBS_HH_CC.xlsx` | `HBS_HM_CC.xlsx` | `HBS_HH_BE.xlsx`, `HBS_HM_BE.xlsx` |
+
+where `CC` is the two-letter country code. To see all available country codes, run:
+
+```r
+country_code()
+```
+
+## Step 3: Process the data with `hbs_eu()`
+
+`hbs_eu()` reads and merges the raw Excel files, creates all socioeconomic and gender-sensitive variables, renames expenditure columns following the COICOP classification, and returns a single data frame ready for use with `calc_di_eu()`, `calc_ep_eu()`, and `calc_tp_eu()`.
+
+### Process all countries for a single wave
+
+```r
+hbs <- hbs_eu(year = 2015,           # Wave: 2010, 2015 or 2020
+              country = "all",        # Process all available countries
+              path = "raw_data")      # Path to the root folder
+```
+
+### Process selected countries
+
+```r
+hbs <- hbs_eu(year = 2015,
+              country = c("BE", "ES"),  # Select specific countries
+              path = "raw_data")
+```
+
+The function will raise an error if a country code is not available in your data for the selected wave, and will list the countries actually found on disk.
+
+## What `hbs_eu()` returns
+
+`hbs_eu()` returns a data frame where:
+
+- Each row is a household.
+- Expenditure variables follow the COICOP naming convention (e.g. `CP00` for total expenditure, `CP045` for domestic energy, `CP07` for transport).
+- Socioeconomic variables such as income quintiles, deciles, ventiles, and percentiles are computed both at the **national** and **EU** level.
+- Gender-sensitive variables (gender of reference person, feminization degree) are included.
+- A `country` column identifies the member state.
+
+For a full list of variables available for distributional analysis, see [Available Variables](https://bc3lc.github.io/medusa/articles/AvailableVariables.html).
+
+## Notes
+
+- `hbs_eu()` only accepts **one year at a time**. To process multiple waves, call the function once per wave and combine the results:
+
+```r
+hbs_2010 <- hbs_eu(year = 2010, country = "all", path = "raw_data")
+hbs_2015 <- hbs_eu(year = 2015, country = "all", path = "raw_data")
+hbs_2020 <- hbs_eu(year = 2020, country = "all", path = "raw_data")
+```
+
+- Intermediate files generated during processing are saved in `raw_data/inputs/` and can be reused in subsequent sessions.

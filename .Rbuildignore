@@ -16,3 +16,12 @@ exampleRepoCheatsheet.pdf
 ^\.github$
 ^_config.yml$
 ^articles$
+^figures$
+^outputs_di$
+^outputs_dii$
+^Medusa_eu_review$
+^paper$
+^rawDataFolder$
+^raw_data$
+^medusa$
+^coverage\.xml$

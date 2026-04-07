@@ -55,3 +55,32 @@ outputs_dii/
 # Tests
 tests/testthat/test_inputs/csv/*
 tests/testthat/test_outputs/*
+!tests/testthat/test_outputs/Example_shocks.csv
+!tests/testthat/test_outputs/Example_shocks_eu.csv
+!tests/testthat/test_outputs/Var_Intersec.csv
+!tests/testthat/test_outputs/Var_Intersec_eu.csv
+!tests/testthat/test_outputs/ex_coicop_eu.csv
+!tests/testthat/test_outputs/ex_coicop2_eu.csv
+!tests/testthat/test_outputs/hbs_2010.rds
+!tests/testthat/test_outputs/hbs_2015.rds
+!tests/testthat/test_outputs/hbs_2020.rds
+!tests/testthat/test_outputs/hbs_coicop_2010.rds
+!tests/testthat/test_outputs/hbs_coicop_2015.rds
+!tests/testthat/test_outputs/hbs_coicop_2020.rds
+!tests/testthat/test_outputs/hbs_price_shock_2015.rds
+!tests/testthat/test_outputs/hbs_updated_2015_to_2022.rds
+
+# Raw_data
+raw_data
+
+# EU review folder (scripts + derived outputs from confidential microdata)
+Medusa_eu_review/
+
+# Script database tests
+database_tests.R
+
+# Windows crash dumps
+bash.exe.stackdump
+
+# Local test fixtures not used in tests
+tests/testthat/test_inputs/DII_impacts_eu.rds

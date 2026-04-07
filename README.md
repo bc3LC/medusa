@@ -77,9 +77,9 @@ degree of the household. Additionally, the package combines these with
 the calculation of energy and transport poverty indices.
 
 :exclamation::exclamation: **Note**: At the moment, `medusa` package
-works for Spain, but in the short term the idea is to extend it to all
-EU countries. Moreover, the package could be extended to all countries
-that are able to provide the raw data of the model.
+works for Spain (INE microdata) and all EU countries (EUROSTAT microdata).
+But the package could be extended to all countries that are able to provide 
+the raw data of the model.
 
 ### <a name="ms-model"></a>The microsimulation model
 
@@ -131,24 +131,69 @@ Now the package is fully loaded and you can start using its functions.
 The `medusa` package contains 3 main blocks of functions:
 
 1.  Module 1. Functions to calculate distributional impacts
-    -   Main function: `calc_di`, `ex_shocks`, `available_var_impact` ,
+    -   Main functions (Spain): `calc_di`, `ex_shocks`, `available_var_impact`,
         `available_var_intersec` and `ex_var_intersec`.
+    -   Main functions (EU): `hbs_eu`, `calc_di_eu`, `ex_shocks_eu`,
+        `available_var_eu`, `ex_var_intersec_eu` and `check_var_eu`.
     -   Auxiliary functions: `load_rawhbs`, `rename_values`,
         `standardize`, `add_coicop`, `elevate_hbs`, `price_shock`,
         `impact`, `impact_intersectional`, `basic_graph`,
         `intersectional_graph`, `order_var`, `adjust_wh` and
         `adjust_wh_is`.
 2.  Module 2. Functions to calculate energy poverty indices
-    -   Main function: `calc_ep`
+    -   Main functions: `calc_ep` (Spain), `calc_ep_eu` (EU)
     -   Auxiliary functions: `id_ep1`, `id_ep2`, `weighted.median` and
         `weighted.quantile`.
 3.  Module 3. Functions to calculate transport poverty indices
-    -   Main function: `calc_tp`
+    -   Main functions: `calc_tp` (Spain), `calc_tp_eu` (EU)
     -   Auxiliary functions: `id_tp`, `weighted.median` and
         `weighted.quantile`.
 
 In addition, the package includes some default input files (.Rda), that
 are read by the different functions.
+
+### Quick example — Spain
+
+```r
+library(medusa)
+
+# 1. Download the example shocks file and edit it
+ex_shocks()
+# [open Example_shocks.csv, fill in price shocks, save]
+shocks <- read.csv("Example_shocks.csv", header = TRUE, sep = ",", dec = ".")
+
+# 2. Distributional impacts by income decile
+results <- calc_di(shocks = shocks, var = "decile")
+
+# 3. Energy and transport poverty indices
+ep <- calc_ep(index = "all")
+tp <- calc_tp(index = "all")
+```
+
+### Quick example — EU
+
+```r
+library(medusa)
+
+# 0. Process HBS microdata (requires Eurostat raw files)
+hbs <- hbs_eu(year = 2015, country = c("BE", "ES"), path = "raw_data")
+
+# 1. Download the example shocks file and edit it
+ex_shocks_eu()
+# [open Example_shocks_eu.csv, fill in price shocks for each country-scenario, save]
+shocks <- read.csv("Example_shocks_eu.csv", header = TRUE, sep = ",", dec = ".")
+
+# 2. Distributional impacts by income decile
+results <- calc_di_eu(data = hbs, shocks = shocks, var = "decile", by_country = TRUE)
+
+# 3. Energy and transport poverty indices
+ep <- calc_ep_eu(data = hbs, index = "all")
+tp <- calc_tp_eu(data = hbs, index = "all")
+```
+
+For detailed step-by-step tutorials, see:
+- [Spain tutorial](https://bc3lc.github.io/medusa/articles/TutorialsExample.html)
+- [EU tutorial](https://bc3lc.github.io/medusa/articles/TutorialsEU_example.html)
 
 ## <a name="contributing"></a>Contributing
 

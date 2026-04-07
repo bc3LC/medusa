@@ -1,10 +1,14 @@
 title: medusa
 
+template:
+  bootstrap: 5
+
 navbar:
-  type: inverse
   left:
     - icon: fa-home
       href: index.html
+    - text: "Get started"
+      href: articles/GetStarted.html
     - text: "Modules"
       icon: fa-solid fa-indent
       menu:
@@ -14,7 +18,7 @@ navbar:
          href: articles/EnergyPoverty.html
       -  text: Transport poverty indices
          href: articles/TransportPoverty.html
-    - text: "Packge Data"
+    - text: "Package Data"
       icon: fa-solid fa-chart-pie
       menu:
       -  text: Package Data
@@ -24,6 +28,8 @@ navbar:
     - text: "Tutorials"
       icon: fas fa-book
       menu:
+      -  text: "--- Spain ---"
+         href: "#"
       -  text: Calculate distributional impacts
          href: articles/Tutorials.html
       -  text: Calculate energy poverty indices
@@ -32,10 +38,22 @@ navbar:
          href: articles/TutorialsTransportPoverty.html
       -  text: Step-by-step example
          href: articles/TutorialsExample.html
-    - icon: fa-file-code-o
+      -  text: "--- EU (Eurostat microdata) ---"
+         href: "#"
+      -  text: Preparing the data
+         href: articles/TutorialsEU_data.html
+      -  text: Calculate distributional impacts
+         href: articles/TutorialsEU_di.html
+      -  text: Calculate energy poverty indices
+         href: articles/TutorialsEU_ep.html
+      -  text: Calculate transport poverty indices
+         href: articles/TutorialsEU_tp.html
+      -  text: Step-by-step example
+         href: articles/TutorialsEU_example.html
+    - icon: fa-regular fa-file-code
       text: "Reference"
       href: reference/index.html
-    - icon: fa-newspaper-o
+    - icon: fa-regular fa-newspaper
       text: "News"
       href: news/index.html
 

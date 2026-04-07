@@ -69,8 +69,8 @@ standardize <- function(data) {
 #' weighted.quantile
 #'
 #' Function to calculate weighted quantile. Extracted from package spatstat.geom v3.2-5
-#' @param x Data values. A vector pf numeric values, for which the median or quantiles are required.
-#' @param w Weights. A vector of nonnegative numbers, of the same lenght as x.
+#' @param x Data values. A vector of numeric values, for which the median or quantiles are required.
+#' @param w Weights. A vector of non negative numbers, of the same lenght as x.
 #' @param probs Probabilities for which the quantiles should be computed. A numeric vector of values between 0 and 1.
 #' @param na.rm Logical. Whether to ignore NA values.
 #' @param type Integer specifying the rule for calculating the median or quantile, corresponding to the rules available for quantile. The only valid choices are type=1, 2 or 4.

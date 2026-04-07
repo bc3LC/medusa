@@ -162,3 +162,50 @@ use_data(is_categories, overwrite=T)
 # graph_labels
 graph_labels = read.csv(paste0(rawDataFolder,"graph_labels.csv"),header=T)
 use_data(graph_labels, overwrite=T)
+
+
+
+#################################################################################
+# Data medusa EU
+
+rawDataFolder = paste0(here::here(),"/inst/extdata/eu/")
+
+# av_country
+av_country = read.csv(paste0(rawDataFolder,"av_country.csv"),header=T)
+use_data(av_country, overwrite=T)
+
+# variables_h
+variables_h = read.csv(paste0(rawDataFolder,"variables_h.csv"),header=T)
+use_data(variables_h, overwrite=T)
+
+# variables_m_2010
+variables_m_2010 = read.csv(paste0(rawDataFolder,"variables_m_2010.csv"),header=T)
+use_data(variables_m_2010, overwrite=T)
+
+# variables_m_2015
+variables_m_2015 = read.csv(paste0(rawDataFolder,"variables_m_2015.csv"),header=T)
+use_data(variables_m_2015, overwrite=T)
+
+# variables_m_2020
+variables_m_2020 = read.csv(paste0(rawDataFolder,"variables_m_2020.csv"),header=T)
+use_data(variables_m_2020, overwrite=T)
+
+# mapping_coicop
+mapping_coicop = read.csv(paste0(rawDataFolder,"mapping_coicop.csv"),header=T)
+use_data(mapping_coicop, overwrite=T)
+
+# shocks_eu
+shocks_eu = read.csv(paste0(rawDataFolder,"shocks_eu.csv"),header=T)
+use_data(shocks_eu, overwrite=T)
+
+# shocks_eu_s
+shocks_eu_s = read.csv(paste0(rawDataFolder,"shocks_eu_s.csv"),header=T)
+use_data(shocks_eu_s, overwrite=T)
+
+# graph_labels_eu
+graph_labels_eu = read.csv(paste0(rawDataFolder,"graph_labels_eu.csv"),header=T)
+use_data(graph_labels_eu, overwrite=T)
+
+# is_categories_eu
+is_categories_eu = read.csv(paste0(rawDataFolder,"is_categories_eu.csv"),header=T)
+use_data(is_categories_eu, overwrite=T)

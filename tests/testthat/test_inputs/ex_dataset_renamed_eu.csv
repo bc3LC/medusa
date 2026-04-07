@@ -1,0 +1,6 @@
+number,country,year,zone,weight,household_size,household_type,income_source
+1,AT,2015,Densely populated,1667,1,Adult alone,Unemployment
+2,BE,2015,Intemediate,800,2,Couple with children,Property
+3,BG,2015,Sparsely populated,390,3,Single parent,Pensions
+4,CY,2015,Sparsely populated,734,4,More than 2 adults,Wages
+5,CZ,2015,Densely populated,996,5,Couple,Self-employment

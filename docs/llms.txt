@@ -1,0 +1,362 @@
+# MEDUSA - Modelling Equity and DistribUtional impacts for Socioeconomic Analysis
+
+[![docs](https://github.com/bc3LC/medusa/actions/workflows/docs.yaml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/docs.yaml)
+[![pages-build-deployment](https://github.com/bc3LC/medusa/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/pages/pages-build-deployment)
+[![test_coverage](https://github.com/bc3LC/medusa/actions/workflows/test_coverage.yml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/test_coverage.yml)
+[![codecov](https://codecov.io/gh/bc3LC/medusa/graph/badge.svg?token=VSmmxRUGO2)](https://codecov.io/gh/bc3LC/medusa)
+[![build](https://github.com/bc3LC/medusa/actions/workflows/build.yaml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/build.yaml)
+[![draft-pdf](https://github.com/bc3LC/medusa/actions/workflows/draft-pdf.yml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/draft-pdf.yml)
+
+## Contents
+
+- [Introduction](#introduction)
+
+  - [State of the field](#state)
+
+  - [The package](#pkg)
+
+  - [The microsimulation model](#ms-model)
+
+- [Installation Guide](#installation-guide)
+
+- [Getting Started](#get-started)
+
+- [Contributing](#contributing)
+
+## Introduction
+
+[Back to Contents](#contents)
+
+### State of the field
+
+Addressing critical challenges, such as climate change, requires
+ambitious policies that promote social justice while avoiding the
+deepening of existing inequalities, such as income or gender
+disparities. To achieve this, policy impact assessments must not only
+take a holistic view of the economy, energy, land, and water systems but
+also analyze the distributional effects on different population groups.
+
+While Integrated Assessment Models (IAMs) play a key role in policy
+evaluation, they often lack the granularity needed to capture
+socio-economic disparities. Micro-simulation models help bridge this gap
+by providing detailed, heterogeneous results that allow policymakers to
+identify vulnerable populations and design targeted compensatory
+measures. However, despite the growing emphasis on distributional
+analysis in the academic literature, these approaches have not yet been
+widely integrated into policymaking. A key barrier is the lack of
+accessible tools that facilitate this type of analysis for practitioners
+and policymakers.
+
+MEDUSA is the first R package specifically designed to fill this gap.
+MEDUSA provides a user-friendly framework for conducting distributional
+analysis. By simplifying complex modeling processes, it enables a
+broader audience —including researchers, policymakers, and analysts— to
+incorporate equity considerations into policy design, ensuring that
+policies are both effective and socially just.
+
+### The package
+
+MEDUSA is an R package that allows the development of distributional
+analyses in isolation or in connection with other models (soft links).
+The extensive database in which the microsimulation model is based
+allows for highly disaggregated results, taking into account numerous
+socioeconomic and demographic characteristics of households, such as
+income level, place of residence, type of family or the feminization
+degree of the household. Additionally, the package combines these with
+the calculation of energy and transport poverty indices.
+
+❗❗ **Note**: At the moment, `medusa` package works for Spain (INE
+microdata) and all EU countries (EUROSTAT microdata). But the package
+could be extended to all countries that are able to provide the raw data
+of the model.
+
+### The microsimulation model
+
+MEDUSA allows to develop distributional analyses based in an overnight
+effect microsimulation model. The model is built up with the microdata
+from the Household Budget Survey. For more details on the model in which
+`medusa` is based click
+[here](https://bc3lc.github.io/medusa/articles/TheModel.html).
+
+## Installation Guide
+
+[Back to Contents](#contents)
+
+To use `medusa` package first you need to follow this steps:
+
+1.  Install R (required) and optionally an interface to facilitate
+    usage, such as RStudio (only if not already installed):
+
+    - To download R click [here](https://www.r-project.org/)
+
+    - To download Rstudio click [here](https://www.rstudio.com/)
+
+2.  Load `medusa` package. For this, open Rstudio and load the library:
+
+    ``` r
+    install.packages('remotes')
+    options(timeout=400)                             # to prevent errors if the connection is slow
+    remotes::install_github("bc3LC/medusa")
+    library(medusa)
+    ```
+
+❗❗ This may take a few minutes because the package contains a lot of
+data.
+
+  
+Now the package is fully loaded and you can start using its functions.  
+
+## Getting Started
+
+[Back to Contents](#contents)
+
+The `medusa` package contains 3 main blocks of functions:
+
+1.  Module 1. Functions to calculate distributional impacts
+    - Main functions (Spain): `calc_di`, `ex_shocks`,
+      `available_var_impact`, `available_var_intersec` and
+      `ex_var_intersec`.
+    - Main functions (EU): `hbs_eu`, `calc_di_eu`, `ex_shocks_eu`,
+      `available_var_eu`, `ex_var_intersec_eu` and `check_var_eu`.
+    - Auxiliary functions: `load_rawhbs`, `rename_values`,
+      `standardize`, `add_coicop`, `elevate_hbs`, `price_shock`,
+      `impact`, `impact_intersectional`, `basic_graph`,
+      `intersectional_graph`, `order_var`, `adjust_wh` and
+      `adjust_wh_is`.
+2.  Module 2. Functions to calculate energy poverty indices
+    - Main functions: `calc_ep` (Spain), `calc_ep_eu` (EU)
+    - Auxiliary functions: `id_ep1`, `id_ep2`, `weighted.median` and
+      `weighted.quantile`.
+3.  Module 3. Functions to calculate transport poverty indices
+    - Main functions: `calc_tp` (Spain), `calc_tp_eu` (EU)
+    - Auxiliary functions: `id_tp`, `weighted.median` and
+      `weighted.quantile`.
+
+In addition, the package includes some default input files (.Rda), that
+are read by the different functions.
+
+### Quick example — Spain
+
+``` r
+library(medusa)
+
+# 1. Download the example shocks file and edit it
+ex_shocks()
+# [open Example_shocks.csv, fill in price shocks, save]
+shocks <- read.csv("Example_shocks.csv", header = TRUE, sep = ",", dec = ".")
+
+# 2. Distributional impacts by income decile
+results <- calc_di(shocks = shocks, var = "decile")
+
+# 3. Energy and transport poverty indices
+ep <- calc_ep(index = "all")
+tp <- calc_tp(index = "all")
+```
+
+### Quick example — EU
+
+``` r
+library(medusa)
+
+# 0. Process HBS microdata (requires Eurostat raw files)
+hbs <- hbs_eu(year = 2015, country = c("BE", "ES"), path = "raw_data")
+
+# 1. Download the example shocks file and edit it
+ex_shocks_eu()
+# [open Example_shocks_eu.csv, fill in price shocks for each country-scenario, save]
+shocks <- read.csv("Example_shocks_eu.csv", header = TRUE, sep = ",", dec = ".")
+
+# 2. Distributional impacts by income decile
+results <- calc_di_eu(data = hbs, shocks = shocks, var = "decile", by_country = TRUE)
+
+# 3. Energy and transport poverty indices
+ep <- calc_ep_eu(data = hbs, index = "all")
+tp <- calc_tp_eu(data = hbs, index = "all")
+```
+
+For detailed step-by-step tutorials, see: - [Spain
+tutorial](https://bc3lc.github.io/medusa/articles/TutorialsExample.html) -
+[EU
+tutorial](https://bc3lc.github.io/medusa/articles/TutorialsEU_example.html)
+
+## Contributing
+
+[Back to Contents](#contributing)
+
+We welcome contributions! You can provide feedback, report issues, or
+suggest improvements by opening an issue on GitHub
+[here](https://github.com/bc3LC/medusa/issues). If you would like to
+make changes to the code, we recommend first opening an issue to outline
+your proposed modifications before submitting a pull request.
+
+If you have any questions about the package, feel free to post them as
+issues on GitHub as well.
+
+# Package index
+
+## All functions
+
+- [`add_coicop()`](add_coicop.md) : add_coicop
+- [`adjust_wh()`](adjust_wh.md) : adjust_wh
+- [`adjust_wh_is()`](adjust_wh_is.md) : adjust_wh_is
+- [`available_var_eu()`](available_var_eu.md) : available_var_eu
+- [`available_var_impact()`](available_var_impact.md) :
+  available_var_impact
+- [`available_var_intersec()`](available_var_intersec.md) :
+  available_var_intersec
+- [`available_var_intersec_eu()`](available_var_intersec_eu.md) :
+  available_var_intersec_eu
+- [`av_country`](av_country.md) : File containing available countries
+  and country codes
+- [`basic_graph()`](basic_graph.md) : basic_graph
+- [`basic_graph_eu()`](basic_graph_eu.md) : basic_graph_eu
+- [`calc_di()`](calc_di.md) : calc_di
+- [`calc_di_eu()`](calc_di_eu.md) : calc_di_eu
+- [`calc_ep()`](calc_ep.md) : calc_ep
+- [`calc_ep_eu()`](calc_ep_eu.md) : calc_ep_eu
+- [`calc_tp()`](calc_tp.md) : calc_tp
+- [`calc_tp_eu()`](calc_tp_eu.md) : calc_tp_eu
+- [`categories`](categories.md) : List containing the socioeconomic and
+  demographic categories for the calculation of distributional impacts
+- [`check_var_eu()`](check_var_eu.md) : check_var_eu
+- [`check_var_impact()`](check_var_impact.md) : check_var_impact
+- [`check_year()`](check_year.md) : check_year
+- [`coicop_2006`](coicop_2006.md) : List to add coicop categories for
+  2006
+- [`coicop_2007`](coicop_2007.md) : List to add coicop categories for
+  2007
+- [`coicop_2008`](coicop_2008.md) : List to add coicop categories for
+  2008
+- [`coicop_2009`](coicop_2009.md) : List to add coicop categories for
+  2009
+- [`coicop_2010`](coicop_2010.md) : List to add coicop categories for
+  2010
+- [`coicop_2011`](coicop_2011.md) : List to add coicop categories for
+  2011
+- [`coicop_2012`](coicop_2012.md) : List to add coicop categories for
+  2012
+- [`coicop_2013`](coicop_2013.md) : List to add coicop categories for
+  2013
+- [`coicop_2014`](coicop_2014.md) : List to add coicop categories for
+  2014
+- [`coicop_2015`](coicop_2015.md) : List to add coicop categories for
+  2015
+- [`coicop_2016`](coicop_2016.md) : List to add coicop categories for
+  2016
+- [`coicop_2017`](coicop_2017.md) : List to add coicop categories for
+  2017
+- [`coicop_2018`](coicop_2018.md) : List to add coicop categories for
+  2018
+- [`coicop_2019`](coicop_2019.md) : List to add coicop categories for
+  2019
+- [`coicop_2020`](coicop_2020.md) : List to add coicop categories for
+  2020
+- [`coicop_2021`](coicop_2021.md) : List to add coicop categories for
+  2021
+- [`coicop_mapping()`](coicop_mapping.md) : coicop_mapping
+- [`country_code()`](country_code.md) : country_code
+- [`database_hbs()`](database_hbs.md) : database_hbs
+- [`elevate_hbs()`](elevate_hbs.md) : elevate_hbs
+- [`epf_list_2006`](epf_list_2006.md) : Clean hbs list for 2006
+- [`epf_list_2007`](epf_list_2007.md) : Clean hbs list for 2007
+- [`epf_list_2008`](epf_list_2008.md) : Clean hbs list for 2008
+- [`epf_list_2009`](epf_list_2009.md) : Clean hbs list for 2009
+- [`epf_list_2010`](epf_list_2010.md) : Clean hbs list for 2010
+- [`epf_list_2011`](epf_list_2011.md) : Clean hbs list for 2011
+- [`epf_list_2012`](epf_list_2012.md) : Clean hbs list for 2012
+- [`epf_list_2013`](epf_list_2013.md) : Clean hbs list for 2013
+- [`epf_list_2014`](epf_list_2014.md) : Clean hbs list for 2014
+- [`epf_list_2015`](epf_list_2015.md) : Clean hbs list for 2015
+- [`epf_list_2016`](epf_list_2016.md) : Clean hbs list for 2016
+- [`epf_list_2017`](epf_list_2017.md) : Clean hbs list for 2017
+- [`epf_list_2018`](epf_list_2018.md) : Clean hbs list for 2018
+- [`epf_list_2019`](epf_list_2019.md) : Clean hbs list for 2019
+- [`epf_list_2020`](epf_list_2020.md) : Clean hbs list for 2020
+- [`epf_list_2021`](epf_list_2021.md) : Clean hbs list for 2021
+- [`ex_shocks()`](ex_shocks.md) : ex_shocks
+- [`ex_shocks_eu()`](ex_shocks_eu.md) : ex_shocks_eu
+- [`ex_var_intersec()`](ex_var_intersec.md) : ex_var_intersec
+- [`ex_var_intersec_eu()`](ex_var_intersec_eu.md) : ex_var_intersec_eu
+- [`gcfhogares95_22`](gcfhogares95_22.md) : File containing household
+  expenditure by COICOP category from the national accounts
+- [`graph_labels`](graph_labels.md) : List containing long names for the
+  socioeconomic and demographic categories to introduce them on the axes
+  of the graphs
+- [`graph_labels_eu`](graph_labels_eu.md) : List of available variables
+  for EU countries and long names for the socioeconomic and demographic
+  categories to introduce them on the axes of the graphs
+- [`hbs_eu()`](hbs_eu.md) : hbs_eu
+- [`id_ep1()`](id_ep1.md) : id_ep1
+- [`id_ep2()`](id_ep2.md) : id_ep2
+- [`id_ep_eu()`](id_ep_eu.md) : id_ep_eu
+- [`id_tp()`](id_tp.md) : id_tp
+- [`id_tp_eu()`](id_tp_eu.md) : id_tp_eu
+- [`impact()`](impact.md) : impact
+- [`impact_eu()`](impact_eu.md) : impact_eu
+- [`impact_intersectional()`](impact_intersectional.md) :
+  impact_intersectional
+- [`impact_intersectional_eu()`](impact_intersectional_eu.md) :
+  impact_intersectional_eu
+- [`intersectional_graph()`](intersectional_graph.md) :
+  intersectional_graph
+- [`intersectional_graph_eu()`](intersectional_graph_eu.md) :
+  intersectional_graph_eu
+- [`is_categories`](is_categories.md) : List containing the
+  socioeconomic and demographic categories for the calculation of
+  intersectional distributional impacts
+- [`is_categories_eu`](is_categories_eu.md) : List containing the
+  socioeconomic and demographic categories for the calculation of
+  intersectional distributional impacts for EU countries
+- [`lists`](lists.md) : List to add coicop categories
+- [`load_rawhbs()`](load_rawhbs.md) : load_rawhbs
+- [`mapping`](mapping.md) : Mapping to rename socioeconomic variables
+- [`mapping_coicop`](mapping_coicop.md) : Mapping for expenditure
+  categories (COICOP)
+- [`medusa`](medusa.md) : medusa
+- [`order_var()`](order_var.md) : order_var
+- [`order_vars_eu()`](order_vars_eu.md) : order_vars_eu
+- [`order_var_eu()`](order_var_eu.md) : order_var_eu
+- [`price_shock()`](price_shock.md) : price_shock
+- [`price_shock_eu()`](price_shock_eu.md) : price_shock_eu
+- [`rawhbs_eu()`](rawhbs_eu.md) : rawhbs_eu
+- [`rename_coicop()`](rename_coicop.md) : rename_coicop
+- [`rename_values()`](rename_values.md) : rename_values
+- [`rename_values_eu()`](rename_values_eu.md) : rename_values_eu
+- [`shocks`](shocks.md) : Example csv file in which the change in prices
+  must be introduced to apply a price shock
+- [`shocks_eu`](shocks_eu.md) : Example csv file in which the change in
+  prices must be introduced to apply a price shock to EU microdata
+- [`shocks_eu_s`](shocks_eu_s.md) : Example csv file in which the change
+  in prices must be introduced to apply multiple scenarios and price
+  shocks to EU microdata
+- [`standardize()`](standardize.md) : standardize
+- [`standardize_eu()`](standardize_eu.md) : standardize_eu
+- [`update_year()`](update_year.md) : update_year
+- [`variables_m_2010`](variables_m_2010.md) : Mapping for 2010 member
+  file
+- [`variables_m_2015`](variables_m_2015.md) : Mapping for 2015 member
+  file
+- [`variables_m_2020`](variables_m_2020.md) : Mapping for 2020 member
+  file
+- [`weighted.median()`](weighted.median.md) : weighted.median
+- [`weighted.quantile()`](weighted.quantile.md) : weighted.quantile
+
+# Articles
+
+### All vignettes
+
+- [Available Variables](AvailableVariables.md):
+- [Energy poverty indices](EnergyPoverty.md):
+- [Get started](GetStarted.md):
+- [Package Data](PackageData.md):
+- [TheModel](TheModel.md):
+- [Transport poverty indices](TransportPoverty.md):
+- [Calculate distributional impacts](Tutorials.md):
+- [Calculate energy poverty indices](TutorialsEnergyPoverty.md):
+- [Preparing the data](TutorialsEU_data.md):
+- [Calculate distributional impacts (EU)](TutorialsEU_di.md):
+- [Calculate energy poverty indices (EU)](TutorialsEU_ep.md):
+- [Step-by-step example (EU)](TutorialsEU_example.md):
+- [Calculate transport poverty indices (EU)](TutorialsEU_tp.md):
+- [Step-by-step example](TutorialsExample.md):
+- [Calculate transport poverty indices](TutorialsTransportPoverty.md):

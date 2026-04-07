@@ -1,37 +1,70 @@
 ---
-title: "AvailableVariables"
+title: "Available Variables"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{AvailableVariables}
+  %\VignetteIndexEntry{Available Variables}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
- `medusa` allows for the calculation of distributional impacts according to numerous socio-economic and demographic variables of households. The variables for which the package currently works are detailed and described below.
+`medusa` allows for the calculation of distributional impacts according to numerous socio-economic and demographic variables of households. The variables available differ between the Spain and EU data.
+
+## Spain
+
+The variables available for Spain are detailed below. To see them in R, run `available_var_impact()`.
 
 | Variable | Description | Labels |
 |-------|--------------|--------------|
-| QUINTILE | The quintile variable distributes households into 5 groups according to their income [[1]](#1), with 1 representing the poorest households in the distribution and 5 the richest. | 1-5 |
-| DECILE | The decile variable distributes households into 10 groups according to their income [[1]](#1), with 1 representing the poorest households in the distribution and 10 the richest. | 1-10 |
-| VENTILE | The variable ventil distributes households into 20 groups according to their income [[1]](#1), with 1 representing the poorest households in the distribution and 20 the richest. | 1-20 |
-| PERCENTILE |The percentile variable distributes households into 100 groups according to their income [[1]](#1), with 1 representing the poorest households in the distribution and 100 the richest. | 1-100 |
-| REGION | Autonomous Community of residence of the household (NUTS2). | Andalucía <br> Aragón <br> Asturias <br> Baleares <br> Canarias <br> Cantabria <br> Castilla y León <br> Castilla La Mancha <br> Cataluña <br> Comunidad Valenciana <br> Extremadura <br> Galicia <br> Madrid <br> Murcia <br> Navarra <br> País Vasco <br> La Rioja <br> Ceuta <br> Melilla|
-| MUNISIZE | Size of municipality of residence. | >10.000: Municipalities with more than 10,000 inhabitants <br> <10.000: Small municipality with less than 10,000 inhabitants |
-| ZONE | Level of rurality of the household's area of residence | Urban: densely populated urban area <br> Semi-urban: semi-urban area with an intermediate population density <br> Rural: rural area with a low population density |
-| HHTYPE | Household type. | Elderly alone <br> Single person <br> Single parent <br> Elderly couples <br> Couples without children <br> Couples with children <br> Others |
-| CHILDREN | Number of household members under 18 years. | No children <br> With children: With 1 or 2 children <br> Large family: Large family with 3 or more children |
-| POVERTY | The household is at risk of poverty if its income [[1]](#1) is below 60% of the national median. | At risk: At risk of general poverty <br> No risk: without risk of falling into general poverty |
-| GENDERRP | Gender of the reference person of the household. | Man: when the household reference person is a man <br> Woman: when the household reference person is a woman |
-| FEMDEGREE | Feminization degree of the household. | FD1: households in which less than 20% of the household members are women <br> FD2:households in which 20-40% of the household members are female <br> FD3:households in which 40-60% of the household members are female <br> FD4:households in which 60-80% of the household members are female <br> FD5: households in which more than 80% of the household members are women |
-| AGERP | Age of the reference person in the household. The age is calculated as at the date of completion of the household file. | Young: Young person aged 30 years or less <br> Adult: Adult person between 30 and 65 years of age <br> Elder: Elderly person aged 65 years or more |
-| COUNTRYRP | Country of birth of the reference person of the household. | Spain: when the reference person in the household was born in Spain <br> EU27: when the reference person of the household was born in an EU27 country (excluding Spain) <br> Other Europe: when the reference person of the household was born in a European country outside the EU27 <br> Rest of world: when the reference person of the household was born in a country in the rest of the world, i.e. in a non-European country |
-| STUDIESRP | Education level completed by the reference person of the household. | Without studies <br> Primary education <br> Secondary education <br> Post-secondary education <br> Higher education |
-| PROFESSIONALSRP | Professional status of the reference person of the household. | Employee <br> Self-employed <br> Employer <br> Otros: Others <br> No aplica: Do not apply |
-| CONTTYPERP | Type of employment contract of the reference person of the household. | Indefinite: Indefinite contract <br> Temporary: Temporary contract <br> Not apply: Do not apply |
-| WORKDAYRP | Working hours of the reference person of the household. | Full time <br> Part time <br> Not apply: Do not apply |
-| REGMR | Tenure status of the household's main residence. | Ownership: with home ownership with or without mortgage <br> Rented: with rented housing <br> Relinquish: when you use a dwelling free of charge |
+| QUINTILE | Income quintile: distributes households into 5 groups according to their income [[1]](#1), with 1 representing the poorest and 5 the richest. | 1–5 |
+| DECILE | Income decile: distributes households into 10 groups according to their income [[1]](#1), with 1 representing the poorest and 10 the richest. | 1–10 |
+| VENTILE | Income ventile: distributes households into 20 groups according to their income [[1]](#1), with 1 representing the poorest and 20 the richest. | 1–20 |
+| PERCENTILE | Income percentile: distributes households into 100 groups according to their income [[1]](#1). | 1–100 |
+| REGION | Autonomous Community of residence (NUTS2). | Andalucía, Aragón, Asturias, Baleares, Canarias, Cantabria, Castilla y León, Castilla La Mancha, Cataluña, Comunidad Valenciana, Extremadura, Galicia, Madrid, Murcia, Navarra, País Vasco, La Rioja, Ceuta, Melilla |
+| MUNISIZE | Size of municipality of residence. | >10.000: more than 10,000 inhabitants <br> <10.000: less than 10,000 inhabitants |
+| ZONE | Level of rurality of the area of residence. | Urban, Semi-urban, Rural |
+| HHTYPE | Household type. | Elderly alone, Single person, Single parent, Elderly couples, Couples without children, Couples with children, Others |
+| CHILDREN | Number of household members under 18 years. | No children, With children (1–2), Large family (3+) |
+| POVERTY | At-risk-of-poverty status: household income [[1]](#1) below 60% of the national median. | At risk, No risk |
+| GENDERRP | Gender of the reference person. | Man, Woman |
+| FEMDEGREE | Feminization degree of the household. | FD1 (<20% women), FD2 (20–40%), FD3 (40–60%), FD4 (60–80%), FD5 (>80%) |
+| AGERP | Age of the reference person. | Young (≤30), Adult (30–65), Elder (≥65) |
+| COUNTRYRP | Country of birth of the reference person. | Spain, EU27, Other Europe, Rest of world |
+| STUDIESRP | Education level of the reference person. | Without studies, Primary, Secondary, Post-secondary, Higher education |
+| PROFESSIONALSRP | Professional status of the reference person. | Employee, Self-employed, Employer, Others, Not applicable |
+| CONTTYPERP | Type of employment contract of the reference person. | Indefinite, Temporary, Not apply |
+| WORKDAYRP | Working hours of the reference person. | Full time, Part time, Not apply |
+| REGMR | Tenure status of the main residence. | Ownership, Rented, Relinquish |
+
+## EU
+
+The variables available for EU countries are detailed below. To see them in R, run `available_var_eu()`. Income groups (quintile, decile, ventile, percentile) are available both at the **national level** (calculated within each country) and at the **EU level** (calculated across all EU households jointly).
+
+| Variable | Description | Labels |
+|-------|--------------|--------------|
+| quintile | Income quintile at national level [[1]](#1). | 1–5 |
+| quintile_eu | Income quintile at EU level [[1]](#1). | 1–5 |
+| decile | Income decile at national level [[1]](#1). | 1–10 |
+| decile_eu | Income decile at EU level [[1]](#1). | 1–10 |
+| ventile | Income ventile at national level [[1]](#1). | 1–20 |
+| ventile_eu | Income ventile at EU level [[1]](#1). | 1–20 |
+| percentile | Income percentile at national level [[1]](#1). | 1–100 |
+| percentile_eu | Income percentile at EU level [[1]](#1). | 1–100 |
+| country | Country of residence. | AT, BE, BG, CY, CZ, DE, DK, EE, EL, ES, FI, FR, HR, HU, IE, IT, LT, LU, LV, MT, NL, PL, PT, RO, SE, SI, SK |
+| zone | Zone of residence. | Urban, Semi-urban, Rural |
+| household_type | Type of household. | Adult alone, Couple, Couple with children, More than 2 adults, More than 2 adults with children, Single parent |
+| income_source | Main income source of the household. | Wages, Self-employment, Property, Pensions, Unemployment |
+| gender | Gender of the reference person. | Male, Female |
+| feminization_degree | Feminization degree of the household. | FD1 (<20% women), FD2 (20–40%), FD3 (40–60%), FD4 (60–80%), FD5 (>80%) |
+| age | Age of the reference person. | Young (≤30), Adult (30–65), Elder (≥65) |
+| birth_country | Country of birth of the reference person. | National, EU, Non-EU, Non-national |
+| education | Education level of the reference person. | Early childhood education, Primary, Secondary, Post-secondary, Tertiary, Higher education |
+| activity | Professional status of the reference person. | Employed, Unemployed, Retired, Student, Domestic tasks, Disabled, Military service |
+| contract_type | Type of employment contract of the reference person. | Permanent, Fixed-term, Not applicable |
+| workday | Type of working hours of the reference person. | Full time, Part time, Not apply |
+| employment_sector | Employment sector of the reference person. | Private sector, Public sector |
+| REGMR | Tenure status of the main residence. | Ownership, Rented, Relinquish |
 
 
-<small><i>  <a  name="1">[1]</a>Equivalent consumption expenditure is used instead of income as it is considered a better proxy for permanent household income since it fluctuates less in the long run [(Goodman & Oldfield, 2004)](#R1). The equivalent spending is calculated based on household spending relativized by the modified OECD equivalence scale, thus considering the economies of scale generated in households based on their size. The modified OECD scale values 1 for the reference person in the household, 0.5 for other people aged 14 or over, and 0.3 for other people under 14 years of age.</i></small>
+<small><i> <a name="1">[1]</a> Equivalent consumption expenditure is used instead of income as it is considered a better proxy for permanent household income since it fluctuates less in the long run [(Goodman & Oldfield, 2004)](#R1). The equivalent spending is calculated based on household spending relativised by the modified OECD equivalence scale, thus considering the economies of scale generated in households based on their size. The modified OECD scale values 1 for the reference person in the household, 0.5 for other people aged 14 or over, and 0.3 for other people under 14 years of age.</i></small>
 
-<a  name="R1">[R1]</a> Goodman, A., & Oldfield, Z. (2004). <i> Permanent differences? Income and expenditure inequality in the 1990s and 2000s </i> (Research Report R66). IFS Report. https://doi.org/10.1920/re.ifs.2004.0066
+<a name="R1">[R1]</a> Goodman, A., & Oldfield, Z. (2004). <i>Permanent differences? Income and expenditure inequality in the 1990s and 2000s</i> (Research Report R66). IFS Report. https://doi.org/10.1920/re.ifs.2004.0066

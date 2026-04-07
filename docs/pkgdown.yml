@@ -1,15 +1,20 @@
-pandoc: 3.1.1
-pkgdown: 2.0.7
+pandoc: '3.4'
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   AvailableVariables: AvailableVariables.html
   EnergyPoverty: EnergyPoverty.html
+  GetStarted: GetStarted.html
   PackageData: PackageData.html
   TheModel: TheModel.html
   TransportPoverty: TransportPoverty.html
   Tutorials: Tutorials.html
   TutorialsEnergyPoverty: TutorialsEnergyPoverty.html
+  TutorialsEU_data: TutorialsEU_data.html
+  TutorialsEU_di: TutorialsEU_di.html
+  TutorialsEU_ep: TutorialsEU_ep.html
+  TutorialsEU_example: TutorialsEU_example.html
+  TutorialsEU_tp: TutorialsEU_tp.html
   TutorialsExample: TutorialsExample.html
   TutorialsTransportPoverty: TutorialsTransportPoverty.html
-last_built: 2025-04-17T15:05Z
-
+last_built: 2026-04-01T11:59Z

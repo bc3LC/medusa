@@ -1,0 +1,49 @@
+# Energy poverty indices
+
+## Energy poverty indices
+
+`medusa` allows to calculate different energy poverty indices. For
+**Spain**, indices are available for the full time series **2006–2021**
+using the data included in the package. For **EU countries**, indices
+can be calculated for the available HBS waves (**2010, 2015 and 2020**),
+using Eurostat microdata processed with
+[`hbs_eu()`](../reference/hbs_eu.md). In both cases, the thresholds used
+in each index (e.g. national medians) are calculated at the **member
+state level**.
+
+The indicators covered by medusa have been commonly used in the
+literature to measure energy poverty during the last decades and can be
+useful to assess the dimension of energy poverty, as well as to monitor
+policies aimed at alleviating this problem.
+
+- **10% indicator.** The household is energy poor if it spends more than
+  10% of its expenditure on meeting its energy needs. Energy expenditure
+  is understood as domestic energy.
+
+- **Double the national median (2M).** A household is considered to be
+  at risk of energy poverty if the proportion of expenditure it
+  allocates to domestic energy is more than twice the national median.
+  That is, they are households that, due to their socioeconomic
+  situation, have to make a disproportionate expenditure to maintain an
+  energy consumption appropriate to their needs.
+
+- **Low-income, high-cost (LIHC) metric.** A household is considered to
+  be energy poor if its total income is below the poverty threshold (60%
+  of the median income of the population) after subtracting energy
+  expenditure and its energy expenditure is above the median expenditure
+  of the population as a whole.
+
+- **Hidden energy poverty (HEP).** A household is considered to be
+  energy poor if its energy expenditure is less than half of the
+  national median energy expenditure. In other words, these are
+  households whose socioeconomic situation does not allow them to
+  consume energy adequately for their needs.
+
+- **Hidden energy poverty and low income (HEP_LI).** A household is
+  considered to be energy poor if its energy expenditure is less than
+  half of the national median energy expenditure and if its total income
+  is below the poverty threshold (60% of the median income of the
+  population) after subtracting energy expenditure. That is, these are
+  households whose socioeconomic situation (since they are above the
+  national poverty threshold) does not allow them to consume energy
+  adequately for their needs.

@@ -4,147 +4,90 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Package Data • medusa</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Package Data">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Package Data">
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <div class="container template-article">
-      <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">medusa</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
-      </span>
-    </div>
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <a class="navbar-brand me-2" href="../index.html">medusa</a>
 
-  </a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-solid fa-indent"></span>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
-    Modules
 
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/TheModel.html">Distributional impacts</a>
-    </li>
-    <li>
-      <a href="../articles/EnergyPoverty.html">Energy poverty indices</a>
-    </li>
-    <li>
-      <a href="../articles/TransportPoverty.html">Transport poverty indices</a>
-    </li>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../index.html"><span class="fa fa-home"></span></a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/GetStarted.html">Get started</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-modules" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-solid fa-indent"></span> Modules</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-modules">
+<li><a class="dropdown-item" href="../articles/TheModel.html">Distributional impacts</a></li>
+    <li><a class="dropdown-item" href="../articles/EnergyPoverty.html">Energy poverty indices</a></li>
+    <li><a class="dropdown-item" href="../articles/TransportPoverty.html">Transport poverty indices</a></li>
   </ul>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-solid fa-chart-pie"></span>
-
-    Packge Data
-
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/PackageData.html">Package Data</a>
-    </li>
-    <li>
-      <a href="../articles/AvailableVariables.html">Available Variables</a>
-    </li>
+<li class="active nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-package-data" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-solid fa-chart-pie"></span> Package Data</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-package-data">
+<li><a class="dropdown-item" href="../articles/PackageData.html">Package Data</a></li>
+    <li><a class="dropdown-item" href="../articles/AvailableVariables.html">Available Variables</a></li>
   </ul>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fas fa-book"></span>
-
-    Tutorials
-
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/Tutorials.html">Calculate distributional impacts</a>
-    </li>
-    <li>
-      <a href="../articles/TutorialsEnergyPoverty.html">Calculate energy poverty indices</a>
-    </li>
-    <li>
-      <a href="../articles/TutorialsTransportPoverty.html">Calculate transport poverty indices</a>
-    </li>
-    <li>
-      <a href="../articles/TutorialsExample.html">Step-by-step example</a>
-    </li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fas fa-book"></span> Tutorials</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
+<li><a class="dropdown-item" href="../#">--- Spain ---</a></li>
+    <li><a class="dropdown-item" href="../articles/Tutorials.html">Calculate distributional impacts</a></li>
+    <li><a class="dropdown-item" href="../articles/TutorialsEnergyPoverty.html">Calculate energy poverty indices</a></li>
+    <li><a class="dropdown-item" href="../articles/TutorialsTransportPoverty.html">Calculate transport poverty indices</a></li>
+    <li><a class="dropdown-item" href="../articles/TutorialsExample.html">Step-by-step example</a></li>
+    <li><a class="dropdown-item" href="../#">--- EU (Eurostat microdata) ---</a></li>
+    <li><a class="dropdown-item" href="../articles/TutorialsEU_data.html">Preparing the data</a></li>
+    <li><a class="dropdown-item" href="../articles/TutorialsEU_di.html">Calculate distributional impacts</a></li>
+    <li><a class="dropdown-item" href="../articles/TutorialsEU_ep.html">Calculate energy poverty indices</a></li>
+    <li><a class="dropdown-item" href="../articles/TutorialsEU_tp.html">Calculate transport poverty indices</a></li>
+    <li><a class="dropdown-item" href="../articles/TutorialsEU_example.html">Step-by-step example</a></li>
   </ul>
 </li>
-<li>
-  <a href="../reference/index.html">
-    <span class="fa fa-file-code-o"></span>
-
-    Reference
-  </a>
-</li>
-<li>
-  <a href="../news/index.html">
-    <span class="fa fa-newspaper-o"></span>
-
-    News
-  </a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-regular fa-file-code"></span> Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html"><span class="fa fa-regular fa-newspaper"></span> News</a></li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/bc3LC/medusa/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/bc3LC/medusa/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
+</nav><div class="container template-article">
 
 
 
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Package Data</h1>
+
+<div class="row">
+  <main id="main" class="col-md-9"><div class="page-header">
+
+      <h1>Package Data</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/bc3LC/medusa/blob/main/vignettes/PackageData.Rmd" class="external-link"><code>vignettes/PackageData.Rmd</code></a></small>
-      <div class="hidden name"><code>PackageData.Rmd</code></div>
-
+      <div class="d-none name"><code>PackageData.Rmd</code></div>
     </div>
 
     
@@ -168,30 +111,53 @@ For more information about the HBS click <a href="https://ec.europa.eu/eurostat/
 <div class="section level4">
 <h4 id="data-included-in-medusa">Data included in medusa<a class="anchor" aria-label="anchor" href="#data-included-in-medusa"></a>
 </h4>
-<p>Currently, medusa includes Spanish HBS microdata for the period
-2006-2021 (soon to be updated for 2022). The original survey data has
-been minimally processed to enhance usability and incorporate additional
-socioeconomic variables. These modifications include: 1. Renaming some
-variables to make them more intuitive for users. 2. Creating new
-socioeconomic indicators, such as income quintiles (QUINTIL), deciles
-(DECIL), ventiles (VENTIL), and percentiles (PERCENTIL). 3. Adding
-gender-sensitive variables, aligned with medusa’s goal of facilitating
-gender-disaggregated analysis: - Gender of the household reference
-person (already included in the HBS). - Degree of household
-feminization, calculated based on the proportion of women over 14 years
-old (the age at which individuals are considered to have decision-making
-capacity) within the household: - FD1: 0-20% (lowest feminization) -
-FD2: 20%-40% - FD3: 40%-60% - FD4: 60%-80% - FD5: 80%-100% (highest
-feminization) For a full list of socioeconomic and demographic variables
-available for distributional analysis, click <a href="https://bc3lc.github.io/medusa/articles/AvailableVariables.html" class="external-link">here</a>.</p>
+<p><code>medusa</code> includes pre-processed HBS microdata with some
+adjustments to enhance usability. These modifications are common to both
+Spain and EU data and include:</p>
+<ol style="list-style-type: decimal">
+<li>Renaming some variables to make them more intuitive for users.</li>
+<li>Creating new socioeconomic indicators, such as income quintiles,
+deciles, ventiles, and percentiles — calculated at the <strong>national
+level</strong> for both Spain and EU data, and additionally at the
+<strong>EU level</strong> for EU data.</li>
+<li>Adding gender-sensitive variables:
+<ul>
+<li>Gender of the household reference person (already included in the
+HBS).</li>
+<li>Degree of household feminization, calculated based on the proportion
+of women over 14 years old within the household:
+<ul>
+<li>FD1: 0–20% (lowest feminization)</li>
+<li>FD2: 20–40%</li>
+<li>FD3: 40–60%</li>
+<li>FD4: 60–80%</li>
+<li>FD5: 80–100% (highest feminization)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>For a full list of variables available for distributional analysis,
+click <a href="https://bc3lc.github.io/medusa/articles/AvailableVariables.html" class="external-link">here</a>.</p>
+<p><strong>Spain:</strong> <code>medusa</code> includes Spanish HBS
+microdata for the period <strong>2006–2021</strong>. The raw microdata
+can be downloaded from <a href="https://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&amp;cid=1254736176806&amp;menu=resultados&amp;idp=1254735976608#_tabs-1254736195147" class="external-link">INE</a>
+and processed using <code><a href="../reference/load_rawhbs.html">load_rawhbs()</a></code>.</p>
+<p><strong>EU:</strong> <code>medusa</code> does <strong>not</strong>
+include Eurostat HBS microdata, as these are confidential and access is
+restricted. The available waves are <strong>2010, 2015 and
+2020</strong>. To request access to the microdata, visit the <a href="https://ec.europa.eu/eurostat/web/microdata/household-budget-survey" class="external-link">Eurostat
+microdata access page</a>. Once access is granted, the data can be
+processed using <code><a href="../reference/hbs_eu.html">hbs_eu()</a></code>. See the <a href="https://bc3lc.github.io/medusa/articles/TutorialsEU_data.html" class="external-link">EU
+tutorials</a> for details.</p>
 </div>
 <div class="section level4">
 <h4 id="expenditure-variables">Expenditure variables<a class="anchor" aria-label="anchor" href="#expenditure-variables"></a>
 </h4>
 <p>HBS expenditure data follows the Classification of Individual
-Consumption by Purpose (COICOP), an internationally recognized
+Consumption by Purpose (COICOP), an internationally recognised
 classification developed by the United Nations Statistics Division. This
-system categorizes household expenditures into groups such as food,
+system categorises household expenditures into groups such as food,
 clothing, housing, water, electricity, gas, and other fuels. For more
 details on the COICOP classification click <a href="https://unstats.un.org/unsd/classifications/unsdclassifications/COICOP_2018_-_pre-edited_white_cover_version_-_2018-12-26.pdf" class="external-link">here</a>.</p>
 </div>
@@ -204,7 +170,7 @@ the total population does not coincide with the data collected in the
 National Accounts. Therefore, in order to make the HBS data consistent
 with the National Accounts data, the population data from the survey
 would first have to be adjusted. To do this, <code>medusa</code> takes
-the EUROSTAT census data as of 1 January and calculates adjustment
+the Eurostat census data as of 1 January and calculates adjustment
 coefficients. The population data is available <a href="https://ec.europa.eu/eurostat/databrowser/view/tps00001/default/table?lang=en&amp;category=t_demo.t_demo_pop" class="external-link">here</a>.</p>
 </div>
 <div class="section level3">
@@ -212,61 +178,75 @@ coefficients. The population data is available <a href="https://ec.europa.eu/eur
 </h3>
 <p>Despite the fact that the HBS provides a very detailed image of the
 annual consumption of households, the aggregate costs of the survey are
-not aligned with the principles and data of the National Accounts, which
-builds its macroeconomic aggregates based on more complete sources of
-information. Therefore, sometimes (e.g. when price shocks come from a
-macro model), before the simulation the HBS data should be adjusted to
-make them consistent with the macroeconomic dimension. In these cases,
-<code>medusa</code> takes the National Accounts consumption data and
-calculates an adjustment factor at the highest possible level of
-disaggregation. To download the latest data click <a href="https://github.com/bc3LC/medusa/blob/main/inst/extdata/gcfhogares95_22.csv" class="external-link">here</a>.</p>
+not aligned with the principles and data of the National Accounts.
+Therefore, sometimes (e.g. when price shocks come from a macro model),
+before the simulation the HBS data should be adjusted to make them
+consistent with the macroeconomic dimension. <code>medusa</code> takes
+the National Accounts consumption data and calculates an adjustment
+factor at the highest possible level of disaggregation.</p>
+<ul>
+<li>
+<strong>Spain:</strong> The national accounting data used in
+<code>medusa</code> can be downloaded <a href="https://github.com/bc3LC/medusa/blob/main/inst/extdata/gcfhogares95_22.csv" class="external-link">here</a>.</li>
+<li>
+<strong>EU:</strong> Household final consumption expenditure data by
+COICOP category is retrieved from Eurostat. The relevant dataset is <a href="https://ec.europa.eu/eurostat/databrowser/view/nama_10_co3_p3/default/table" class="external-link"><code>nama_10_co3_p3</code></a>,
+accessible via the Eurostat data browser or directly through the
+<code>restatapi</code> package.</li>
+</ul>
 </div>
 <div class="section level3">
 <h3 id="data-processing-in-medusa">Data processing in <code>medusa</code><a class="anchor" aria-label="anchor" href="#data-processing-in-medusa"></a>
 </h3>
-<p>While <code>medusa</code> includes <strong>pre-processed versions of
-the HBS data</strong>, users who wish to work directly with the raw data
-can do so. The <strong>main modifications</strong> made to the survey
-data are: - Merging household and expenditure datasets. - Adding the new
-socioeconomic and gender-sensitive variables mentioned above.</p>
-<p>However, <code>medusa</code> does not apply further adjustments
-<strong>unless explicitly requested by the user</strong>. For example: -
-Aligning expenditures with National Accounts is optional*and is only
-performed when users select this adjustment within the
-<code><a href="../reference/calc_di.html">calc_di()</a></code> function. - The adjustment process is handled by
-the function <code><a href="../reference/load_rawhbs.html">load_rawhbs()</a></code>, which is included in the
-package.</p>
-<p>Initially, we considered including the raw HBS microdata in
-<code>medusa</code>, but given the large file sizes, running the
-function would be too slow for users. Instead, we processed the data
-externally and included the modified version in the package. However,
-users can download the raw microdata from <a href="https://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&amp;cid=1254736176806&amp;menu=resultados&amp;idp=1254735976608#_tabs-1254736195147" class="external-link">here</a>
-and process it themselves using <code><a href="../reference/load_rawhbs.html">load_rawhbs()</a></code>.</p>
+<div class="section level4">
+<h4 id="spain">Spain<a class="anchor" aria-label="anchor" href="#spain"></a>
+</h4>
+<p><code>medusa</code> includes <strong>pre-processed versions of the
+Spanish HBS data</strong> (2006–2021), so no prior data preparation is
+required to use the Spain functions. Users who wish to work directly
+with the raw data can do so using <code><a href="../reference/load_rawhbs.html">load_rawhbs()</a></code>. The main
+modifications applied are:</p>
+<ul>
+<li>Merging household and expenditure datasets.</li>
+<li>Adding the socioeconomic and gender-sensitive variables described
+above.</li>
+</ul>
+<p>Aligning expenditures with National Accounts is
+<strong>optional</strong> and only performed when users set
+<code>elevate = TRUE</code> in <code><a href="../reference/calc_di.html">calc_di()</a></code>.</p>
+</div>
+<div class="section level4">
+<h4 id="eu">EU<a class="anchor" aria-label="anchor" href="#eu"></a>
+</h4>
+<p><code>medusa</code> does <strong>not</strong> include pre-processed
+EU data. To use the EU functions, users must:</p>
+<ol style="list-style-type: decimal">
+<li>Obtain access to Eurostat HBS microdata (see <a href="https://bc3lc.github.io/medusa/articles/TutorialsEU_data.html" class="external-link">Preparing
+the data</a>).</li>
+<li>Process the raw microdata using <code><a href="../reference/hbs_eu.html">hbs_eu()</a></code>, which handles
+merging, variable creation, and standardisation.</li>
+<li>Use the resulting dataset as input to <code><a href="../reference/calc_di_eu.html">calc_di_eu()</a></code>,
+<code><a href="../reference/calc_ep_eu.html">calc_ep_eu()</a></code>, and <code><a href="../reference/calc_tp_eu.html">calc_tp_eu()</a></code>.</li>
+</ol>
 </div>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-      </div>
-
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
-  <p></p>
-<p>Developed by Eva Alonso-Epelde, Clàudia Rodés-Bachs, María Moyano-Reina, Jon Sampedro, Xaquín García-Muros.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p>Developed by Eva Alonso-Epelde, Clàudia Rodés-Bachs, María Moyano-Reina, Jon Sampedro, Xaquín García-Muros.</p>
 </div>
 
-<div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<div class="pkgdown-footer-right">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
-
 
 
 

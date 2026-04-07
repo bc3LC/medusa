@@ -78,3 +78,9 @@ Medusa_eu_review/
 
 # Script database tests
 database_tests.R
+
+# Windows crash dumps
+bash.exe.stackdump
+
+# Local test fixtures not used in tests
+tests/testthat/test_inputs/DII_impacts_eu.rds

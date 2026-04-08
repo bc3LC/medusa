@@ -209,7 +209,8 @@ use_data(graph_labels_eu, overwrite=T)
 # is_categories_eu
 is_categories_eu = read.csv(paste0(rawDataFolder,"is_categories_eu.csv"),header=T)
 use_data(is_categories_eu, overwrite=T)
-# mapping GCAM - MEDUSA COICOP categories
+
+# mapping GCAM-Europe --- MEDUSA COICOP categories
 mapping_gcam_medusa <- read.csv(paste0(rawDataFolder, "mapping_gcam_medusa.csv"), header = T)
 use_data(mapping_gcam_medusa, overwrite=T)
 

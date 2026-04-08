@@ -175,22 +175,11 @@ get_prices_gcameurope <- function(db_path = NULL, query_path = "inst/extdata", d
       values_from = price_diff
     )
 
-  # -------
-  # Add names column
-  names_coicop_map <- get(paste0("coicop_", selected_year)) %>%
-    dplyr::select(names, coicop) %>%
-    dplyr::distinct() %>%
-    dplyr::mutate(coicop = stringr::str_replace(coicop, 'EUR_A_', 'CP'))
-
-  data_coicop_fin_full_names <- data_coicop_fin_full %>%
-    dplyr::right_join(names_coicop_map, by = 'coicop') %>%
-    dplyr::relocate(last_col())
-
 
   # -------
   # Save and return
   file_name <- paste0('GCAMEurope_shocks_',stringr::str_remove(prj_name,'.dat'),'.csv')
-  write.csv(data_coicop_fin, file = file.path('output',file_name))
+  write.csv(data_coicop_fin_full, file = file.path('output',file_name))
   print(paste0("The GCAM-Europe prices file has been saved in`", getwd(),"/output/",file_name))
 
   return(invisible(data_coicop_fin_full))

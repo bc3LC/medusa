@@ -148,6 +148,8 @@ The `medusa` package contains 3 main blocks of functions:
     -   Main functions: `calc_tp` (Spain), `calc_tp_eu` (EU)
     -   Auxiliary functions: `id_tp`, `weighted.median` and
         `weighted.quantile`.
+4.  Module 4. Functions to connect with other models
+    -   Main functions: `get_prices_gcameurope` (EU).
 
 In addition, the package includes some default input files (.Rda), that
 are read by the different functions.
@@ -194,6 +196,8 @@ tp <- calc_tp_eu(data = hbs, index = "all")
 For detailed step-by-step tutorials, see:
 - [Spain tutorial](https://bc3lc.github.io/medusa/articles/TutorialsExample.html)
 - [EU tutorial](https://bc3lc.github.io/medusa/articles/TutorialsEU_example.html)
+- [GCAM-Europe connection tutorial](https://bc3lc.github.io/medusa/articles/TutorialsEU_di.html#example-5--connect-with-gcam-europe.html)
+
 
 ## <a name="contributing"></a>Contributing
 

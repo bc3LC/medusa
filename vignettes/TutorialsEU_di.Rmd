@@ -140,6 +140,7 @@ results <- calc_di_eu(data = hbs,           # HBS 2015 microdata
 ```
 
 ---
+
 ## Example 5. Connect with GCAM-Europe
 
 1. Read the GCAM-Europe prices from the database. You can indicate the database path and name, or the already created project file.
@@ -171,6 +172,7 @@ results <- calc_di_eu(data = hbs,            # Output from hbs_eu()
 ```
 
 By default, `calc_di_eu` calculates distributional impacts for all available socioeconomic variables and saves the results and figures in an `outputs/` folder within your working directory.
+
 
 ---
 

@@ -9,6 +9,7 @@ data](https://bc3lc.github.io/medusa/articles/TutorialsEU_data.html) for
 details.
 
 ``` r
+
 hbs <- hbs_eu(year = 2015, country = "all", path = "raw_data")
 ```
 
@@ -23,6 +24,7 @@ indices](https://bc3lc.github.io/medusa/articles/EnergyPoverty.html).
 1.  Define the index to calculate (e.g. `"LIHC"`) in `calc_ep_eu`:
 
 ``` r
+
 file <- calc_ep_eu(data = hbs,       # Output from hbs_eu()
                    index = "LIHC")   # Select the index
 ```
@@ -30,6 +32,7 @@ file <- calc_ep_eu(data = hbs,       # Output from hbs_eu()
 2.  Save the output data frame to Excel:
 
 ``` r
+
 library(openxlsx)
 
 write.xlsx(file,
@@ -48,6 +51,7 @@ energy poor in each member state according to the selected index.
 1.  Run `calc_ep_eu` with `index = "all"` (the default):
 
 ``` r
+
 file <- calc_ep_eu(data = hbs,
                    index = "all")   # All indices (default)
 ```
@@ -55,6 +59,7 @@ file <- calc_ep_eu(data = hbs,
 2.  Save the output:
 
 ``` r
+
 library(openxlsx)
 
 write.xlsx(file,
@@ -74,6 +79,7 @@ If you processed only a subset of countries in
 calculate indices only for those countries:
 
 ``` r
+
 hbs_subset <- hbs_eu(year = 2015,
                      country = c("BE", "ES"),
                      path = "raw_data")

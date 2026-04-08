@@ -1,12 +1,12 @@
-# order_var
+# order_vars
 
 Function to order the labels of the socioeconomic and demographic
-variablesin basic graph
+variables in intersectional graph
 
 ## Usage
 
 ``` r
-order_var(data, g)
+order_vars(data, g)
 ```
 
 ## Arguments

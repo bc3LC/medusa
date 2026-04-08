@@ -6,6 +6,8 @@
 [![codecov](https://codecov.io/gh/bc3LC/medusa/graph/badge.svg?token=VSmmxRUGO2)](https://codecov.io/gh/bc3LC/medusa)
 [![build](https://github.com/bc3LC/medusa/actions/workflows/build.yaml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/build.yaml)
 [![draft-pdf](https://github.com/bc3LC/medusa/actions/workflows/draft-pdf.yml/badge.svg)](https://github.com/bc3LC/medusa/actions/workflows/draft-pdf.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15729051.svg)](https://doi.org/10.5281/zenodo.15729051)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.07697/status.svg)](https://doi.org/10.21105/joss.07697)
 
 ## Contents
 
@@ -94,6 +96,7 @@ To use `medusa` package first you need to follow this steps:
 2.  Load `medusa` package. For this, open Rstudio and load the library:
 
     ``` r
+
     install.packages('remotes')
     options(timeout=400)                             # to prevent errors if the connection is slow
     remotes::install_github("bc3LC/medusa")
@@ -101,7 +104,11 @@ To use `medusa` package first you need to follow this steps:
     ```
 
 ❗❗ This may take a few minutes because the package contains a lot of
-data.
+data. If the installation fails, the timeout parameter may need to be
+further increased. Additionally, sometimes users downloading `medusa`
+with remotes may need to set up a Personal Access Token (PAT) and store
+it in their credentials file. For more information about how to proceed
+click [here](https://usethis.r-lib.org/articles/git-credentials.html).
 
   
 Now the package is fully loaded and you can start using its functions.  
@@ -131,6 +138,8 @@ The `medusa` package contains 3 main blocks of functions:
     - Main functions: `calc_tp` (Spain), `calc_tp_eu` (EU)
     - Auxiliary functions: `id_tp`, `weighted.median` and
       `weighted.quantile`.
+4.  Module 4. Functions to connect with other models
+    - Main functions: `get_prices_gcameurope` (EU).
 
 In addition, the package includes some default input files (.Rda), that
 are read by the different functions.
@@ -138,6 +147,7 @@ are read by the different functions.
 ### Quick example — Spain
 
 ``` r
+
 library(medusa)
 
 # 1. Download the example shocks file and edit it
@@ -156,6 +166,7 @@ tp <- calc_tp(index = "all")
 ### Quick example — EU
 
 ``` r
+
 library(medusa)
 
 # 0. Process HBS microdata (requires Eurostat raw files)
@@ -177,7 +188,9 @@ tp <- calc_tp_eu(data = hbs, index = "all")
 For detailed step-by-step tutorials, see: - [Spain
 tutorial](https://bc3lc.github.io/medusa/articles/TutorialsExample.html) -
 [EU
-tutorial](https://bc3lc.github.io/medusa/articles/TutorialsEU_example.html)
+tutorial](https://bc3lc.github.io/medusa/articles/TutorialsEU_example.html) -
+[GCAM-Europe connection
+tutorial](https://bc3lc.github.io/medusa/articles/TutorialsEU_di.html#example-5--connect-with-gcam-europe.html)
 
 ## Contributing
 

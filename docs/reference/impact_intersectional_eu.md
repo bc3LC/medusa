@@ -40,6 +40,12 @@ impact_intersectional_eu(
   same format as the output of \`available_var_intersec()\`, i.e. a
   table whose columns have category_a and category_b as their titles.
 
+- by_country:
+
+  If TRUE (by default) calculates distributional impacts by EU country
+  in addition to the overall EU-level results. If FALSE, only EU-level
+  results are calculated.
+
 - save:
 
   If TRUE (by default) saves a list of the generated datasets (.RData)

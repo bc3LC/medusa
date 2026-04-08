@@ -23,6 +23,7 @@ of these scenarios.
 1.  Download the example file into your working directory by running:
 
 ``` r
+
 ex_shocks()
 ```
 
@@ -53,6 +54,7 @@ ex_shocks()
 6.  Upload the edited file into R:
 
 ``` r
+
 exampledf <- read.csv("Example_shocks.csv", header = TRUE, sep = ",", dec = ".")
 ```
 
@@ -61,6 +63,7 @@ exampledf <- read.csv("Example_shocks.csv", header = TRUE, sep = ",", dec = ".")
 7.  Identify the variables available for distributional impact analysis:
 
 ``` r
+
 available_var_impact()
 ```
 
@@ -74,6 +77,7 @@ income deciles. For more information on available variables, visit
 8.  Compute the distributional impacts by income decile for 2019 data:
 
 ``` r
+
 calc_di(2019,                      # Base year: 2019
         shocks = exampledf,        # File containing the shocks
         var_impact = "DECILE")     # Select income deciles as the socioeconomic variable
@@ -119,6 +123,7 @@ save and increase their income by the given percentage.
     directory by running:
 
 ``` r
+
 ex_var_intersec()
 ```
 
@@ -137,6 +142,7 @@ ex_var_intersec()
 11. Save the edited CSV file and upload it into R:
 
 ``` r
+
 example_vars <- read.csv("Var_intersec.csv", header = TRUE, sep = ",", dec = ".")
 ```
 
@@ -147,6 +153,7 @@ example_vars <- read.csv("Var_intersec.csv", header = TRUE, sep = ",", dec = "."
     intersectional variables:
 
 ``` r
+
 calc_di(2019,                         # Base year: 2019
         shocks = exampledf,           # File containing the shocks
         var_impact = NULL,            # Skip single-variable analysis

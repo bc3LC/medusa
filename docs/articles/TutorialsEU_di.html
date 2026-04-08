@@ -246,6 +246,53 @@ argument:</p>
 <hr>
 </div>
 <div class="section level3">
+<h3 id="example-5--connect-with-gcam-europe">Example 5. Connect with GCAM-Europe<a class="anchor" aria-label="anchor" href="#example-5--connect-with-gcam-europe"></a>
+</h3>
+<ol style="list-style-type: decimal">
+<li>Read the GCAM-Europe prices from the database. You can indicate the
+database path and name, or the already created project file.
+<strong>Importantly</strong>, you must indicate the Baseline scenario
+from which the percentage prices increment will be computed. Indicate
+also the year of the analysis through the <code>selected_year</code>
+parameter:</li>
+</ol>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># if indicating the database path and name</span></span>
+<span><span class="va">shocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_prices_gcameurope.html">get_prices_gcameurope</a></span><span class="op">(</span>db_path <span class="op">=</span> <span class="st">'path/to/db'</span>, db_name <span class="op">=</span> <span class="st">'db_name'</span>, </span>
+<span>                                prj_name <span class="op">=</span> <span class="st">'new_prj_name.dat'</span>,</span>
+<span>                                scenarios <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'scen1'</span>,<span class="st">'scen2'</span><span class="op">)</span>, </span>
+<span>                                final_db_year <span class="op">=</span> <span class="fl">2100</span>, saveOutput <span class="op">=</span> <span class="cn">T</span>, </span>
+<span>                                base_scen <span class="op">=</span> <span class="st">'Reference'</span>, selected_year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span>
+<span>                                </span>
+<span></span>
+<span><span class="co"># if indicating the project name</span></span>
+<span><span class="va">shocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_prices_gcameurope.html">get_prices_gcameurope</a></span><span class="op">(</span>prj_name <span class="op">=</span> <span class="st">'path/to/existing/prj.dat'</span>,</span>
+<span>                                scenarios <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'scen1'</span>,<span class="st">'scen2'</span><span class="op">)</span>, </span>
+<span>                                final_db_year <span class="op">=</span> <span class="fl">2100</span>, saveOutput <span class="op">=</span> <span class="cn">T</span>, </span>
+<span>                                base_scen <span class="op">=</span> <span class="st">'Reference'</span>, selected_year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Go to your working directory and check the csv
+<strong>“output/GCAMEU_shocks_[prj_name].csv”</strong>. It will have
+each column named after a country code and a scenario suffix
+(e.g. <code>AT_s1</code>, <code>BE_s1</code>, …, <code>AT_s2</code>,
+<code>BE_s2</code>, …) representing a scenario for each country and each
+row a COICOP code. The values indicate the price change
+(e.g. <code>1.1</code> for a 10% increase and <code>0.9</code> for a 10%
+decrease). If there is no shock in a category, keep
+<code>1</code>.</p></li>
+<li><p>Run <code>calc_di_eu</code> with the processed HBS data and the
+price shocks:</p></li>
+</ol>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_di_eu.html">calc_di_eu</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">hbs</span>,            <span class="co"># Output from hbs_eu()</span></span>
+<span>                    shocks <span class="op">=</span> <span class="va">shocks</span><span class="op">)</span>       <span class="co"># GCAM-Europe shocks file</span></span></code></pre></div>
+<p>By default, <code>calc_di_eu</code> calculates distributional impacts
+for all available socioeconomic variables and saves the results and
+figures in an <code>outputs/</code> folder within your working
+directory.</p>
+<hr>
+</div>
+<div class="section level3">
 <h3 id="outputs">Outputs<a class="anchor" aria-label="anchor" href="#outputs"></a>
 </h3>
 <p><code>calc_di_eu</code> returns a list with two elements:</p>

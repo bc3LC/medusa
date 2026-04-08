@@ -57,5 +57,5 @@ impact(
 
 ## Value
 
-a list containing the generated datasets (.RData) summarising the
-distributional impacts per selected variable.
+a dataframe summarising the distributional impacts per selected
+variable.

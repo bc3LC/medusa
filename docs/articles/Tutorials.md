@@ -8,6 +8,7 @@
     following function in the R terminal:
 
 ``` r
+
 ex_shocks() 
 ```
 
@@ -34,6 +35,7 @@ ex_shocks()
     terminal:
 
 ``` r
+
 exampledf <- read.csv(file_name,            # File name or full file path
                       header = TRUE,        # Header indicator (set to TRUE)
                       sep = ",",            # Value separator used in the file
@@ -45,6 +47,7 @@ exampledf <- read.csv(file_name,            # File name or full file path
     price shocks to be applied.
 
 ``` r
+
 calc_di( year,                     # Base year for the simulation (available 2006-2021)
          elevate = F,              # Elevation of raw data (set to FALSE)
          shocks = exampledf,       # Indicate here the name of the uploaded file with shocks
@@ -64,6 +67,7 @@ that appear in your dataset.*
     distributional impacts is available run the following function.  
 
 ``` r
+
 available_var_impact()
 ```
 
@@ -78,6 +82,7 @@ available_var_impact()
     [here](https://bc3lc.github.io/medusa/articles/AvailableVariables.html).
 
 ``` r
+
 calc_di(year,                     # Base year for the simulation
         elevate = F,              # Elevation of raw data (set to FALSE)
         shocks = exampledf,       # Name of the uploaded file with shocks
@@ -91,6 +96,7 @@ calc_di(year,                     # Base year for the simulation
     `calc_di`.
 
 ``` r
+
 #Create a vector
 vars <- c("ZONE", "QUINTILE")
 
@@ -111,6 +117,7 @@ calc_di(year,                     # Base year for the simulation
     intersectional distributional impacts is available.
 
 ``` r
+
 available_var_intersec()
 ```
 
@@ -122,6 +129,7 @@ available_var_intersec()
     only the set of variables you are interested in, save it.
 
 ``` r
+
 ex_var_intersec()
 ```
 
@@ -129,6 +137,7 @@ ex_var_intersec()
     terminal:
 
 ``` r
+
 example_vars <- read.csv(file_name,            # File name or full file path
                          header = TRUE,        # Header indicator (set to TRUE)
                          sep = ",",            # Value separator used in the file
@@ -144,6 +153,7 @@ example_vars <- read.csv(file_name,            # File name or full file path
     [here](https://bc3lc.github.io/medusa/articles/AvailableVariables.html).
 
 ``` r
+
 calc_di(year,                          # Base year for the simulation
         elevate = F,                   # Elevation of raw data (set to FALSE)
         shocks = exampledf,            # Name of the uploaded file with shocks 

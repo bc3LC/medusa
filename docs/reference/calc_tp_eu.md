@@ -1,8 +1,7 @@
 # calc_tp_eu
 
 Function to calculate transport poverty indices for EU countries.
-Thresholds are calculated per member state. Long-distance transport (air
-and sea) is excluded from the calculation.
+Thresholds are calculated per member state.
 
 ## Usage
 

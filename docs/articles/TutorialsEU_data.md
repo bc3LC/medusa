@@ -59,6 +59,7 @@ where `CC` is the two-letter country code. To see all available country
 codes, run:
 
 ``` r
+
 country_code()
 ```
 
@@ -75,6 +76,7 @@ single data frame ready for use with
 #### Process all countries for a single wave
 
 ``` r
+
 hbs <- hbs_eu(year = 2015,           # Wave: 2010, 2015 or 2020
               country = "all",        # Process all available countries
               path = "raw_data")      # Path to the root folder
@@ -83,6 +85,7 @@ hbs <- hbs_eu(year = 2015,           # Wave: 2010, 2015 or 2020
 #### Process selected countries
 
 ``` r
+
 hbs <- hbs_eu(year = 2015,
               country = c("BE", "ES"),  # Select specific countries
               path = "raw_data")
@@ -118,6 +121,7 @@ Variables](https://bc3lc.github.io/medusa/articles/AvailableVariables.html).
   combine the results:
 
 ``` r
+
 hbs_2010 <- hbs_eu(year = 2010, country = "all", path = "raw_data")
 hbs_2015 <- hbs_eu(year = 2015, country = "all", path = "raw_data")
 hbs_2020 <- hbs_eu(year = 2020, country = "all", path = "raw_data")

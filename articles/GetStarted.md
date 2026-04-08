@@ -10,10 +10,10 @@ socioeconomic characteristics across EU countries.
 
 The package provides three main modules:
 
-| Module | Spain | EU countries |
-|----|----|----|
-| **Distributional impacts** | [`calc_di()`](../reference/calc_di.md) | [`calc_di_eu()`](../reference/calc_di_eu.md) |
-| **Energy poverty indices** | [`calc_ep()`](../reference/calc_ep.md) | [`calc_ep_eu()`](../reference/calc_ep_eu.md) |
+| Module                        | Spain                                  | EU countries                                 |
+|-------------------------------|----------------------------------------|----------------------------------------------|
+| **Distributional impacts**    | [`calc_di()`](../reference/calc_di.md) | [`calc_di_eu()`](../reference/calc_di_eu.md) |
+| **Energy poverty indices**    | [`calc_ep()`](../reference/calc_ep.md) | [`calc_ep_eu()`](../reference/calc_ep_eu.md) |
 | **Transport poverty indices** | [`calc_tp()`](../reference/calc_tp.md) | [`calc_tp_eu()`](../reference/calc_tp_eu.md) |
 
 For a full description of the microsimulation model, see the
@@ -25,7 +25,6 @@ impacts](https://bc3lc.github.io/medusa/articles/TheModel.html) article.
 Install the development version from GitHub:
 
 ``` r
-
 # install.packages("devtools")
 devtools::install_github("bc3LC/medusa")
 ```
@@ -33,7 +32,6 @@ devtools::install_github("bc3LC/medusa")
 Load the package:
 
 ``` r
-
 library(medusa)
 ```
 
@@ -45,7 +43,6 @@ No prior data preparation is needed.
 #### Quick example
 
 ``` r
-
 library(medusa)
 
 # Download the example price shocks file
@@ -77,7 +74,6 @@ not included in the package.
 #### Workflow
 
 ``` r
-
 library(medusa)
 
 # Step 1: Process the raw Eurostat microdata (once per wave)
@@ -122,7 +118,6 @@ analysis differ between Spain and EU data. For a full list, see
 Variables](https://bc3lc.github.io/medusa/articles/AvailableVariables.html).
 
 ``` r
-
 # Spain
 available_var_impact()
 

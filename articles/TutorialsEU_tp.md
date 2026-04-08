@@ -9,7 +9,6 @@ data](https://bc3lc.github.io/medusa/articles/TutorialsEU_data.html) for
 details.
 
 ``` r
-
 hbs <- hbs_eu(year = 2015, country = "all", path = "raw_data")
 ```
 
@@ -24,7 +23,6 @@ indices](https://bc3lc.github.io/medusa/articles/TransportPoverty.html).
 1.  Define the index to calculate (e.g. `"VTU"`) in `calc_tp_eu`:
 
 ``` r
-
 file <- calc_tp_eu(data = hbs,      # Output from hbs_eu()
                    index = "VTU")   # Select the index
 ```
@@ -32,7 +30,6 @@ file <- calc_tp_eu(data = hbs,      # Output from hbs_eu()
 2.  Save the output data frame to Excel:
 
 ``` r
-
 library(openxlsx)
 
 write.xlsx(file,
@@ -51,7 +48,6 @@ transport poor in each member state according to the selected index.
 1.  Run `calc_tp_eu` with `index = "all"` (the default):
 
 ``` r
-
 file <- calc_tp_eu(data = hbs,
                    index = "all")   # All indices (default)
 ```
@@ -59,7 +55,6 @@ file <- calc_tp_eu(data = hbs,
 2.  Save the output:
 
 ``` r
-
 library(openxlsx)
 
 write.xlsx(file,
@@ -77,7 +72,6 @@ The returned data frame contains four rows, one per index (`10%`, `2M`,
 To calculate a subset of indices, pass a vector to the `index` argument:
 
 ``` r
-
 file <- calc_tp_eu(data = hbs,
                    index = c("2M", "LIHC"))
 ```
@@ -91,7 +85,6 @@ If you processed only a subset of countries in
 calculate indices only for those countries:
 
 ``` r
-
 hbs_subset <- hbs_eu(year = 2015,
                      country = c("BE", "ES"),
                      path = "raw_data")
@@ -104,12 +97,12 @@ file <- calc_tp_eu(data = hbs_subset,
 
 ### Available indices
 
-| Index | Description |
-|----|----|
-| `10%` | Household spends more than 10% of its total expenditure on transport (private + short/medium distance public). |
-| `2M` | Household transport expenditure share is more than twice the national median (among transport users). |
-| `LIHC` | Low income (below poverty line after housing and transport costs) AND high transport expenditure (above national median). |
-| `VTU` | Vulnerable transport user: high transport expenditure (\>2× national median), low income (\<median), AND low public transport expenditure (\<national median among public transport users). |
+| Index  | Description                                                                                                                                                                                 |
+|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `10%`  | Household spends more than 10% of its total expenditure on transport (private + short/medium distance public).                                                                              |
+| `2M`   | Household transport expenditure share is more than twice the national median (among transport users).                                                                                       |
+| `LIHC` | Low income (below poverty line after housing and transport costs) AND high transport expenditure (above national median).                                                                   |
+| `VTU`  | Vulnerable transport user: high transport expenditure (\>2× national median), low income (\<median), AND low public transport expenditure (\<national median among public transport users). |
 
 Thresholds (national medians and poverty lines) are calculated
 separately for each **member state**. Long-distance transport (air:

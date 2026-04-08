@@ -19,7 +19,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/bc3LC/medusa/blob/HEAD/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/bc3LC/medusa/blob/main/DESCRIPTION)
 
 Alonso-Epelde E, Rodés-Bachs C, Moyano-Reina M, Sampedro J, García-Muros
 X (2026). *medusa: MEDUSA - Modelling Equity and DistribUtional impacts

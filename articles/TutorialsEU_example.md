@@ -27,7 +27,6 @@ the required folder structure (see [Preparing the
 data](https://bc3lc.github.io/medusa/articles/TutorialsEU_data.html)).
 
 ``` r
-
 library(medusa)
 
 hbs <- hbs_eu(year = 2015,
@@ -48,7 +47,6 @@ and all socioeconomic variables are already included.
 1.  Download the example shocks file:
 
 ``` r
-
 ex_shocks_eu()
 ```
 
@@ -91,7 +89,6 @@ to `0.5` in Scenario 2 only.*
 4.  Save the edited file and load it into R:
 
 ``` r
-
 shocks <- read.csv("Example_shocks_eu.csv",
                    header = TRUE,
                    sep = ",",
@@ -103,7 +100,6 @@ shocks <- read.csv("Example_shocks_eu.csv",
 5.  Check the variables available for distributional analysis:
 
 ``` r
-
 available_var_eu()
 ```
 
@@ -116,7 +112,6 @@ available_var_eu()
     level):
 
 ``` r
-
 results <- calc_di_eu(data = hbs,
                       shocks = shocks,
                       var = "decile",        # National income deciles
@@ -164,7 +159,6 @@ values indicate a cost reduction.*
 7.  Download the intersectional variables file:
 
 ``` r
-
 ex_var_intersec_eu()
 ```
 
@@ -181,7 +175,6 @@ the pairs whose variables are present in the data will be computed.*
     combination **`quintile` – `gender`**. Save and reload:
 
 ``` r
-
 example_vars <- read.csv("Var_Intersec_eu.csv",
                          header = TRUE,
                          sep = ",",
@@ -191,7 +184,6 @@ example_vars <- read.csv("Var_Intersec_eu.csv",
 9.  Run the intersectional calculation:
 
 ``` r
-
 results_intersec <- calc_di_eu(data = hbs,
                                shocks = shocks,
                                var = NULL,                    # Skip individual variables
@@ -218,7 +210,6 @@ quintile-gender group.*
 10. Calculate all energy poverty indices for Belgium and Spain:
 
 ``` r
-
 ep <- calc_ep_eu(data = hbs,
                  index = "all")
 
@@ -233,7 +224,6 @@ country.
 11. Save to Excel:
 
 ``` r
-
 library(openxlsx)
 
 write.xlsx(ep, "EP_BE_ES_2015.xlsx", sheetName = "Energy poverty")
@@ -246,7 +236,6 @@ write.xlsx(ep, "EP_BE_ES_2015.xlsx", sheetName = "Energy poverty")
 12. Calculate all transport poverty indices:
 
 ``` r
-
 tp <- calc_tp_eu(data = hbs,
                  index = "all")
 
@@ -259,7 +248,6 @@ The result follows the same structure: four rows (one per index: `10%`,
 13. Save to Excel:
 
 ``` r
-
 write.xlsx(tp, "TP_BE_ES_2015.xlsx", sheetName = "Transport poverty")
 ```
 
@@ -268,7 +256,6 @@ write.xlsx(tp, "TP_BE_ES_2015.xlsx", sheetName = "Transport poverty")
 ### Full script
 
 ``` r
-
 library(medusa)
 
 # 0. Prepare data

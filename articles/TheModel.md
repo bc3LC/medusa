@@ -62,17 +62,15 @@ easily change their behaviour as far as energy consumption is concerned
 
 The results derived from the model are presented as the relative impact
 (%) on total equivalent consumption expenditure [\[1\]](#id_1). The
-relative impact, $`\Delta e_h^s`$, shows the additional cost that
+relative impact, $\Delta e_{h}^{s}$, shows the additional cost that
 household *h* would assume in a proposed scenario in relative terms (%),
 compared to the initial household expenditure, and it is calculated as:
 
-``` math
-\Delta e_h^s = \frac{ \sum_c e_{c,h} (1+\Delta p_c^s) - \sum_c e_{c,h} }{ \sum_c e_{c,h} } \times 100
-```
+$$\Delta e_{h}^{s} = \frac{\sum\limits_{c}e_{c,h}\left( 1 + \Delta p_{c}^{s} \right) - \sum\limits_{c}e_{c,h}}{\sum\limits_{c}e_{c,h}} \times 100$$
 
-here $`e_{c,h}`$ refers to the total spending on each consumption
+here $e_{c,h}$ refers to the total spending on each consumption
 category, *c* , consumed by each of the household, in the baseline
-scenario and $`\Delta p_c^s`$ is the increase in prices by consumption
+scenario and $\Delta p_{c}^{s}$ is the increase in prices by consumption
 category and scenario obtained with the price model.
 
 The great granularity of the data contained in the HBS allows the

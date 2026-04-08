@@ -96,7 +96,6 @@ To use `medusa` package first you need to follow this steps:
 2.  Load `medusa` package. For this, open Rstudio and load the library:
 
     ``` r
-
     install.packages('remotes')
     options(timeout=400)                             # to prevent errors if the connection is slow
     remotes::install_github("bc3LC/medusa")
@@ -147,7 +146,6 @@ are read by the different functions.
 ### Quick example — Spain
 
 ``` r
-
 library(medusa)
 
 # 1. Download the example shocks file and edit it
@@ -166,7 +164,6 @@ tp <- calc_tp(index = "all")
 ### Quick example — EU
 
 ``` r
-
 library(medusa)
 
 # 0. Process HBS microdata (requires Eurostat raw files)

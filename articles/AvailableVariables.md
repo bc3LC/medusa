@@ -19,30 +19,30 @@ Income groups (quintile, decile, ventile, percentile) are available both
 at the **national level** (calculated within each country) and at the
 **EU level** (calculated across all EU households jointly).
 
-| Variable | Description | Labels |
-|----|----|----|
-| quintile | Income quintile at national level [\[1\]](#id_1). | 1–5 |
-| quintile_eu | Income quintile at EU level [\[1\]](#id_1). | 1–5 |
-| decile | Income decile at national level [\[1\]](#id_1). | 1–10 |
-| decile_eu | Income decile at EU level [\[1\]](#id_1). | 1–10 |
-| ventile | Income ventile at national level [\[1\]](#id_1). | 1–20 |
-| ventile_eu | Income ventile at EU level [\[1\]](#id_1). | 1–20 |
-| percentile | Income percentile at national level [\[1\]](#id_1). | 1–100 |
-| percentile_eu | Income percentile at EU level [\[1\]](#id_1). | 1–100 |
-| country | Country of residence. | AT, BE, BG, CY, CZ, DE, DK, EE, EL, ES, FI, FR, HR, HU, IE, IT, LT, LU, LV, MT, NL, PL, PT, RO, SE, SI, SK |
-| zone | Zone of residence. | Urban, Semi-urban, Rural |
-| household_type | Type of household. | Adult alone, Couple, Couple with children, More than 2 adults, More than 2 adults with children, Single parent |
-| income_source | Main income source of the household. | Wages, Self-employment, Property, Pensions, Unemployment |
-| gender | Gender of the reference person. | Male, Female |
-| feminization_degree | Feminization degree of the household. | FD1 (\<20% women), FD2 (20–40%), FD3 (40–60%), FD4 (60–80%), FD5 (\>80%) |
-| age | Age of the reference person. | Young (≤30), Adult (30–65), Elder (≥65) |
-| birth_country | Country of birth of the reference person. | National, EU, Non-EU, Non-national |
-| education | Education level of the reference person. | Early childhood education, Primary, Secondary, Post-secondary, Tertiary, Higher education |
-| activity | Professional status of the reference person. | Employed, Unemployed, Retired, Student, Domestic tasks, Disabled, Military service |
-| contract_type | Type of employment contract of the reference person. | Permanent, Fixed-term, Not applicable |
-| workday | Type of working hours of the reference person. | Full time, Part time, Not apply |
-| employment_sector | Employment sector of the reference person. | Private sector, Public sector |
-| REGMR | Tenure status of the main residence. | Ownership, Rented, Relinquish |
+| Variable            | Description                                          | Labels                                                                                                         |
+|---------------------|------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| quintile            | Income quintile at national level [\[1\]](#id_1).    | 1–5                                                                                                            |
+| quintile_eu         | Income quintile at EU level [\[1\]](#id_1).          | 1–5                                                                                                            |
+| decile              | Income decile at national level [\[1\]](#id_1).      | 1–10                                                                                                           |
+| decile_eu           | Income decile at EU level [\[1\]](#id_1).            | 1–10                                                                                                           |
+| ventile             | Income ventile at national level [\[1\]](#id_1).     | 1–20                                                                                                           |
+| ventile_eu          | Income ventile at EU level [\[1\]](#id_1).           | 1–20                                                                                                           |
+| percentile          | Income percentile at national level [\[1\]](#id_1).  | 1–100                                                                                                          |
+| percentile_eu       | Income percentile at EU level [\[1\]](#id_1).        | 1–100                                                                                                          |
+| country             | Country of residence.                                | AT, BE, BG, CY, CZ, DE, DK, EE, EL, ES, FI, FR, HR, HU, IE, IT, LT, LU, LV, MT, NL, PL, PT, RO, SE, SI, SK     |
+| zone                | Zone of residence.                                   | Urban, Semi-urban, Rural                                                                                       |
+| household_type      | Type of household.                                   | Adult alone, Couple, Couple with children, More than 2 adults, More than 2 adults with children, Single parent |
+| income_source       | Main income source of the household.                 | Wages, Self-employment, Property, Pensions, Unemployment                                                       |
+| gender              | Gender of the reference person.                      | Male, Female                                                                                                   |
+| feminization_degree | Feminization degree of the household.                | FD1 (\<20% women), FD2 (20–40%), FD3 (40–60%), FD4 (60–80%), FD5 (\>80%)                                       |
+| age                 | Age of the reference person.                         | Young (≤30), Adult (30–65), Elder (≥65)                                                                        |
+| birth_country       | Country of birth of the reference person.            | National, EU, Non-EU, Non-national                                                                             |
+| education           | Education level of the reference person.             | Early childhood education, Primary, Secondary, Post-secondary, Tertiary, Higher education                      |
+| activity            | Professional status of the reference person.         | Employed, Unemployed, Retired, Student, Domestic tasks, Disabled, Military service                             |
+| contract_type       | Type of employment contract of the reference person. | Permanent, Fixed-term, Not applicable                                                                          |
+| workday             | Type of working hours of the reference person.       | Full time, Part time, Not apply                                                                                |
+| employment_sector   | Employment sector of the reference person.           | Private sector, Public sector                                                                                  |
+| REGMR               | Tenure status of the main residence.                 | Ownership, Rented, Relinquish                                                                                  |
 
 *\[1\] Equivalent consumption expenditure is used instead of income as
 it is considered a better proxy for permanent household income since it

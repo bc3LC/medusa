@@ -7,6 +7,8 @@
 - [`adjust_wh_is()`](adjust_wh_is.md) : adjust_wh_is
 - [`all_coicop`](all_coicop.md) : List of all COICOP codes available in
   MEDUSA
+- [`av_country`](av_country.md) : File containing available countries
+  and country codes
 - [`available_var_eu()`](available_var_eu.md) : available_var_eu
 - [`available_var_impact()`](available_var_impact.md) :
   available_var_impact
@@ -14,8 +16,6 @@
   available_var_intersec
 - [`available_var_intersec_eu()`](available_var_intersec_eu.md) :
   available_var_intersec_eu
-- [`av_country`](av_country.md) : File containing available countries
-  and country codes
 - [`basic_graph()`](basic_graph.md) : basic_graph
 - [`basic_graph_eu()`](basic_graph_eu.md) : basic_graph_eu
 - [`calc_di()`](calc_di.md) : calc_di
@@ -141,9 +141,9 @@
 - [`mapping_gcam_medusa`](mapping_gcam_medusa.md) : Mapping between the
   GCAM items names and the COICOP codes
 - [`order_var()`](order_var.md) : order_var
+- [`order_var_eu()`](order_var_eu.md) : order_var_eu
 - [`order_vars()`](order_vars.md) : order_vars
 - [`order_vars_eu()`](order_vars_eu.md) : order_vars_eu
-- [`order_var_eu()`](order_var_eu.md) : order_var_eu
 - [`price_shock()`](price_shock.md) : price_shock
 - [`price_shock_eu()`](price_shock_eu.md) : price_shock_eu
 - [`rawhbs_eu()`](rawhbs_eu.md) : rawhbs_eu

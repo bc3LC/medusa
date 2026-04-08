@@ -1,0 +1,17 @@
+db_path <- 'C:\\Users\\claudia.rodes\\Documents\\GitHub\\gcam-core-eu\\output'
+db_name <- 'database_basexdb'
+query_path = "inst/extdata"
+prj_name = 'medusa.dat'
+prj = NULL
+scenarios = c('EU_NECP_LTT-Rev1','Ref')
+queries = "queries_GCAM_MEDUSA.xml"
+final_db_year = 2030
+saveOutput = T
+base_scen = 'Ref'
+selected_year = 2015
+
+
+shocks <- get_prices_gcameurope(prj_name = prj_name,
+                                scenarios = scenarios, 
+                                final_db_year = final_db_year, saveOutput = T, 
+                                base_scen = base_scen, selected_year = 2015)

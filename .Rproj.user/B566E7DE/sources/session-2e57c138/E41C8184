@@ -1,0 +1,26 @@
+{
+    "id": "E41C8184",
+    "path": "~/GitHub/medusa/R/main_eu.R",
+    "project_path": "R/main_eu.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1775635462099.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "167,18",
+        "scrollLine": "152"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1775633397,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1775633397,
+    "read_only": false,
+    "read_only_alternatives": []
+}

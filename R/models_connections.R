@@ -1,47 +1,23 @@
-# library(tidyr)
-# library(dplyr)
-# library(magrittr)
-# library(ggplot2)
-# library(rgcam)
-# library(gcamdata)
-# library(countrycode)
-# library(tibble)
-
-#------------------------
-#' get_prices_gcam
+#' get_prices_gcameurope
 #'
-#' Extract and format prices from a GCAM-Europe database or project file for MEDUSA
-#' @keywords GCAM, GCAM-Europe, prices
-#' @return a dataframe with prices by sector and GCAM-Europe region
-#' @param db_path Path to the GCAM database
-#' @param query_path Path to the query file
-#' @param db_name Name of the GCAM database
-#' @param prj_name Name of the rgcam project. This can be an existing project, or, if not, this will be the name
-#' @param prj rgcam loaded project
-#' @param scenarios Vector names of the GCAM scenarios to be processed
-#' @param queries Name of the GCAM query file. The file by default includes the queries required to run rfasst
-#' @param final_db_year Final year in the GCAM database (this allows to process databases with user-defined "stop periods")
-#' @param saveOutput Writes the files.By default=T
-#' @param base_scen The base scenario that other scenarios will be compared against
-#' @param selected_year The year of analysis, when the scenarios wil be compared
+#' Extract and format prices from a GCAM-Europe database or project file for MEDUSA.
+#' @keywords GCAM, GCAM-Europe, prices.
+#' @return a dataframe with prices by sector and GCAM-Europe region.
+#' @param db_path Path to the GCAM-Europe database.
+#' @param query_path Path to the query file.
+#' @param db_name Name of the GCAM-Europe database.
+#' @param prj_name Name of the rgcam project. This can be an existing project, or, if not, this will be the newly created project name.
+#' @param scenarios Vector names of the GCAM-Europe scenarios to be processed.
+#' @param queries Name of the GCAM-Europe query file. The file by default includes the queries required to run rfasst.
+#' @param final_db_year Final year in the GCAM-Europe database (this allows to process databases with user-defined "stop periods").
+#' @param saveOutput Writes the files.By default=T.
+#' @param base_scen The base scenario that other scenarios will be compared against.
+#' @param selected_year The year of analysis, when the scenarios will be compared.
 #' @importFrom magrittr %>%
 #' @export
-get_prices_gcam <- function(db_path = NULL, query_path = "inst/extdata", db_name = NULL, prj_name, prj = NULL,
+get_prices_gcameurope <- function(db_path = NULL, query_path = "inst/extdata", db_name = NULL, prj_name,
                             scenarios, queries = "queries_GCAM_MEDUSA.xml", final_db_year = 2100,
                             saveOutput = T, base_scen, selected_year) {
-
-  db_path <- 'C:\\Users\\claudia.rodes\\Documents\\GitHub\\gcam-core-eu\\output'
-  db_name <- 'database_basexdb_heatpumps2'
-  query_path = "inst/extdata"
-  prj_name = 'medusa.dat'
-  prj = NULL
-  scenarios = c('Reference_HeatPumps17_2100','Reference_heatpumps')
-  queries = "queries_GCAM_MEDUSA.xml"
-  final_db_year = 2030
-  saveOutput = T
-  base_scen = 'Reference_heatpumps'
-  selected_year = 2015
-
 
   # Set countries
   EU_COUNTRIES <- c("Austria", "Belgium", "Bulgaria", "Croatia",
@@ -80,32 +56,26 @@ get_prices_gcam <- function(db_path = NULL, query_path = "inst/extdata", db_name
     dplyr::distinct() %>%
     dplyr::pull()
 
-  # Load the rgcam project if prj not passed as a parameter:
-  if (is.null(prj)) {
-    if (!is.null(db_path) & !is.null(db_name)) {
-      rlang::inform('Creating project ...')
-      conn <- rgcam::localDBConn(db_path,
-                                 db_name,migabble = FALSE)
+  # Load or create the rgcam project:
+  if (!is.null(db_path) & !is.null(db_name)) {
+    rlang::inform('Creating project ...')
+    conn <- rgcam::localDBConn(db_path,
+                               db_name,migabble = FALSE)
 
-      prj <- rgcam::addScenario(conn = conn,
-                                proj = prj_name,
-                                scenario = scenarios,
-                                queryFile = paste0(query_path,"/",queries),
-                                clobber = F,
-                                saveProj = F)
+    prj <- rgcam::addScenario(conn = conn,
+                              proj = prj_name,
+                              scenario = scenarios,
+                              queryFile = paste0(query_path,"/",queries),
+                              clobber = F,
+                              saveProj = F)
 
-      if (!file.exists('output')) dir.create('output')
-      rgcam::saveProject(prj, file = file.path('output',prj_name))
+    if (!file.exists('output')) dir.create('output')
+    rgcam::saveProject(prj, file = file.path('output',prj_name))
 
-      QUERY_LIST <- c(rgcam::listQueries(prj, c(scenarios)))
-    } else {
-      rlang::inform('Loading project ...')
-      prj <- rgcam::loadProject(prj_name)
-
-      QUERY_LIST <- c(rgcam::listQueries(prj, c(scenarios)))
-    }
   } else {
-    QUERY_LIST <- c(rgcam::listQueries(prj, c(scenarios)))
+    rlang::inform('Loading project ...')
+    prj <- rgcam::loadProject(prj_name)
+
   }
 
 
@@ -185,8 +155,6 @@ get_prices_gcam <- function(db_path = NULL, query_path = "inst/extdata", db_name
       values_from = price_diff
     )
 
-  write.csv(data_coicop_fin, file = file.path('output',paste0('data_coicop_fin_',stringr::str_remove(prj_name,'.dat'),'.csv')))
-
   # -------
   # Add all the remaining coicop categories (with no change, value = 1)
   data_coicop_fin_full <- data_coicop_diff %>%
@@ -206,7 +174,24 @@ get_prices_gcam <- function(db_path = NULL, query_path = "inst/extdata", db_name
       names_from = ctry_sce,
       values_from = price_diff
     )
+
   # -------
+  # Add names column
+  names_coicop_map <- get(paste0("coicop_", selected_year)) %>%
+    dplyr::select(names, coicop) %>%
+    dplyr::distinct() %>%
+    dplyr::mutate(coicop = stringr::str_replace(coicop, 'EUR_A_', 'CP'))
+
+  data_coicop_fin_full_names <- data_coicop_fin_full %>%
+    dplyr::right_join(names_coicop_map, by = 'coicop') %>%
+    dplyr::relocate(last_col())
+
+
+  # -------
+  # Save and return
+  file_name <- paste0('GCAMEurope_shocks_',stringr::str_remove(prj_name,'.dat'),'.csv')
+  write.csv(data_coicop_fin, file = file.path('output',file_name))
+  print(paste0("The GCAM-Europe prices file has been saved in`", getwd(),"/output/",file_name))
 
   return(invisible(data_coicop_fin_full))
 

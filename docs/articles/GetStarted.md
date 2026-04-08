@@ -25,6 +25,7 @@ impacts](https://bc3lc.github.io/medusa/articles/TheModel.html) article.
 Install the development version from GitHub:
 
 ``` r
+
 # install.packages("devtools")
 devtools::install_github("bc3LC/medusa")
 ```
@@ -32,6 +33,7 @@ devtools::install_github("bc3LC/medusa")
 Load the package:
 
 ``` r
+
 library(medusa)
 ```
 
@@ -43,6 +45,7 @@ No prior data preparation is needed.
 #### Quick example
 
 ``` r
+
 library(medusa)
 
 # Download the example price shocks file
@@ -74,6 +77,7 @@ not included in the package.
 #### Workflow
 
 ``` r
+
 library(medusa)
 
 # Step 1: Process the raw Eurostat microdata (once per wave)
@@ -118,6 +122,7 @@ analysis differ between Spain and EU data. For a full list, see
 Variables](https://bc3lc.github.io/medusa/articles/AvailableVariables.html).
 
 ``` r
+
 # Spain
 available_var_impact()
 

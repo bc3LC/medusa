@@ -8,6 +8,7 @@
     in `calc_tp`
 
 ``` r
+
 file <- calc_tp(year = 2019,        # Select the year
                 index = "LIHC")     # Select the index or a vector: c("LIHC", "VTU")
 ```
@@ -15,12 +16,14 @@ file <- calc_tp(year = 2019,        # Select the year
 2.  Define the directory to save the outputs
 
 ``` r
+
 setwd(path)   # Indicate the path to save the outputs
 ```
 
 3.  Save the output dataframe in excel
 
 ``` r
+
 write.xlsx(file,                         # Indicate the dataframe created in step 1
            "File_name.xlsx",             # Indicate the file name of the excel to be saved
            sheetName = "sheet_name",     # Indicate the sheet name
@@ -32,12 +35,14 @@ write.xlsx(file,                         # Indicate the dataframe created in ste
 1.  Define the time series
 
 ``` r
+
 time_series <- seq(2006,2021,1)
 ```
 
 2.  Calculate transport poverty indices for the defined time series
 
 ``` r
+
 file <- calc_tp(year = time_series,      # Select the vector with the selected years
                 index = "all")           # Select all indices (by default)
 ```
@@ -45,12 +50,14 @@ file <- calc_tp(year = time_series,      # Select the vector with the selected y
 3.  Define the directory to save the outputs
 
 ``` r
+
 setwd(path)   # Indicate the path to save the outputs
 ```
 
 4.  Save the output dataframe in excel
 
 ``` r
+
 write.xlsx(file,                         # File name or full file path
            "File_name.xlsx",             # Indicate the file name of the excel to be saved
            sheetName = "sheet_name",     # Indicate the sheet name

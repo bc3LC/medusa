@@ -5,6 +5,8 @@
 - [`add_coicop()`](add_coicop.md) : add_coicop
 - [`adjust_wh()`](adjust_wh.md) : adjust_wh
 - [`adjust_wh_is()`](adjust_wh_is.md) : adjust_wh_is
+- [`all_coicop`](all_coicop.md) : List of all COICOP codes available in
+  MEDUSA
 - [`available_var_eu()`](available_var_eu.md) : available_var_eu
 - [`available_var_impact()`](available_var_impact.md) :
   available_var_impact
@@ -63,28 +65,46 @@
 - [`country_code()`](country_code.md) : country_code
 - [`database_hbs()`](database_hbs.md) : database_hbs
 - [`elevate_hbs()`](elevate_hbs.md) : elevate_hbs
-- [`epf_list_2006`](epf_list_2006.md) : Clean hbs list for 2006
-- [`epf_list_2007`](epf_list_2007.md) : Clean hbs list for 2007
-- [`epf_list_2008`](epf_list_2008.md) : Clean hbs list for 2008
-- [`epf_list_2009`](epf_list_2009.md) : Clean hbs list for 2009
-- [`epf_list_2010`](epf_list_2010.md) : Clean hbs list for 2010
-- [`epf_list_2011`](epf_list_2011.md) : Clean hbs list for 2011
-- [`epf_list_2012`](epf_list_2012.md) : Clean hbs list for 2012
-- [`epf_list_2013`](epf_list_2013.md) : Clean hbs list for 2013
-- [`epf_list_2014`](epf_list_2014.md) : Clean hbs list for 2014
-- [`epf_list_2015`](epf_list_2015.md) : Clean hbs list for 2015
-- [`epf_list_2016`](epf_list_2016.md) : Clean hbs list for 2016
-- [`epf_list_2017`](epf_list_2017.md) : Clean hbs list for 2017
-- [`epf_list_2018`](epf_list_2018.md) : Clean hbs list for 2018
-- [`epf_list_2019`](epf_list_2019.md) : Clean hbs list for 2019
-- [`epf_list_2020`](epf_list_2020.md) : Clean hbs list for 2020
-- [`epf_list_2021`](epf_list_2021.md) : Clean hbs list for 2021
+- [`epf_list_2006`](epf_list_2006.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2006
+- [`epf_list_2007`](epf_list_2007.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2007
+- [`epf_list_2008`](epf_list_2008.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2008
+- [`epf_list_2009`](epf_list_2009.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2009
+- [`epf_list_2010`](epf_list_2010.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2010
+- [`epf_list_2011`](epf_list_2011.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2011
+- [`epf_list_2012`](epf_list_2012.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2012
+- [`epf_list_2013`](epf_list_2013.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2013
+- [`epf_list_2014`](epf_list_2014.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2014
+- [`epf_list_2015`](epf_list_2015.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2015
+- [`epf_list_2016`](epf_list_2016.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2016
+- [`epf_list_2017`](epf_list_2017.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2017
+- [`epf_list_2018`](epf_list_2018.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2018
+- [`epf_list_2019`](epf_list_2019.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2019
+- [`epf_list_2020`](epf_list_2020.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2020
+- [`epf_list_2021`](epf_list_2021.md) : Cleaned Household Budget Survey
+  (HBS) microdata for 2021
 - [`ex_shocks()`](ex_shocks.md) : ex_shocks
 - [`ex_shocks_eu()`](ex_shocks_eu.md) : ex_shocks_eu
 - [`ex_var_intersec()`](ex_var_intersec.md) : ex_var_intersec
 - [`ex_var_intersec_eu()`](ex_var_intersec_eu.md) : ex_var_intersec_eu
 - [`gcfhogares95_22`](gcfhogares95_22.md) : File containing household
   expenditure by COICOP category from the national accounts
+- [`get_prices_gcameurope()`](get_prices_gcameurope.md) :
+  get_prices_gcameurope
 - [`graph_labels`](graph_labels.md) : List containing long names for the
   socioeconomic and demographic categories to introduce them on the axes
   of the graphs
@@ -118,8 +138,10 @@
 - [`mapping`](mapping.md) : Mapping to rename socioeconomic variables
 - [`mapping_coicop`](mapping_coicop.md) : Mapping for expenditure
   categories (COICOP)
-- [`medusa`](medusa.md) : medusa
+- [`mapping_gcam_medusa`](mapping_gcam_medusa.md) : Mapping between the
+  GCAM items names and the COICOP codes
 - [`order_var()`](order_var.md) : order_var
+- [`order_vars()`](order_vars.md) : order_vars
 - [`order_vars_eu()`](order_vars_eu.md) : order_vars_eu
 - [`order_var_eu()`](order_var_eu.md) : order_var_eu
 - [`price_shock()`](price_shock.md) : price_shock

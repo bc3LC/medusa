@@ -9,6 +9,7 @@ data](https://bc3lc.github.io/medusa/articles/TutorialsEU_data.html) for
 details.
 
 ``` r
+
 hbs <- hbs_eu(year = 2015, country = "all", path = "raw_data")
 ```
 
@@ -23,6 +24,7 @@ indices](https://bc3lc.github.io/medusa/articles/TransportPoverty.html).
 1.  Define the index to calculate (e.g. `"VTU"`) in `calc_tp_eu`:
 
 ``` r
+
 file <- calc_tp_eu(data = hbs,      # Output from hbs_eu()
                    index = "VTU")   # Select the index
 ```
@@ -30,6 +32,7 @@ file <- calc_tp_eu(data = hbs,      # Output from hbs_eu()
 2.  Save the output data frame to Excel:
 
 ``` r
+
 library(openxlsx)
 
 write.xlsx(file,
@@ -48,6 +51,7 @@ transport poor in each member state according to the selected index.
 1.  Run `calc_tp_eu` with `index = "all"` (the default):
 
 ``` r
+
 file <- calc_tp_eu(data = hbs,
                    index = "all")   # All indices (default)
 ```
@@ -55,6 +59,7 @@ file <- calc_tp_eu(data = hbs,
 2.  Save the output:
 
 ``` r
+
 library(openxlsx)
 
 write.xlsx(file,
@@ -72,6 +77,7 @@ The returned data frame contains four rows, one per index (`10%`, `2M`,
 To calculate a subset of indices, pass a vector to the `index` argument:
 
 ``` r
+
 file <- calc_tp_eu(data = hbs,
                    index = c("2M", "LIHC"))
 ```
@@ -85,6 +91,7 @@ If you processed only a subset of countries in
 calculate indices only for those countries:
 
 ``` r
+
 hbs_subset <- hbs_eu(year = 2015,
                      country = c("BE", "ES"),
                      path = "raw_data")

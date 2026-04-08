@@ -5,11 +5,11 @@ Authors@R: c(person("Eva", "Alonso-Epelde", email = "eva.alonso@bc3research.org"
 		     comment = c(ORCID = "0000-0002-4052-1703")),
 	         person("Clàudia", "Rodés-Bachs", email = "claudia.rodes@bc3research.org", role = c("aut"),
 		   	 comment = c(ORCID = "0000-0001-6696-7685")),
-			 person("María", "Moyano-Reina", email = "maria.moyano@bc3research.org ", role = c("aut"),
+			    person("María", "Moyano-Reina", email = "maria.moyano@bc3research.org ", role = c("aut"),
 		     comment = c(ORCID = "0009-0000-4290-0697")),
-		     person("Jon", "Sampedro", email = "jon.sampedro@bc3research.org", role = c("aut"),
+		      person("Jon", "Sampedro", email = "jon.sampedro@bc3research.org", role = c("aut"),
 		     comment = c(ORCID = "0000-0002-2277-1530")),
-		     person("Xaquín", "García-Muros", email = "xaquin.garcia@bc3research.org ", role = c("aut"),
+		      person("Xaquín", "García-Muros", email = "xaquin.garcia@bc3research.org ", role = c("aut"),
 		     comment = c(ORCID = "0000-0002-2667-3292")))
 Description: Description of your R package medusa.
 URL: https://github.com/bc3LC/medusa
@@ -19,7 +19,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 LazyDataCompression: xz
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Imports:
     usethis,
     knitr,
@@ -31,12 +31,12 @@ Imports:
   	tidyr,
   	ggplot2,
   	stringr,
-	openxlsx,
-	gtools,
+	  openxlsx,
+	  gtools,
   	here,
 	  spatstat.geom,
 	  tibble,
-	  restatapi
+	  restatapi,
 	  countrycode
 Remotes:
     github::JGCRI/rpackageutils,

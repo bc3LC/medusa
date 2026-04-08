@@ -141,6 +141,40 @@ results <- calc_di_eu(data = hbs,           # HBS 2015 microdata
 
 ---
 
+## Example 5. Connect with GCAM-Europe
+
+1. Read the GCAM-Europe prices from the database. You can indicate the database path and name, or the already created project file.
+**Importantly**, you must indicate the Baseline scenario from which the percentage prices increment will be computed. Indicate also the year of the analysis through the `selected_year` parameter:
+
+```r
+# if indicating the database path and name
+shocks <- get_prices_gcameurope(db_path = 'path/to/db', db_name = 'db_name', 
+                                prj_name = 'new_prj_name.dat',
+                                scenarios = c('scen1','scen2'), 
+                                final_db_year = 2100, saveOutput = T, 
+                                base_scen = 'Reference', selected_year = 2015)
+                                
+
+# if indicating the project name
+shocks <- get_prices_gcameurope(prj_name = 'path/to/existing/prj.dat',
+                                scenarios = c('scen1','scen2'), 
+                                final_db_year = 2100, saveOutput = T, 
+                                base_scen = 'Reference', selected_year = 2015)
+```
+
+2. Go to your working directory and check the csv **"output/GCAMEU_shocks_[prj_name].csv"**. It will have each column named after a country code and a scenario suffix (e.g. `AT_s1`, `BE_s1`, ..., `AT_s2`, `BE_s2`, ...) representing a scenario for each country and each row a COICOP code. The values indicate the price change (e.g. `1.1` for a 10% increase and `0.9` for a 10% decrease). If there is no shock in a category, keep `1`.
+
+3. Run `calc_di_eu` with the processed HBS data and the price shocks:
+
+  ```r
+results <- calc_di_eu(data = hbs,            # Output from hbs_eu()
+                      shocks = shocks)       # GCAM-Europe shocks file
+```
+
+By default, `calc_di_eu` calculates distributional impacts for all available socioeconomic variables and saves the results and figures in an `outputs/` folder within your working directory.
+
+---
+
 ## Outputs
 
 `calc_di_eu` returns a list with two elements:
